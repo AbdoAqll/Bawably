@@ -1,5 +1,12 @@
 add_library(Domain STATIC
     User/User.cpp
+    Apartment/Apartment.cpp
+    Building/Building.cpp
+    Expense/Expense.cpp
+    MaintenanceRequest/MaintenanceRequest.cpp
+    RentalContract/RentalContract.cpp
+    RentPayment/RentPayment.cpp
+    Tenant/Tenant.cpp
 )
 
 # this is to tell the cmake where to look for .h files
