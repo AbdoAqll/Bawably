@@ -1,6 +1,8 @@
 add_executable(Presentation
     main.cpp
     Controllers/UserController.cpp
+    Controllers/BuildingController/BuildingController.cpp
+    Container/DependencyContainer.cpp
 )
 
 target_include_directories(Presentation PUBLIC
