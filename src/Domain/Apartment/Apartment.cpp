@@ -1,11 +1,12 @@
 #include "Apartment.h"
 
-Apartment::Apartment(int id, int buildingId, string &number)
+int Apartment::nextId = 0;
+Apartment::Apartment(int buildingId, string &number)
 {
-    apartmentId = id;
-    buildingId = buildingId;
-    apartmentNumber = number;
-    status = ApartmentStatus::Vacant;
+    this->apartmentId = ++nextId;
+    this->buildingId = buildingId;
+    this->apartmentNumber = number;
+    this->status = ApartmentStatus::Vacant;
 }
 
 int Apartment::getId() const

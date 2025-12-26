@@ -5,6 +5,11 @@ add_library(Application STATIC
     UseCases/Building/GetAllBuilding/GetAllBuildingUseCase.cpp
     UseCases/Building/GetBuildingDetails/GetBuildingDetailsUseCase.cpp
     UseCases/Building/IsBuildingExists/IsBuildingExistsUseCase.cpp
+    UseCases/Apartment/AddApartment/AddApartmentUseCase.cpp
+    UseCases/Apartment/GetAllApartments/GetAllApartmentsUseCase.cpp
+    UseCases/Apartment/CheckApartmentStatus/CheckApartmentStatusUseCase.cpp
+    UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.cpp
+    UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.cpp
 )
 
 target_include_directories(Application PUBLIC

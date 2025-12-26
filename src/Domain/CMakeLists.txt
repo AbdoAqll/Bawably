@@ -7,6 +7,11 @@ add_library(Domain STATIC
     RentalContract/RentalContract.cpp
     RentPayment/RentPayment.cpp
     Tenant/Tenant.cpp
+    Shared/DomainException.cpp
+    Building/Exceptions/BuildingNotExistException.cpp
+    Apartment/Exceptions/ApartmentNotExistException.cpp
+    Apartment/Exceptions/ApartmentAlreadyExistsException.cpp
+    Apartment/ApartmentStatus.cpp
 )
 
 # this is to tell the cmake where to look for .h files
