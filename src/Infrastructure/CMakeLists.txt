@@ -1,5 +1,6 @@
 add_library(Infrastructure STATIC
     User/Repositories/UserRepository.cpp
+        MaintenanceRequest/Repositories/MaintenanceRequestRepository.cpp
 )
 
 target_include_directories(Infrastructure PUBLIC
