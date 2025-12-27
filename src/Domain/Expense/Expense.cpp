@@ -1,6 +1,6 @@
 #include "Expense.h"
 
-Expense::Expense(int id, int buildingId, ExpenseCategory category, double amount, string &description, string &expenseDate)
+Expense::Expense(int id, int buildingId, ExpenseCategory category, double amount,const string &description,const string &expenseDate)
 {
 }
 

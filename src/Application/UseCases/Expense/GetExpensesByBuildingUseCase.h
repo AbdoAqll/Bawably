@@ -1,7 +1,8 @@
+// src/Application/UseCases/Expense/GetExpensesByBuildingUseCase.h
 #pragma once
 
-#include "../../Domain/Expense/Expense.h"
-#include "../../Domain/Expense/ExpenseRepository.h"
+#include "../../../Domain/Expense/Expense.h"
+#include "../../../Domain/Expense/ExpenseRepository.h"
 #include <vector>
 
 class GetExpensesByBuildingUseCase {

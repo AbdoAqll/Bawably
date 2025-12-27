@@ -1,3 +1,4 @@
+// src/Application/UseCases/Expense/GetExpensesByBuildingUseCase.cpp
 #include "GetExpensesByBuildingUseCase.h"
 
 GetExpensesByBuildingUseCase::GetExpensesByBuildingUseCase(ExpenseRepository& repository)

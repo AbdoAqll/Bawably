@@ -2,7 +2,11 @@
 #include <string>
 
 using namespace std;
+#pragma once
 
+// ... باقي الكود
+
+// مفيش حاجة بعد #endif لو استخدمت pragma once
 class Expense
 {
 private:
@@ -14,7 +18,7 @@ private:
     string expenseDate;
 
 public:
-    Expense(int id, int buildingId, ExpenseCategory category, double amount, string &description, string &expenseDate);
+    Expense(int id, int buildingId, ExpenseCategory category, double amount,const string &description,const string &expenseDate);
 
     int getExpenseId() const;
     int getBuildingId() const;
@@ -24,6 +28,7 @@ public:
     string getExpenseDate() const;
 
     void setCategory(ExpenseCategory newCategory);
+    void setExpenseId(int _id);
     void setAmount(double newAmount);
     void setDescription(string &newDescription);
     void setExpenseDate(string &newDate);
