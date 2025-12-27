@@ -1,0 +1,14 @@
+//
+// Created by Badry Anas on 12/27/2025.
+//
+
+#ifndef FINALPROJECT_EXPENSECONTROLLER_H
+#define FINALPROJECT_EXPENSECONTROLLER_H
+
+
+class ExpenseController
+{
+};
+
+
+#endif //FINALPROJECT_EXPENSECONTROLLER_H

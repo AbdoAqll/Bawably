@@ -4,6 +4,8 @@ add_executable(Presentation
     Controllers/BuildingController/BuildingController.cpp
     Container/DependencyContainer.cpp
     Controllers/ApartmentController/ApartmentController.cpp
+        Controllers/ExpenseController/ExpenseController.cpp
+        Controllers/ExpenseController/ExpenseController.h
 )
 
 target_include_directories(Presentation PUBLIC

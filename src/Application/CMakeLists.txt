@@ -10,6 +10,9 @@ add_library(Application STATIC
     UseCases/Apartment/CheckApartmentStatus/CheckApartmentStatusUseCase.cpp
     UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.cpp
     UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.cpp
+    UseCases/Expense/CreateExpenseUseCase.cpp
+    UseCases/Expense/GetExpensesByBuildingUseCase.cpp
+    UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
 )
 
 target_include_directories(Application PUBLIC
