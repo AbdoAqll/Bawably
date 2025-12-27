@@ -1,7 +1,8 @@
 add_library(Infrastructure STATIC
-    User/Repositories/UserRepository.cpp
-    Building/Repositories/BuildingRepository.cpp
-    Apartment/Repositories/InMemoryApartmentRepository.cpp
+        User/Repositories/UserRepository.cpp
+        Building/Repositories/BuildingRepository.cpp
+        Apartment/Repositories/InMemoryApartmentRepository.cpp
+        MaintenanceRequest/Repositories/InMemoryMaintenanceRequestRepository.cpp
 )
 
 target_include_directories(Infrastructure PUBLIC
