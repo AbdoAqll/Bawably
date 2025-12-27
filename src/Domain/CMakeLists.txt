@@ -12,6 +12,8 @@ add_library(Domain STATIC
     Apartment/Exceptions/ApartmentNotExistException.cpp
     Apartment/Exceptions/ApartmentAlreadyExistsException.cpp
     Apartment/ApartmentStatus.cpp
+    RentalContract/Exceptions/RentalContractNotFoundException.cpp
+    RentalContract/Exceptions/ContractAlreadyExistsException.cpp
 )
 
 # this is to tell the cmake where to look for .h files

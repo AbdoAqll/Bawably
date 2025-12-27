@@ -19,11 +19,13 @@ ApartmentController::ApartmentController(vector<shared_ptr<IUseCase> > &useCases
 void ApartmentController::displayMenu() {
     cout << "\nApartment Menu:\n";
     cout << "1. Add Apartment\n";
-    cout << "2. Get All Apartments\n";
-    cout << "3. Get Apartment Details\n";
-    cout << "4. Check Apartment Status\n";
-    cout << "5. Check if Apartment Exists\n";
-    cout << "6. Exit\n";
+    cout << "2. Manage Apartment\n"; // rental / maintenance 
+    // first take the id of the Apartment them start to pass it to all the controllers of the other modules
+    cout << "3. Get All Apartments\n";
+    cout << "4. Get Apartment Details\n";
+    cout << "5. Check Apartment Status\n";
+    cout << "6. Check if Apartment Exists\n";
+    cout << "0. Back to Previous Menu\n";
     cout << "Enter your choice: ";
 }
 
@@ -148,7 +150,7 @@ void ApartmentController::execute(int buildingId) {
             case 5:
                 isApartmentExists(buildingId);
                 break;
-            case 6:
+            case 0:
                 return;
                 break;
             default:

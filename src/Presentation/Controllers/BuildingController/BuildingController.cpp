@@ -13,12 +13,15 @@ BuildingController::BuildingController(vector<shared_ptr<IUseCase>>& useCases)
 void BuildingController::displayMenu() {
     cout << "\nBuilding Menu:\n";
     cout << "1. Add Building\n";
-    cout << "2. Get All Buildings\n";
-    cout << "3. Get Building Details\n";
-    cout << "4. Check if Building Exists\n";
-    cout << "5. Exit\n";
+    cout << "2. Manage Building\n"; // apartment/maintenance (building only)
+    // first take the id of the building them start to pass it to all the controllers of the other modules
+    cout << "3. Get All Buildings\n";
+    cout << "4. Get Building Details\n";
+    cout << "5. Check if Building Exists\n";
+    cout << "0. Exit\n";
     cout << "Enter your choice: ";
 }
+
 void BuildingController::createBuilding() {
     string name, address;
     cout << "Enter Building Name: ";
@@ -29,7 +32,6 @@ void BuildingController::createBuilding() {
     AddBuildingParams params = {name, address};
     useCases["AddBuilding"]->execute(params);
 }
-
 void BuildingController::getAllBuildings() {
     auto result = useCases["GetAllBuilding"]->execute();
     vector<Building> buildings = any_cast<vector<Building>>(result);
@@ -82,7 +84,7 @@ void BuildingController::execute() {
             case 4: 
                 isBuildingExists(); 
                 break;
-            case 5: 
+            case 0: 
                 return;
             default: 
                 cout << "Invalid choice.\n";
