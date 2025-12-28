@@ -11,7 +11,7 @@ struct CloseMaintenanceRequestParams {
 
 class CloseMaintenanceRequestUseCase: public IUseCase {
 private:
-    shared_ptr<IMaintenanceRequestRepository> repository;
+    shared_ptr<IMaintenanceRequestRepository> _maintnenceRequestRepo;
 public:
     CloseMaintenanceRequestUseCase(shared_ptr<IMaintenanceRequestRepository> rep);
     any execute(const any &params) override;

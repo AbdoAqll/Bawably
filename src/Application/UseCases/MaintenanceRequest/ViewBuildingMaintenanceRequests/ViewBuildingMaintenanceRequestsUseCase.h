@@ -15,7 +15,7 @@ struct ViewMaintenanceRequestsParams {
 
 class ViewBuildingMaintenanceRequestsUseCase : public IUseCase{
 private:
-    std::shared_ptr<IMaintenanceRequestRepository> repository;
+    std::shared_ptr<IMaintenanceRequestRepository> _maintnenceRequestRepo;
 public:
     ViewBuildingMaintenanceRequestsUseCase(shared_ptr<IMaintenanceRequestRepository> rep);
 

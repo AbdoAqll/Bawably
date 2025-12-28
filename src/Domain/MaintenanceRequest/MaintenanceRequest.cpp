@@ -2,7 +2,8 @@
 #include "Shared/CurrentDate.h"
 
 
-MaintenanceRequest::MaintenanceRequest(int id, int buildingId, int apartmentId, string &description, int tenantId):resolvedAt("Not Resolved Yet")
+MaintenanceRequest::MaintenanceRequest(int id, int buildingId, int apartmentId, string &description, int tenantId)
+:resolvedAt("Not Resolved Yet")
 {
     this->requestId = id;
     this->buildingId = buildingId;
@@ -97,19 +98,19 @@ void MaintenanceRequest::markResolved(string &date)
 
 
 ostream &operator<<(ostream &os, MaintenanceRequest &request) {
-    os<<"Request id: "<<request.getRequestId()<<endl;
-    os<<"Building Id: "<<request.getBuildingId()<<endl;
-    os<<"Apartment Id: "<<request.getApartmentId()<<endl;
+    os<<"Request id: "<<request.getRequestId();
+    os<<", Building Id: "<<request.getBuildingId();
+    os<<", Apartment Id: "<<request.getApartmentId();
 
     if (request.getTenantId() != -1)
-        os<<"Request Issued by Tenant with Id: "<<request.getTenantId()<<endl;
+        os<<", Tenant Id: "<<request.getTenantId();
     else
-        os<<"Request Issued by Property Owner"<<endl;
+        os<<", Request Issued by Property Owner";
 
-    os<<"Description: "<<request.getDescription()<<endl;
-    os<<"Issued Date: "<<request.getCreatedAt()<<endl;
+    os<<", Description: "<<request.getDescription();
+    os<<", Issued Date: "<<request.getCreatedAt();
 
     string status = request.getStatusString();
-    os<<"Status: "<<status<<endl;
-    os<<"Resolving Date: "<<request.getResolvedAt()<<endl;
+    os<<", Status: "<<status;
+    os<<", Resolving Date: "<<request.getResolvedAt()<<endl;
 }
