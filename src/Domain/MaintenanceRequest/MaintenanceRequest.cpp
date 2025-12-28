@@ -97,7 +97,7 @@ void MaintenanceRequest::markResolved(string &date)
 
 
 
-ostream &operator<<(ostream &os, MaintenanceRequest &request) {
+ostream &operator<<(ostream &os,  MaintenanceRequest &request) {
     os<<"Request id: "<<request.getRequestId();
     os<<", Building Id: "<<request.getBuildingId();
     os<<", Apartment Id: "<<request.getApartmentId();
@@ -108,9 +108,12 @@ ostream &operator<<(ostream &os, MaintenanceRequest &request) {
         os<<", Request Issued by Property Owner";
 
     os<<", Description: "<<request.getDescription();
-    os<<", Issued Date: "<<request.getCreatedAt();
+    os<<", \nIssued Date: "<<request.getCreatedAt();
 
     string status = request.getStatusString();
     os<<", Status: "<<status;
     os<<", Resolving Date: "<<request.getResolvedAt()<<endl;
+    os<<"======================================="<<endl;
+
+    return os;
 }

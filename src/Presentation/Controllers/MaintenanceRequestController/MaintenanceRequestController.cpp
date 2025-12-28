@@ -1,6 +1,7 @@
 #include "MaintenanceRequestController.h"
 
 #include <iostream>
+#include <limits>
 
 #include "Apartment/Exceptions/ApartmentNotExistException.h"
 #include "Application/UseCases/MaintenanceRequest/AddMaintenanceRequest/AddMaintenanceRequestUseCase.h"
@@ -33,12 +34,14 @@ void MaintenanceRequestController::createMaintenanceRequest() {
     cout<<"Enter apartment number: "<<endl;
     cin>>apartmentId;
     cout<<"Enter your id as a tenant (-1) if you are an owner:"<<endl;
-    cin>>tenantId;
+    cin >> tenantId;
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     cout<<"Enter the description of your problem:"<<endl;
     getline(cin,description);
 
     AddMaintenanceRequestParams params = {
-        apartmentId, buildingId, tenantId, description
+        buildingId, tenantId, apartmentId, description
     };
 
     try {

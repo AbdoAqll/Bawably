@@ -7,16 +7,15 @@
 
 class IMaintenanceRequestRepository {
 protected:
-    int requestId;
+    int requestId = 1;
 public:
-    IMaintenanceRequestRepository(): requestId(1){}
     virtual ~IMaintenanceRequestRepository() = default;
 
     virtual bool save(const MaintenanceRequest &maintenance_request)=0;
     virtual MaintenanceRequest findById(int id)=0;
     virtual bool exists(int id)=0;
     virtual int getNewId()=0;
-    virtual vector<MaintenanceRequest> getRequestsOfBuilding(int buildingId);
+    virtual vector<MaintenanceRequest> getRequestsOfBuilding(int buildingId) = 0;
 };
 
 

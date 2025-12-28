@@ -15,12 +15,20 @@
 #include "Application/UseCases/Building/GetBuildingDetails/GetBuildingDetailsUseCase.h"
 #include "Application/UseCases/Building/IsBuildingExists/IsBuildingExistsUseCase.h"
 
+#include "Infrastructure/MaintenanceRequest/Repositories/InMemoryMaintenanceRequestRepository.h"
+#include "Application/UseCases/MaintenanceRequest/Interfaces/IMaintenanceRequestRepository.h"
+#include "Application/UseCases/MaintenanceRequest/AddMaintenanceRequest/AddMaintenanceRequestUseCase.h"
+#include "Application/UseCases/MaintenanceRequest/ViewBuildingMaintenanceRequests/ViewBuildingMaintenanceRequestsUseCase.h"
+#include "Application/UseCases/MaintenanceRequest/CloseMaintenanceRequest/CloseMaintenanceRequestUseCase.h"
+
+
 using namespace std;
 
 DependencyContainer::DependencyContainer() {
     auto userRepository = make_shared<UserRepository>();
     auto buildingRepository = make_shared<BuildingRepository>();
     shared_ptr<IApartmentRepository> apartmentRepository = make_shared<InMemoryApartmentRepository>();
+    shared_ptr<IMaintenanceRequestRepository> maintenanceRequestRepository = make_shared<InMemoryMaintenanceRequestRepository>();
 
     auto createUserUseCase = make_shared<CreateUserUseCase>(userRepository);
     
@@ -38,10 +46,17 @@ DependencyContainer::DependencyContainer() {
         make_shared<GetApartmentDetailsUseCase>(apartmentRepository, buildingRepository),
         make_shared<IsApartmentExistsUseCase>(apartmentRepository, buildingRepository)
     };
+
+    vector<shared_ptr<IUseCase>> maintenanceRequestUseCases = {
+        make_shared<AddMaintenanceRequestUseCase>(maintenanceRequestRepository,apartmentRepository,buildingRepository),
+        make_shared<ViewBuildingMaintenanceRequestsUseCase>(maintenanceRequestRepository, buildingRepository),
+        make_shared<CloseMaintenanceRequestUseCase>(maintenanceRequestRepository)
+    };
    
     userController = make_shared<UserController>(createUserUseCase);
     buildingController = make_shared<BuildingController>(buildingUseCases);
     apartmentController = make_shared<ApartmentController>(apartmentUseCases);
+    maintenanceRequestController = make_shared<MaintenanceRequestController>(maintenanceRequestUseCases);
 }
 
 shared_ptr<UserController> DependencyContainer::getUserController() {
@@ -54,5 +69,9 @@ shared_ptr<BuildingController> DependencyContainer::getBuildingController() {
 
 std::shared_ptr<ApartmentController> DependencyContainer::getApartmentController() {
     return apartmentController;
+}
+
+std::shared_ptr<MaintenanceRequestController> DependencyContainer::getMaintenanceRequestController() {
+    return maintenanceRequestController;
 }
 

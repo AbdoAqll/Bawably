@@ -12,13 +12,13 @@ private:
 
 public:
     InMemoryMaintenanceRequestRepository()= default;
-    ~InMemoryMaintenanceRequestRepository()= default;
+    ~InMemoryMaintenanceRequestRepository() override= default;
 
-    int getNewId();
+    int getNewId() override;
     bool save(const MaintenanceRequest &maintenance_request)override ;
     MaintenanceRequest findById(int id) override;
     bool exists(int id) override;
-    vector<MaintenanceRequest> getRequestsOfBuilding(int buildingId);
+    vector<MaintenanceRequest> getRequestsOfBuilding(int buildingId) override;
 };
 
 

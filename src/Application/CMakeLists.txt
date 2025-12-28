@@ -13,6 +13,7 @@ add_library(Application STATIC
         UseCases/MaintenanceRequest/AddMaintenanceRequest/AddMaintenanceRequestUseCase.cpp
         UseCases/MaintenanceRequest/ViewBuildingMaintenanceRequests/ViewBuildingMaintenanceRequestsUseCase.cpp
         UseCases/MaintenanceRequest/CloseMaintenanceRequest/CloseMaintenanceRequestUseCase.cpp
+        UseCases/MaintenanceRequest/Interfaces/IMaintenanceRequestRepository.h
 )
 
 target_include_directories(Application PUBLIC

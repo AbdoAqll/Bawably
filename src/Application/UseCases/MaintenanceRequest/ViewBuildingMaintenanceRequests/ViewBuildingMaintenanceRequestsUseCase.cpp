@@ -1,5 +1,7 @@
 #include "ViewBuildingMaintenanceRequestsUseCase.h"
 
+#include <iostream>
+
 #include "Domain/Building/Exceptions/BuildingNotExistException.h"
 
 ViewBuildingMaintenanceRequestsUseCase::ViewBuildingMaintenanceRequestsUseCase(shared_ptr<IMaintenanceRequestRepository> rep
