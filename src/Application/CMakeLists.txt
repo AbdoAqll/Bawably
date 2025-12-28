@@ -11,7 +11,7 @@ add_library(Application STATIC
         UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.cpp
         UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.cpp
         UseCases/MaintenanceRequest/AddMaintenanceRequest/AddMaintenanceRequestUseCase.cpp
-        UseCases/MaintenanceRequest/ViewMaintenanceRequests/ViewMaintenanceRequestsUseCase.cpp
+        UseCases/MaintenanceRequest/ViewBuildingMaintenanceRequests/ViewBuildingMaintenanceRequestsUseCase.cpp
         UseCases/MaintenanceRequest/CloseMaintenanceRequest/CloseMaintenanceRequestUseCase.cpp
 )
 

@@ -13,11 +13,11 @@ struct ViewMaintenanceRequestsParams {
     int buildingId;
 };
 
-class ViewMaintenanceRequestsUseCase : public IUseCase{
+class ViewBuildingMaintenanceRequestsUseCase : public IUseCase{
 private:
     std::shared_ptr<IMaintenanceRequestRepository> repository;
 public:
-    ViewMaintenanceRequestsUseCase(shared_ptr<IMaintenanceRequestRepository> rep);
+    ViewBuildingMaintenanceRequestsUseCase(shared_ptr<IMaintenanceRequestRepository> rep);
 
     any execute(const any& params = {}) override;
 
