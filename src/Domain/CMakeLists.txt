@@ -8,10 +8,13 @@ add_library(Domain STATIC
     RentPayment/RentPayment.cpp
     Tenant/Tenant.cpp
     Shared/DomainException.cpp
+        Shared/CurrentDate.cpp
     Building/Exceptions/BuildingNotExistException.cpp
     Apartment/Exceptions/ApartmentNotExistException.cpp
     Apartment/Exceptions/ApartmentAlreadyExistsException.cpp
     Apartment/ApartmentStatus.cpp
+        MaintenanceRequest/Exceptions/MaintenanceRequestAlreadyClosedException.cpp
+        MaintenanceRequest/Exceptions/MaintenanceRequestNotFoundException.cpp
     RentalContract/Exceptions/RentalContractNotFoundException.cpp
     RentalContract/Exceptions/ContractAlreadyExistsException.cpp
 )
