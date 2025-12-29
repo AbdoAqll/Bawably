@@ -22,15 +22,13 @@ void MaintenanceRequestController::displayMenu() {
     cout<<"1. Request maintenance for apartment"<<endl;
     cout<<"2. View maintenance requests for a building"<<endl;
     cout<<"3. Close a maintenance request"<<endl;
-    cout<<"4. Exit"<<endl;
+    cout<<"0. Back to Main Menu"<<endl;
 }
 
-void MaintenanceRequestController::createMaintenanceRequest() {
-    int buildingId, apartmentId, tenantId=-1;
+void MaintenanceRequestController::createMaintenanceRequest(int buildingId) {
+    int apartmentId, tenantId=-1;
     string description;
 
-    cout<<"Enter building number: "<<endl;
-    cin>>buildingId;
     cout<<"Enter apartment number: "<<endl;
     cin>>apartmentId;
     cout<<"Enter your id as a tenant (-1) if you are an owner:"<<endl;
@@ -41,7 +39,7 @@ void MaintenanceRequestController::createMaintenanceRequest() {
     getline(cin,description);
 
     AddMaintenanceRequestParams params = {
-        buildingId, tenantId, apartmentId, description
+      buildingId,  tenantId, apartmentId, description
     };
 
     try {
@@ -57,15 +55,9 @@ void MaintenanceRequestController::createMaintenanceRequest() {
 
 }
 
-void MaintenanceRequestController::getBuildingMaintenanceRequest() {
-    int buildingId;
-
-    cout<<"Enter building number: "<<endl;
-    cin>>buildingId;
-
-    ViewMaintenanceRequestsParams params = {buildingId};
-
+void MaintenanceRequestController::getBuildingMaintenanceRequest(int buildingId) {
     try {
+        ViewMaintenanceRequestsParams params = {buildingId};
         useCases[ "ViewBuildingMaintenanceRequests"]->execute(params);
     }catch (const BuildingNotExistException &e) {
         cout << e.what() << endl;
@@ -95,7 +87,7 @@ void MaintenanceRequestController::closeMaintenanceRequest() {
     }
 }
 
-void MaintenanceRequestController::execute() {
+void MaintenanceRequestController::execute(int buildingId) {
     int choice = 0;
     while (true) {
         displayMenu();
@@ -103,15 +95,15 @@ void MaintenanceRequestController::execute() {
         cin.ignore();
         switch (choice) {
             case 1:
-                createMaintenanceRequest();
+                createMaintenanceRequest(buildingId);
                 break;
             case 2:
-                getBuildingMaintenanceRequest();
+                getBuildingMaintenanceRequest(buildingId);
                 break;
             case 3:
                 closeMaintenanceRequest();
                 break;
-            case 4:
+            case 0:
                 return;
             default:
                 cout<<"Invalid choice"<<endl;

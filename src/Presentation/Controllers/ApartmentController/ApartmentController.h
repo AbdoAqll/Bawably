@@ -9,14 +9,19 @@
 #include <UseCases/IUseCase.h>
 using namespace std;
 
+class RentalContractController;
+
 class ApartmentController {
 private:
     std::unordered_map<string, shared_ptr<IUseCase>> useCases;
+    shared_ptr<RentalContractController> rentalContractController;
 
 public:
-    explicit ApartmentController(vector<shared_ptr<IUseCase>>& useCases);
+    explicit ApartmentController(vector<shared_ptr<IUseCase>>& useCases,
+        shared_ptr<RentalContractController> rentalContractCtrl);
     void displayMenu();
     void createApartment(int buildingId);
+    void manageApartment(int buildingId);
     void getAllApartments(int buildingId);
     void getApartmentDetails(int buildingId);
     void checkApartmentStatus(int buildingId);

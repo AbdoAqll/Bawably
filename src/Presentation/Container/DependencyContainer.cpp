@@ -38,7 +38,7 @@ DependencyContainer::DependencyContainer() {
     shared_ptr<IMaintenanceRequestRepository> maintenanceRequestRepository = make_shared<InMemoryMaintenanceRequestRepository>();
 
     auto createUserUseCase = make_shared<CreateUserUseCase>(userRepository);
-    
+
     vector<shared_ptr<IUseCase>> buildingUseCases = {
         make_shared<AddBuildingUseCase>(buildingRepository),
         make_shared<GetAllBuildingUseCase>(buildingRepository),
@@ -67,11 +67,11 @@ DependencyContainer::DependencyContainer() {
         rentalContractRepository, apartmentRepository);
 
     userController = make_shared<UserController>(createUserUseCase);
-    buildingController = make_shared<BuildingController>(buildingUseCases);
-    apartmentController = make_shared<ApartmentController>(apartmentUseCases);
     rentalContractController = make_shared<RentalContractController>(
         createRentalContractUseCase, endRentalContractUseCase, rentalContractRepository);
     maintenanceRequestController = make_shared<MaintenanceRequestController>(maintenanceRequestUseCases);
+    apartmentController = make_shared<ApartmentController>(apartmentUseCases, rentalContractController);
+    buildingController = make_shared<BuildingController>(buildingUseCases, apartmentController, maintenanceRequestController);
 }
 
 shared_ptr<UserController> DependencyContainer::getUserController() {

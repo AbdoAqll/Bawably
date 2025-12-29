@@ -10,17 +10,10 @@ RentalContractController::RentalContractController(
     endRentalContractUseCase = endUseCase;
     rentalContractRepository = repository;
 }
-
-void RentalContractController::showMenu() {
+void RentalContractController::execute(int buildingId , int apartmentId) {
     int choice;
     do {
-        cout << "\n=== Rental Contract Management ===" << endl;
-        cout << "1. Create Rental Contract" << endl;
-        cout << "2. End Rental Contract" << endl;
-        cout << "3. View Active Contracts" << endl;
-        cout << "4. View All Contracts" << endl;
-        cout << "5. View Contract Details" << endl;
-        cout << "0. Back to Previous Menu" << endl;
+        showMenu();
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -33,7 +26,7 @@ void RentalContractController::showMenu() {
 
         switch (choice) {
         case 1:
-            handleCreateRentalContract();
+            handleCreateRentalContract(buildingId, apartmentId);
             break;
         case 2:
             handleEndRentalContract();
@@ -55,16 +48,22 @@ void RentalContractController::showMenu() {
         }
     } while (choice != 0);
 }
+void RentalContractController::showMenu() {
+    cout << "\n=== Rental Contract Management ===" << endl;
+    cout << "1. Create Rental Contract" << endl;
+    cout << "2. End Rental Contract" << endl;
+    cout << "3. View Active Contracts" << endl;
+    cout << "4. View All Contracts" << endl;
+    cout << "5. View Contract Details" << endl;
+    cout << "0. Back to Main Menu" << endl;
+}
 
-void RentalContractController::handleCreateRentalContract() {
+void RentalContractController::handleCreateRentalContract(int buildingId , int apartmentId) {
     cout << "\n--- Create Rental Contract ---" << endl;
 
-    int apartmentId, tenantId;
+    int tenantId;
     double monthlyRent;
     string startDate;
-
-    cout << "Enter Apartment ID: ";
-    cin >> apartmentId;
 
     cout << "Enter Tenant ID: ";
     cin >> tenantId;
@@ -77,7 +76,7 @@ void RentalContractController::handleCreateRentalContract() {
     getline(cin, startDate);
 
     try {
-        CreateRentalContractParams params{ apartmentId, tenantId, monthlyRent, startDate };
+        CreateRentalContractParams params{ buildingId ,apartmentId, tenantId, monthlyRent, startDate };
         auto result = createRentalContractUseCase->execute(params);
         int contractId = any_cast<int>(result);
 

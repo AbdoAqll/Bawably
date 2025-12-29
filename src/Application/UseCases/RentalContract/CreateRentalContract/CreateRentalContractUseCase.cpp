@@ -16,8 +16,8 @@ CreateRentalContractUseCase::CreateRentalContractUseCase(
 any CreateRentalContractUseCase::execute(const any& params) {
     auto args = any_cast<CreateRentalContractParams>(params);
 
-    if (!_apartmentRepository->exists(args.apartmentId, 0)) {
-        throw ApartmentNotExistException(to_string(args.apartmentId), 0);
+    if (!_apartmentRepository->exists(args.apartmentId, args.buildingId)) {
+        throw ApartmentNotExistException(to_string(args.apartmentId), args.buildingId);
     }
 
     if (!_tenantRepository->exists(args.tenantId)) {
@@ -28,13 +28,13 @@ any CreateRentalContractUseCase::execute(const any& params) {
         throw ContractAlreadyExistsException(args.apartmentId, args.tenantId);
     }
 
-    auto apartment = _apartmentRepository->findById(args.apartmentId, 0);
+    auto apartment = _apartmentRepository->findById(args.apartmentId, args.buildingId);
     if (apartment.getStatus() == ApartmentStatus::Rented) {
         throw DomainException("Apartment is already rented");
     }
 
     static int nextContractId = 1;
-    RentalContract contract(nextContractId++, args.apartmentId, args.tenantId,
+    RentalContract contract(nextContractId++, args.buildingId, args.apartmentId, args.tenantId,
         args.monthlyRent, args.startDate);
 
     if (!_rentalContractRepository->save(contract)) {

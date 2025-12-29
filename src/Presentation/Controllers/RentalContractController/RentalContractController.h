@@ -24,11 +24,13 @@ public:
         shared_ptr<IRentalContractRepository> repository);
 
     void showMenu();
-    void handleCreateRentalContract();
+    void handleCreateRentalContract(int buildingId , int apartmentId);
     void handleEndRentalContract();
     void handleViewActiveContracts();
     void handleViewAllContracts();
     void handleViewContractDetails();
+    void execute(int buildingId , int apartmentId);
+    ~RentalContractController() = default;
 };
 
 #endif //RENTALCONTRACTCONTROLLER_H

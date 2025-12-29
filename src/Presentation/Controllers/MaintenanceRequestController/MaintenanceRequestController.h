@@ -13,10 +13,10 @@ private:
 public:
     explicit MaintenanceRequestController(vector<shared_ptr<IUseCase>> &useCases);
     void displayMenu();
-    void createMaintenanceRequest();
-    void getBuildingMaintenanceRequest();
+    void createMaintenanceRequest(int buildingId);
+    void getBuildingMaintenanceRequest(int buildingId);
     void closeMaintenanceRequest();
-    void execute();
+    void execute(int buildingId);
 };
 
 #endif

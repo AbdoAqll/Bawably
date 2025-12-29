@@ -2,11 +2,12 @@
 
 #include <Apartment/Exceptions/ApartmentNotExistException.h>
 
-bool InMemoryApartmentRepository::save(const Apartment &apartment) {
+bool InMemoryApartmentRepository::save(const Apartment& apartment) {
     int id = apartment.getId();
     bool exists = false;
     for (const auto& pair : apartments) {
-        if (pair.second.getApartmentNumber() == apartment.getApartmentNumber()) {
+        if (pair.second.getApartmentNumber() == apartment.getApartmentNumber()
+            && pair.second.getBuildingId() == apartment.getBuildingId()) {
             exists = true;
             break;
         }
@@ -14,7 +15,7 @@ bool InMemoryApartmentRepository::save(const Apartment &apartment) {
     if (exists) {
         return false;
     }
-    apartments.insert({id, apartment});
+    apartments.insert({ id, apartment });
     return true;
 }
 
@@ -44,10 +45,11 @@ bool InMemoryApartmentRepository::exists(int id, int buildingId) {
     return false;
 }
 
-int InMemoryApartmentRepository::getApartmentIdFromApartmentNumber(string apartmentNumber) {
+int InMemoryApartmentRepository::getApartmentIdFromApartmentNumber(string apartmentNumber, int buildingId) {
     int apartmentId = -1;
     for (const auto& pair : apartments) {
-        if (pair.second.getApartmentNumber() == apartmentNumber) {
+        if (pair.second.getApartmentNumber() == apartmentNumber
+            && pair.second.getBuildingId() == buildingId) {
             apartmentId = pair.second.getId();
             break;
         }

@@ -3,16 +3,16 @@
 #include <Building/Exceptions/BuildingNotExistException.h>
 
 GetApartmentDetailsUseCase::GetApartmentDetailsUseCase(
-    const shared_ptr<IApartmentRepository> &apartmentRepository,
-    const shared_ptr<IBuildingRepository> &buildingRepository) {
+    const shared_ptr<IApartmentRepository>& apartmentRepository,
+    const shared_ptr<IBuildingRepository>& buildingRepository) {
     _apartmentRepository = apartmentRepository;
     _buildingRepository = buildingRepository;
     UseCaseName = "GetApartmentDetails";
 }
 
-any GetApartmentDetailsUseCase::execute(const any &params) {
+any GetApartmentDetailsUseCase::execute(const any& params) {
     auto args = any_cast<GetApartmentDetailsParams>(params);
-    int apartmentId = _apartmentRepository->getApartmentIdFromApartmentNumber(args.aprtmentNumber);
+    int apartmentId = _apartmentRepository->getApartmentIdFromApartmentNumber(args.aprtmentNumber, args.buildingId);
     if (!_buildingRepository->exists(args.buildingId)) {
         throw BuildingNotExistException(args.buildingId);
     }

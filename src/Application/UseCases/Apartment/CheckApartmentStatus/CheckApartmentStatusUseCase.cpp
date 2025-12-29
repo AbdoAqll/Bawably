@@ -13,7 +13,7 @@ CheckApartmentStatusUseCase::CheckApartmentStatusUseCase(
 
 any CheckApartmentStatusUseCase::execute(const any &params) {
     auto args = any_cast<CheckApartmentStatusParams>(params);
-    int apartmentId = _apartmentRepository->getApartmentIdFromApartmentNumber(args.apartmentNumber);
+    int apartmentId = _apartmentRepository->getApartmentIdFromApartmentNumber(args.apartmentNumber, args.buildingId);
     if (!_buildingRepository->exists(args.buildingId)) {
         throw BuildingNotExistException(args.buildingId);
     }

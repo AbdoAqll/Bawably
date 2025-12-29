@@ -8,24 +8,26 @@
 #include <UseCases/Apartment/GetAllApartments/GetAllApartmentsUseCase.h>
 #include <UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.h>
 #include <UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.h>
+#include "Controllers/RentalContractController/RentalContractController.h"
 
-ApartmentController::ApartmentController(vector<shared_ptr<IUseCase> > &useCases) {
+ApartmentController::ApartmentController(vector<shared_ptr<IUseCase> >& useCases,
+    shared_ptr<RentalContractController> rentalContractCtrl) {
     for (const auto& useCase : useCases) {
         this->useCases[useCase->UseCaseName] = useCase;
     }
+    rentalContractController = rentalContractCtrl;
 }
 
 
 void ApartmentController::displayMenu() {
     cout << "\nApartment Menu:\n";
     cout << "1. Add Apartment\n";
-    cout << "2. Manage Apartment\n"; // rental / maintenance 
-    // first take the id of the Apartment them start to pass it to all the controllers of the other modules
+    cout << "2. Manage Apartment\n";
     cout << "3. Get All Apartments\n";
     cout << "4. Get Apartment Details\n";
     cout << "5. Check Apartment Status\n";
     cout << "6. Check if Apartment Exists\n";
-    cout << "0. Back to Previous Menu\n";
+    cout << "0. Back to Building Menu\n";
     cout << "Enter your choice: ";
 }
 
@@ -34,23 +36,26 @@ void ApartmentController::createApartment(int buildingId) {
     cout << "Enter apartment number: ";
     cin >> apartmentNumber;
 
-    AddApartmentParams params = {buildingId, apartmentNumber};
+    AddApartmentParams params = { buildingId, apartmentNumber };
 
     try {
         useCases["AddApartment"]->execute(params);
         cout << "Apartment created successfully!" << endl;
-    }catch(const ApartmentAlreadyExistsException& e) {
+    }
+    catch (const ApartmentAlreadyExistsException& e) {
         cout << e.what() << endl;
-    }catch (const BuildingNotExistException &e) {
+    }
+    catch (const BuildingNotExistException& e) {
         cout << e.what() << endl;
-    }catch (const exception& e) {
+    }
+    catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
     }
 }
 
 
 void ApartmentController::getAllApartments(int buildingId) {
-    GetAllApartmentArgs getAllApartmentArgs = {buildingId};
+    GetAllApartmentArgs getAllApartmentArgs = { buildingId };
     try {
         auto result = useCases["GetAllApartments"]->execute(getAllApartmentArgs);
         auto apartments = any_cast<vector<Apartment>>(result);
@@ -60,9 +65,11 @@ void ApartmentController::getAllApartments(int buildingId) {
             cout << "------------------------------------" << endl;
         }
 
-    }catch (const BuildingNotExistException &e) {
+    }
+    catch (const BuildingNotExistException& e) {
         cout << e.what() << endl;
-    }catch (const exception& e) {
+    }
+    catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
     }
 }
@@ -73,18 +80,21 @@ void ApartmentController::getApartmentDetails(int buildingId) {
     cout << "Enter apartment number: ";
     cin >> apartmentNumber;
 
-    GetApartmentDetailsParams params = {apartmentNumber, buildingId};
+    GetApartmentDetailsParams params = { apartmentNumber, buildingId };
 
     try {
         auto result = useCases["GetApartmentDetails"]->execute(params);
         Apartment apartment = any_cast<Apartment>(result);
         cout << "Apartment number: " << apartment.getApartmentNumber() << endl;
         cout << "Apartment status: " << apartment.getStatus() << endl;
-    }catch (const BuildingNotExistException& e) {
+    }
+    catch (const BuildingNotExistException& e) {
         cout << e.what() << endl;
-    }catch (const ApartmentNotExistException& e) {
+    }
+    catch (const ApartmentNotExistException& e) {
         cout << e.what() << endl;
-    }catch (const exception& e) {
+    }
+    catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
     }
 }
@@ -95,14 +105,15 @@ void ApartmentController::isApartmentExists(int buildingId) {
     cout << "Enter apartment number: ";
     cin >> apartmentNumber;
 
-    IsApartmentExistsParams params = {apartmentNumber, buildingId};
+    IsApartmentExistsParams params = { apartmentNumber, buildingId };
 
     try {
         auto result = useCases["IsApartmentExists"]->execute(params);
         bool isExist = any_cast<bool>(result);
         isExist ? cout << "Exists" : cout << "Not Exists";
         cout << endl;
-    }catch (const exception& e) {
+    }
+    catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
     }
 }
@@ -112,17 +123,59 @@ void ApartmentController::checkApartmentStatus(int buildingId) {
     cout << "Enter apartment number: ";
     cin >> apartmentNumber;
 
-    CheckApartmentStatusParams params = {apartmentNumber, buildingId};
+    CheckApartmentStatusParams params = { apartmentNumber, buildingId };
 
     try {
         auto result = useCases["CheckApartmentStatus"]->execute(params);
         ApartmentStatus status = any_cast<ApartmentStatus>(result);
         cout << "current status is: " << status << endl;
-    }catch (const BuildingNotExistException& e) {
+    }
+    catch (const BuildingNotExistException& e) {
         cout << e.what() << endl;
-    }catch (const ApartmentNotExistException& e) {
+    }
+    catch (const ApartmentNotExistException& e) {
         cout << e.what() << endl;
-    }catch (const exception& e) {
+    }
+    catch (const exception& e) {
+        cout << "Error: " << e.what() << endl;
+    }
+}
+
+void ApartmentController::manageApartment(int buildingId) {
+    string apartmentNumber;
+    cout << "Enter apartment number to manage: ";
+    cin >> apartmentNumber;
+    cin.ignore();
+
+    IsApartmentExistsParams params = { apartmentNumber, buildingId };
+
+    try {
+        int apartmentId = any_cast<int>(useCases["IsApartmentExists"]->execute(params));
+        if (apartmentId == -1) {
+            cout << "Apartment does not exist." << endl;
+            return;
+        }
+        int choice = 0;
+        while (true) {
+            cout << "\n=== Manage Apartment (" << apartmentNumber << ") ===\n";
+            cout << "1. Rental Contract Management\n";
+            cout << "0. Back to Apartment Menu\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            switch (choice) {
+            case 1:
+                rentalContractController->execute(buildingId, apartmentId);
+                break;
+            case 0:
+                return;
+            default:
+                cout << "Invalid choice.\n";
+            }
+        }
+    }
+    catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
     }
 }
@@ -135,27 +188,29 @@ void ApartmentController::execute(int buildingId) {
         cin >> choice;
         cin.ignore();
         switch (choice) {
-            case 1:
-                createApartment(buildingId);
-                break;
-            case 2:
-                getAllApartments(buildingId);
-                break;
-            case 3:
-                getApartmentDetails(buildingId);
-                break;
-            case 4:
-                checkApartmentStatus(buildingId);
-                break;
-            case 5:
-                isApartmentExists(buildingId);
-                break;
-            case 0:
-                return;
-                break;
-            default:
-                cout << "Invalid choice." << endl;
-                break;
+        case 1:
+            createApartment(buildingId);
+            break;
+        case 2:
+            manageApartment(buildingId);
+            break;
+        case 3:
+            getAllApartments(buildingId);
+            break;
+        case 4:
+            getApartmentDetails(buildingId);
+            break;
+        case 5:
+            checkApartmentStatus(buildingId);
+            break;
+        case 6:
+            isApartmentExists(buildingId);
+            break;
+        case 0:
+            return;
+        default:
+            cout << "Invalid choice." << endl;
+            break;
         }
     }
 }
