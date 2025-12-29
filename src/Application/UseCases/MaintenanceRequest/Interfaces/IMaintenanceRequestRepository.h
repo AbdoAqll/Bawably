@@ -11,11 +11,13 @@ protected:
 public:
     virtual ~IMaintenanceRequestRepository() = default;
 
-    virtual bool save(const MaintenanceRequest &maintenance_request)=0;
-    virtual MaintenanceRequest findById(int id)=0;
-    virtual bool exists(int id)=0;
-    virtual int getNewId()=0;
+    virtual bool save(const MaintenanceRequest& maintenance_request) = 0;
+    virtual MaintenanceRequest findById(int id) = 0;
+    virtual bool exists(int id) = 0;
+    virtual int getNewId() = 0;
     virtual vector<MaintenanceRequest> getRequestsOfBuilding(int buildingId) = 0;
+    virtual vector<MaintenanceRequest> getRequestsByApartment(int buildingId, int apartmentId) = 0;
+    virtual vector<MaintenanceRequest> getRequestsByTenant(int tenantId) = 0;
 };
 
 

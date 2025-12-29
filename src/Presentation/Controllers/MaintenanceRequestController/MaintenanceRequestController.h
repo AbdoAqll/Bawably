@@ -11,12 +11,15 @@ private:
     std::unordered_map<string, shared_ptr<IUseCase>> useCases;
 
 public:
-    explicit MaintenanceRequestController(vector<shared_ptr<IUseCase>> &useCases);
+    explicit MaintenanceRequestController(vector<shared_ptr<IUseCase>>& useCases);
     void displayMenu();
-    void createMaintenanceRequest();
-    void getBuildingMaintenanceRequest();
+    void createMaintenanceRequest(int buildingId);
+    void createMaintenanceRequestForTenant(int buildingId, int apartmentId, int tenantId);
+    void getBuildingMaintenanceRequest(int buildingId);
+    void getApartmentMaintenanceHistory(int buildingId, int apartmentId);
     void closeMaintenanceRequest();
-    void execute();
+    void execute(int buildingId);
+    void executeForOwner(int buildingId); 
 };
 
 #endif

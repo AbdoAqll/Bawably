@@ -5,11 +5,12 @@
 #include <UseCases/IUseCase.h>
 #include <UseCases/RentalContract/Interfaces/IRentalContractRepository.h>
 #include <UseCases/Apartment/Interfaces/IApartmentRepository.h>
-#include <UseCases/Tenant/Interfaces/ITenantRepository.h>
+#include <UseCases/User/Interfaces/IUserRepository.h>
 
 using namespace std;
 
 struct CreateRentalContractParams {
+    int buildingId;
     int apartmentId;
     int tenantId;
     double monthlyRent;
@@ -20,13 +21,13 @@ class CreateRentalContractUseCase : public IUseCase {
 private:
     shared_ptr<IRentalContractRepository> _rentalContractRepository;
     shared_ptr<IApartmentRepository> _apartmentRepository;
-    shared_ptr<ITenantRepository> _tenantRepository;
+    shared_ptr<IUserRepository> _userRepository;
 
 public:
     explicit CreateRentalContractUseCase(
         const shared_ptr<IRentalContractRepository>& rentalContractRepository,
         const shared_ptr<IApartmentRepository>& apartmentRepository,
-        const shared_ptr<ITenantRepository>& tenantRepository);
+        const shared_ptr<IUserRepository>& userRepository);
 
     any execute(const any& params = {}) override;
     ~CreateRentalContractUseCase() override = default;

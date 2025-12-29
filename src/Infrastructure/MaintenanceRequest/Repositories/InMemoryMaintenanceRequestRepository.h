@@ -11,14 +11,16 @@ private:
     unordered_map<int, MaintenanceRequest> requests;
 
 public:
-    InMemoryMaintenanceRequestRepository()= default;
-    ~InMemoryMaintenanceRequestRepository() override= default;
+    InMemoryMaintenanceRequestRepository() = default;
+    ~InMemoryMaintenanceRequestRepository() override = default;
 
     int getNewId() override;
-    bool save(const MaintenanceRequest &maintenance_request)override ;
+    bool save(const MaintenanceRequest& maintenance_request)override;
     MaintenanceRequest findById(int id) override;
     bool exists(int id) override;
     vector<MaintenanceRequest> getRequestsOfBuilding(int buildingId) override;
+    vector<MaintenanceRequest> getRequestsByApartment(int buildingId, int apartmentId) override;
+    vector<MaintenanceRequest> getRequestsByTenant(int tenantId) override;
 };
 
 

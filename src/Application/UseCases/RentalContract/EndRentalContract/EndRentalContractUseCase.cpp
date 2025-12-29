@@ -10,7 +10,7 @@ EndRentalContractUseCase::EndRentalContractUseCase(
     UseCaseName = "EndRentalContract";
 }
 
-any EndRentalContractUseCase::execute(const any &params) {
+any EndRentalContractUseCase::execute(const any& params) {
     auto args = any_cast<EndRentalContractParams>(params);
 
     RentalContract* contract = _rentalContractRepository->findById(args.contractId);
@@ -28,7 +28,7 @@ any EndRentalContractUseCase::execute(const any &params) {
         throw DomainException("Failed to update rental contract");
     }
 
-    auto apartment = _apartmentRepository->findById(contract->getApartmentId(), 0);
+    auto apartment = _apartmentRepository->findById(contract->getApartmentId(), contract->getBuildingId());
     apartment.setStatus(ApartmentStatus::Vacant);
     _apartmentRepository->save(apartment);
 

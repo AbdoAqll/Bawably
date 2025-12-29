@@ -1,11 +1,17 @@
 add_executable(Presentation
     main.cpp
-        Controllers/UserController.cpp
         Controllers/BuildingController/BuildingController.cpp
         Container/DependencyContainer.cpp
         Controllers/ApartmentController/ApartmentController.cpp
         Controllers/MaintenanceRequestController/MaintenanceRequestController.cpp
         Controllers/RentalContractController/RentalContractController.cpp
+        Controllers/AuthController/AuthController.cpp
+        Controllers/OwnerMenuController/OwnerMenuController.cpp
+        Controllers/TenantMenuController/TenantMenuController.cpp
+        UI/ConsoleUtils.cpp
+        UI/MenuDisplayer.cpp
+        UI/TextEditor.cpp
+        UI/InputForm.cpp
 )
 
 target_include_directories(Presentation PUBLIC

@@ -9,14 +9,22 @@
 
 using namespace std;
 
-class BuildingController
-{
+class ApartmentController;
+class MaintenanceRequestController;
+
+class BuildingController {
     unordered_map<string, shared_ptr<IUseCase>> useCases;
+    shared_ptr<ApartmentController> apartmentController;
+    shared_ptr<MaintenanceRequestController> maintenanceRequestController;
 
 public:
-    BuildingController(vector<shared_ptr<IUseCase>> &useCases);
+    BuildingController(vector<shared_ptr<IUseCase>>& useCases,
+        shared_ptr<ApartmentController> apartmentController,
+        shared_ptr<MaintenanceRequestController> maintenanceRequestController);
     void displayMenu();
     void createBuilding();
+    void manageBuilding();
+    void displayManageBuildingMenu(int buildingId);
     void getAllBuildings();
     void getBuildingDetails();
     void isBuildingExists();

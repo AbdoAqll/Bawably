@@ -1,6 +1,4 @@
 add_library(Application STATIC
-        UseCases/User/CreateUser/CreateUserUseCase.cpp
-        UseCases/User/DeleteUser/DeleteUserUseCase.cpp
         UseCases/Building/AddBuilding/AddBuildingUseCase.cpp
         UseCases/Building/GetAllBuilding/GetAllBuildingUseCase.cpp
         UseCases/Building/GetBuildingDetails/GetBuildingDetailsUseCase.cpp
@@ -10,12 +8,16 @@ add_library(Application STATIC
         UseCases/Apartment/CheckApartmentStatus/CheckApartmentStatusUseCase.cpp
         UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.cpp
         UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.cpp
+        UseCases/Apartment/CheckApartmentExistsAndGetId/CheckApartmentExistsAndGetIdUseCase.cpp
         UseCases/MaintenanceRequest/AddMaintenanceRequest/AddMaintenanceRequestUseCase.cpp
         UseCases/MaintenanceRequest/ViewBuildingMaintenanceRequests/ViewBuildingMaintenanceRequestsUseCase.cpp
+        UseCases/MaintenanceRequest/ViewApartmentMaintenanceRequests/ViewApartmentMaintenanceRequestsUseCase.cpp
         UseCases/MaintenanceRequest/CloseMaintenanceRequest/CloseMaintenanceRequestUseCase.cpp
         UseCases/MaintenanceRequest/Interfaces/IMaintenanceRequestRepository.h
         UseCases/RentalContract/CreateRentalContract/CreateRentalContractUseCase.cpp
         UseCases/RentalContract/EndRentalContract/EndRentalContractUseCase.cpp
+        UseCases/User/Login/LoginUseCase.cpp
+        UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp
 )
 
 target_include_directories(Application PUBLIC

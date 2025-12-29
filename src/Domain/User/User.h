@@ -3,28 +3,30 @@
 
 #include <string>
 
-class User
-{
-private:
-    int id;
-    std::string name;
-    std::string email;
+using namespace std;
+
+enum class UserRole {
+    OWNER,
+    TENANT
+};
+
+class User {
+protected:
+    int userId;
+    string username;
+    string password;
+    UserRole role;
 
 public:
-    User() : id(0), name(""), email("") {}
+    User(int id, const string& username, const string& password, UserRole role);
+    virtual ~User() = default;
 
-    User(int userId, const std::string &userName, const std::string &userEmail)
-        : id(userId), name(userName), email(userEmail) {}
+    int getUserId() const;
+    string getUsername() const;
+    string getPassword() const;
+    UserRole getRole() const;
 
-    // Getters
-    int getId() const { return id; }
-    const std::string &getName() const { return name; }
-    const std::string &getEmail() const { return email; }
-
-    // Setters
-    void setId(int userId) { id = userId; }
-    void setName(const std::string &userName) { name = userName; }
-    void setEmail(const std::string &userEmail) { email = userEmail; }
+    bool validatePassword(const string& inputPassword) const;
 };
 
 #endif // USER_H

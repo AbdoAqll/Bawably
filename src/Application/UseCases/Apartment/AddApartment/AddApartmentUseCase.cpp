@@ -30,5 +30,3 @@ any AddApartmentUseCase::execute(const any &params) {
 }
 
 
-
-

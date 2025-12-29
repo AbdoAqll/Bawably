@@ -1,48 +1,54 @@
 #include <iostream>
 #include <memory>
 #include "Container/DependencyContainer.h"
+#include "UI/ConsoleUtils.h"
+#include "UI/MenuDisplayer.h"
+#include "Domain/User/User.h"
+#include "Domain/User/Owner.h"
+#include "Domain/User/TenantUser.h"
 #include <string>
 
 using namespace std;
 
-int main()
-{
+int main() {
+    // Initialize console for proper character encoding (box-drawing chars)
+    ConsoleUtils::initConsole();
+    ConsoleUtils::clearScreen();
+
     DependencyContainer container;
-    auto& userController = *container.getUserController();
-    auto& buildingController = *container.getBuildingController();
-    auto& apartmentController = *container.getApartmentController();
-    auto& rentalContractController = *container.getRentalContractController();
-    auto& maintenanceRequestController = *container.getMaintenanceRequestController();
+    auto& authController = *container.getAuthController();
+    auto& ownerMenuController = *container.getOwnerMenuController();
+    auto& tenantMenuController = *container.getTenantMenuController();
 
-    int choice = 0;
-    while(true) {
-        cout << "\n=== Bawably System ===\n";
-        cout << "1. Building Management\n";
-        cout << "2. Apartment Management\n";
-        cout << "3. Maintenance Management\n";
-        cout << "4. Rental Contract Management\n";
-        cout << "5. Exit\n";
-        cout << "Enter choice: ";
-        cin >> choice;
-        cin.ignore();
-
-        if (choice == 1) {
-            buildingController.execute();
-        } else if (choice == 2) {
-            // note here i used fixed building id = 0
-            // because there is not context switch between buildings tell not
-            // will be fixed in the future if the context switch exists.
-            apartmentController.execute(0);
-        } else if (choice == 3) {
-            maintenanceRequestController.execute();
-        } else if (choice == 4) {
-            rentalContractController.showMenu();
-        } else if (choice == 5) {
-            cout << "Exiting...\n";
+    bool running = true;
+    while (running) {
+        shared_ptr<User> loggedInUser = authController.showLoginForm();
+        if (loggedInUser == nullptr) {
+            // User chose to exit
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Thank you for using Bawably System!" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            running = false;
             break;
-        } else {
-            cout << "Invalid choice.\n";
         }
+
+        // Route to appropriate menu based on user role
+        if (loggedInUser->getRole() == UserRole::OWNER) {
+            // Cast to Owner and show owner menu
+            auto owner = dynamic_pointer_cast<Owner>(loggedInUser);
+            if (owner) {
+                ownerMenuController.execute(owner);
+            }
+        }
+        else if (loggedInUser->getRole() == UserRole::TENANT) {
+            // Cast to TenantUser and show tenant menu
+            auto tenant = dynamic_pointer_cast<TenantUser>(loggedInUser);
+            if (tenant) {
+                tenantMenuController.execute(tenant);
+            }
+        }
+        // After logout, loop back to login screen
     }
 
     return 0;
