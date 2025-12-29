@@ -4,14 +4,14 @@
 #include <Building/Exceptions/BuildingNotExistException.h>
 
 CheckApartmentStatusUseCase::CheckApartmentStatusUseCase(
-    const shared_ptr<IApartmentRepository> &apartmentRepository,
+    const shared_ptr<IApartmentRepository>& apartmentRepository,
     const shared_ptr<IBuildingRepository>& buildingRepository) {
     _apartmentRepository = apartmentRepository;
     _buildingRepository = buildingRepository;
     UseCaseName = "CheckApartmentStatus";
 }
 
-any CheckApartmentStatusUseCase::execute(const any &params) {
+any CheckApartmentStatusUseCase::execute(const any& params) {
     auto args = any_cast<CheckApartmentStatusParams>(params);
     int apartmentId = _apartmentRepository->getApartmentIdFromApartmentNumber(args.apartmentNumber, args.buildingId);
     if (!_buildingRepository->exists(args.buildingId)) {

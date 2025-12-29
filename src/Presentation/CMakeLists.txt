@@ -6,6 +6,10 @@ add_executable(Presentation
         Controllers/ApartmentController/ApartmentController.cpp
         Controllers/MaintenanceRequestController/MaintenanceRequestController.cpp
         Controllers/RentalContractController/RentalContractController.cpp
+        UI/ConsoleUtils.cpp
+        UI/MenuDisplayer.cpp
+        UI/TextEditor.cpp
+        UI/InputForm.cpp
 )
 
 target_include_directories(Presentation PUBLIC

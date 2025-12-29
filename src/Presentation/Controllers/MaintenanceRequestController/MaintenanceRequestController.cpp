@@ -10,106 +10,184 @@
 #include "MaintenanceRequest/Exceptions/MaintenanceRequestNotFoundException.h"
 #include "UseCases/MaintenanceRequest/CloseMaintenanceRequest/CloseMaintenanceRequestUseCase.h"
 #include "UseCases/MaintenanceRequest/ViewBuildingMaintenanceRequests/ViewBuildingMaintenanceRequestsUseCase.h"
+#include "UI/ConsoleUtils.h"
+#include "UI/MenuDisplayer.h"
+#include "UI/InputForm.h"
+#include "UI/TextEditor.h"
 
-MaintenanceRequestController::MaintenanceRequestController(vector<shared_ptr<IUseCase>> &useCases) {
-    for (const auto &useCase : useCases) {
+MaintenanceRequestController::MaintenanceRequestController(vector<shared_ptr<IUseCase>>& useCases) {
+    for (const auto& useCase : useCases) {
         this->useCases[useCase->UseCaseName] = useCase;
     }
 }
 
 void MaintenanceRequestController::displayMenu() {
-    cout<<"Maintenance Request Menu: "<<endl;
-    cout<<"1. Request maintenance for apartment"<<endl;
-    cout<<"2. View maintenance requests for a building"<<endl;
-    cout<<"3. Close a maintenance request"<<endl;
-    cout<<"0. Back to Main Menu"<<endl;
+    // Kept for compatibility
+    cout << "Maintenance Request Menu: " << endl;
+    cout << "1. Request maintenance for apartment" << endl;
+    cout << "2. View maintenance requests for a building" << endl;
+    cout << "3. Close a maintenance request" << endl;
+    cout << "0. Back to Main Menu" << endl;
 }
 
 void MaintenanceRequestController::createMaintenanceRequest(int buildingId) {
-    int apartmentId, tenantId=-1;
-    string description;
+    ConsoleUtils::clearScreen();
 
-    cout<<"Enter apartment number: "<<endl;
-    cin>>apartmentId;
-    cout<<"Enter your id as a tenant (-1) if you are an owner:"<<endl;
-    cin >> tenantId;
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    InputForm form("Create Maintenance Request");
+    form.addNumberField("apartmentId", "Apartment Number", true)
+        .addNumberField("tenantId", "Tenant ID (-1 if owner)", false)
+        .addTextField("description", "Problem Description", 500, true);
 
-    cout<<"Enter the description of your problem:"<<endl;
-    getline(cin,description);
+    FormResult result = form.show();
 
-    AddMaintenanceRequestParams params = {
-      buildingId,  tenantId, apartmentId, description
-    };
+    if (result.submitted) {
+        int apartmentId = result.getInt("apartmentId");
+        int tenantId = result.getInt("tenantId");
+        string description = result.get("description");
 
-    try {
-        useCases["AddMaintenanceRequest"]->execute(params);
-        cout<<"Maintenance Request created Successfully"<<endl;
-    }catch (const BuildingNotExistException &e) {
-        cout << e.what() << endl;
-    }catch (const ApartmentNotExistException &e) {
-        cout << e.what() << endl;
-    }catch (const exception &e) {
-        cout<<"Error: "<<e.what()<<endl;
+        AddMaintenanceRequestParams params = {
+            buildingId, tenantId, apartmentId, description
+        };
+
+        try {
+            useCases["AddMaintenanceRequest"]->execute(params);
+
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Maintenance Request created successfully!" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const BuildingNotExistException& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const ApartmentNotExistException& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const exception& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
     }
-
 }
 
 void MaintenanceRequestController::getBuildingMaintenanceRequest(int buildingId) {
+    ConsoleUtils::clearScreen();
+    ConsoleUtils::textattr(Colors::TITLE);
+    cout << "=== Maintenance Requests for Building " << buildingId << " ===" << endl;
+    ConsoleUtils::textattr(Colors::DEFAULT);
+
     try {
-        ViewMaintenanceRequestsParams params = {buildingId};
-        useCases[ "ViewBuildingMaintenanceRequests"]->execute(params);
-    }catch (const BuildingNotExistException &e) {
-        cout << e.what() << endl;
-    }catch (const exception &e) {
-        cout<<"Error: "<<e.what()<<endl;
+        ViewMaintenanceRequestsParams params = { buildingId };
+        useCases["ViewBuildingMaintenanceRequests"]->execute(params);
     }
+    catch (const BuildingNotExistException& e) {
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+    }
+    catch (const exception& e) {
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+    }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
-
 void MaintenanceRequestController::closeMaintenanceRequest() {
-    int requestId;
+    ConsoleUtils::clearScreen();
 
-    cout<<"Enter request id you want to close: "<<endl;
-    cin>>requestId;
+    SingleLineEditor editor("Request ID to close", 10);
+    editor.setPosition(2, 2).setInputType(InputType::NUMERIC);
 
-    CloseMaintenanceRequestParams params = {requestId};
+    string idStr = editor.show();
+
+    if (idStr.empty()) return;
+
+    int requestId = stoi(idStr);
+
+    CloseMaintenanceRequestParams params = { requestId };
 
     try {
-        useCases[ "CloseMaintenanceRequest"]->execute(params);
-        cout<<"Maintenance Request closed Successfully"<<endl;
-    }catch (const MaintenanceRequestNotFoundException &e) {
-        cout << e.what() << endl;
-    }catch (const MaintenanceRequestAlreadyClosedException &e) {
-        cout << e.what() << endl;
-    }catch (const exception &e) {
-        cout<<"Error: "<<e.what()<<endl;
+        useCases["CloseMaintenanceRequest"]->execute(params);
+
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::HIGHLIGHT);
+        cout << "\n Maintenance Request closed successfully!" << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
+    }
+    catch (const MaintenanceRequestNotFoundException& e) {
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
+    }
+    catch (const MaintenanceRequestAlreadyClosedException& e) {
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
+    }
+    catch (const exception& e) {
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
     }
 }
 
 void MaintenanceRequestController::execute(int buildingId) {
-    int choice = 0;
-    while (true) {
-        displayMenu();
-        cin >> choice;
-        cin.ignore();
+    bool running = true;
+
+    while (running) {
+        MenuDisplayer menu("Maintenance Management (Building: " + to_string(buildingId) + ")", {
+            "1. Request Maintenance for Apartment",
+            "2. View Maintenance Requests",
+            "3. Close a Maintenance Request",
+            "0. Back to Building Menu"
+            });
+
+        int choice = menu.show();
+
         switch (choice) {
-            case 1:
-                createMaintenanceRequest(buildingId);
-                break;
-            case 2:
-                getBuildingMaintenanceRequest(buildingId);
-                break;
-            case 3:
-                closeMaintenanceRequest();
-                break;
-            case 0:
-                return;
-            default:
-                cout<<"Invalid choice"<<endl;
-                break;
+        case 0:
+            createMaintenanceRequest(buildingId);
+            break;
+        case 1:
+            getBuildingMaintenanceRequest(buildingId);
+            break;
+        case 2:
+            closeMaintenanceRequest();
+            break;
+        case 3:
+        case -1:
+            running = false;
+            break;
         }
-
     }
-
 }

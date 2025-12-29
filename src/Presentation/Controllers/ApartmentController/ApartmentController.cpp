@@ -9,6 +9,10 @@
 #include <UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.h>
 #include <UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.h>
 #include "Controllers/RentalContractController/RentalContractController.h"
+#include "UI/ConsoleUtils.h"
+#include "UI/MenuDisplayer.h"
+#include "UI/InputForm.h"
+#include "UI/TextEditor.h"
 
 ApartmentController::ApartmentController(vector<shared_ptr<IUseCase> >& useCases,
     shared_ptr<RentalContractController> rentalContractCtrl) {
@@ -20,6 +24,7 @@ ApartmentController::ApartmentController(vector<shared_ptr<IUseCase> >& useCases
 
 
 void ApartmentController::displayMenu() {
+    // Kept for compatibility
     cout << "\nApartment Menu:\n";
     cout << "1. Add Apartment\n";
     cout << "2. Manage Apartment\n";
@@ -32,184 +37,323 @@ void ApartmentController::displayMenu() {
 }
 
 void ApartmentController::createApartment(int buildingId) {
-    string apartmentNumber;
-    cout << "Enter apartment number: ";
-    cin >> apartmentNumber;
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Apartment Number", 20);
+    editor.setPosition(2, 2).setInputType(InputType::ALPHANUMERIC);
+
+    string apartmentNumber = editor.show();
+
+    if (apartmentNumber.empty()) return;
 
     AddApartmentParams params = { buildingId, apartmentNumber };
 
     try {
         useCases["AddApartment"]->execute(params);
-        cout << "Apartment created successfully!" << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::HIGHLIGHT);
+        cout << "\n Apartment created successfully!" << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "Building ID: " << buildingId << endl;
+        cout << "Apartment Number: " << apartmentNumber << endl;
     }
     catch (const ApartmentAlreadyExistsException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const BuildingNotExistException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 
 void ApartmentController::getAllApartments(int buildingId) {
+    ConsoleUtils::clearScreen();
+    ConsoleUtils::textattr(Colors::TITLE);
+    cout << "=== All Apartments (Building ID: " << buildingId << ") ===" << endl;
+    ConsoleUtils::textattr(Colors::DEFAULT);
+
     GetAllApartmentArgs getAllApartmentArgs = { buildingId };
     try {
         auto result = useCases["GetAllApartments"]->execute(getAllApartmentArgs);
         auto apartments = any_cast<vector<Apartment>>(result);
-        for (const auto& apartment : apartments) {
-            cout << "Apartment number: " << apartment.getApartmentNumber() << endl;
-            cout << "Apartment status: " << apartment.getStatus() << endl;
-            cout << "------------------------------------" << endl;
-        }
 
+        if (apartments.empty()) {
+            cout << "\nNo apartments found in this building." << endl;
+        }
+        else {
+            cout << "\nTotal Apartments: " << apartments.size() << "\n" << endl;
+            for (const auto& apartment : apartments) {
+                cout << "Apartment Number: " << apartment.getApartmentNumber() << endl;
+                cout << "Status: " << apartment.getStatus() << endl;
+                cout << "------------------------------------" << endl;
+            }
+        }
     }
     catch (const BuildingNotExistException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 
 void ApartmentController::getApartmentDetails(int buildingId) {
-    string apartmentNumber;
-    cout << "Enter apartment number: ";
-    cin >> apartmentNumber;
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Apartment Number", 20);
+    editor.setPosition(2, 2).setInputType(InputType::ALPHANUMERIC);
+
+    string apartmentNumber = editor.show();
+
+    if (apartmentNumber.empty()) return;
 
     GetApartmentDetailsParams params = { apartmentNumber, buildingId };
 
     try {
         auto result = useCases["GetApartmentDetails"]->execute(params);
         Apartment apartment = any_cast<Apartment>(result);
-        cout << "Apartment number: " << apartment.getApartmentNumber() << endl;
-        cout << "Apartment status: " << apartment.getStatus() << endl;
+
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::TITLE);
+        cout << "=== Apartment Details ===" << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "Apartment Number: " << apartment.getApartmentNumber() << endl;
+        cout << "Building ID: " << buildingId << endl;
+        cout << "Status: " << apartment.getStatus() << endl;
     }
     catch (const BuildingNotExistException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const ApartmentNotExistException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 
 void ApartmentController::isApartmentExists(int buildingId) {
-    string apartmentNumber;
-    cout << "Enter apartment number: ";
-    cin >> apartmentNumber;
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Apartment Number", 20);
+    editor.setPosition(2, 2).setInputType(InputType::ALPHANUMERIC);
+
+    string apartmentNumber = editor.show();
+
+    if (apartmentNumber.empty()) return;
 
     IsApartmentExistsParams params = { apartmentNumber, buildingId };
 
     try {
         auto result = useCases["IsApartmentExists"]->execute(params);
         bool isExist = any_cast<bool>(result);
-        isExist ? cout << "Exists" : cout << "Not Exists";
-        cout << endl;
+
+        ConsoleUtils::clearScreen();
+        if (isExist) {
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Apartment '" << apartmentNumber << "' exists in Building " << buildingId << endl;
+        }
+        else {
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Apartment '" << apartmentNumber << "' does not exist in Building " << buildingId << endl;
+        }
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 void ApartmentController::checkApartmentStatus(int buildingId) {
-    string apartmentNumber;
-    cout << "Enter apartment number: ";
-    cin >> apartmentNumber;
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Apartment Number", 20);
+    editor.setPosition(2, 2).setInputType(InputType::ALPHANUMERIC);
+
+    string apartmentNumber = editor.show();
+
+    if (apartmentNumber.empty()) return;
 
     CheckApartmentStatusParams params = { apartmentNumber, buildingId };
 
     try {
         auto result = useCases["CheckApartmentStatus"]->execute(params);
         ApartmentStatus status = any_cast<ApartmentStatus>(result);
-        cout << "current status is: " << status << endl;
+
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::TITLE);
+        cout << "=== Apartment Status ===" << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "Apartment: " << apartmentNumber << endl;
+        cout << "Current Status: " << status << endl;
     }
     catch (const BuildingNotExistException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const ApartmentNotExistException& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
     catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 void ApartmentController::manageApartment(int buildingId) {
-    string apartmentNumber;
-    cout << "Enter apartment number to manage: ";
-    cin >> apartmentNumber;
-    cin.ignore();
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Apartment Number to manage", 20);
+    editor.setPosition(2, 2).setInputType(InputType::ALPHANUMERIC);
+
+    string apartmentNumber = editor.show();
+
+    if (apartmentNumber.empty()) return;
 
     IsApartmentExistsParams params = { apartmentNumber, buildingId };
 
     try {
-        int apartmentId = any_cast<int>(useCases["IsApartmentExists"]->execute(params));
-        if (apartmentId == -1) {
-            cout << "Apartment does not exist." << endl;
+        auto result = useCases["IsApartmentExists"]->execute(params);
+        bool isExist = any_cast<bool>(result);
+
+        if (!isExist) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Apartment does not exist." << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
             return;
         }
-        int choice = 0;
-        while (true) {
-            cout << "\n=== Manage Apartment (" << apartmentNumber << ") ===\n";
-            cout << "1. Rental Contract Management\n";
-            cout << "0. Back to Apartment Menu\n";
-            cout << "Enter your choice: ";
-            cin >> choice;
-            cin.ignore();
+
+        // Get apartment ID for rental contract
+        GetApartmentDetailsParams detailParams = { apartmentNumber, buildingId };
+        auto detailResult = useCases["GetApartmentDetails"]->execute(detailParams);
+        Apartment apartment = any_cast<Apartment>(detailResult);
+        int apartmentId = apartment.getId();
+
+        bool running = true;
+        while (running) {
+            std::vector<std::string> options = {
+                "1. Rental Contract Management",
+                "0. Back to Apartment Menu"
+            };
+            MenuDisplayer menu("Manage Apartment (" + apartmentNumber + ")", options);
+
+            int choice = menu.show();
 
             switch (choice) {
-            case 1:
+            case 0:
                 rentalContractController->execute(buildingId, apartmentId);
                 break;
-            case 0:
-                return;
-            default:
-                cout << "Invalid choice.\n";
+            case 1:
+            case -1:
+                running = false;
+                break;
             }
         }
     }
     catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
     }
 }
 
 
 void ApartmentController::execute(int buildingId) {
-    int choice = 0;
-    while (true) {
-        displayMenu();
-        cin >> choice;
-        cin.ignore();
+    bool running = true;
+
+    while (running) {
+        MenuDisplayer menu("Apartment Management (Building ID: " + to_string(buildingId) + ")", {
+            "1. Add Apartment",
+            "2. Manage Apartment",
+            "3. Get All Apartments",
+            "4. Get Apartment Details",
+            "5. Check Apartment Status",
+            "6. Check if Apartment Exists",
+            "0. Back to Building Menu"
+            });
+
+        int choice = menu.show();
+
         switch (choice) {
-        case 1:
+        case 0:
             createApartment(buildingId);
             break;
-        case 2:
+        case 1:
             manageApartment(buildingId);
             break;
-        case 3:
+        case 2:
             getAllApartments(buildingId);
             break;
-        case 4:
+        case 3:
             getApartmentDetails(buildingId);
             break;
-        case 5:
+        case 4:
             checkApartmentStatus(buildingId);
             break;
-        case 6:
+        case 5:
             isApartmentExists(buildingId);
             break;
-        case 0:
-            return;
-        default:
-            cout << "Invalid choice." << endl;
+        case 6:
+        case -1:
+            running = false;
             break;
         }
     }

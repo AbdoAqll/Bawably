@@ -1,5 +1,9 @@
 #include "RentalContractController.h"
 #include "Domain/Shared/DomainException.h"
+#include "UI/ConsoleUtils.h"
+#include "UI/MenuDisplayer.h"
+#include "UI/InputForm.h"
+#include "UI/TextEditor.h"
 #include <limits>
 
 RentalContractController::RentalContractController(
@@ -10,45 +14,48 @@ RentalContractController::RentalContractController(
     endRentalContractUseCase = endUseCase;
     rentalContractRepository = repository;
 }
-void RentalContractController::execute(int buildingId , int apartmentId) {
-    int choice;
-    do {
-        showMenu();
-        cout << "Enter choice: ";
-        cin >> choice;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid input. Please enter a number." << endl;
-            continue;
-        }
+void RentalContractController::execute(int buildingId, int apartmentId) {
+    bool running = true;
+
+    while (running) {
+        MenuDisplayer menu("Rental Contract Management", {
+            "1. Create Rental Contract",
+            "2. End Rental Contract",
+            "3. View Active Contracts",
+            "4. View All Contracts",
+            "5. View Contract Details",
+            "0. Back to Apartment Menu"
+            });
+
+        int choice = menu.show();
 
         switch (choice) {
-        case 1:
+        case 0:
             handleCreateRentalContract(buildingId, apartmentId);
             break;
-        case 2:
+        case 1:
             handleEndRentalContract();
             break;
-        case 3:
+        case 2:
             handleViewActiveContracts();
             break;
-        case 4:
+        case 3:
             handleViewAllContracts();
             break;
-        case 5:
+        case 4:
             handleViewContractDetails();
             break;
-        case 0:
-            cout << "Returning to main menu..." << endl;
+        case 5:
+        case -1:
+            running = false;
             break;
-        default:
-            cout << "Invalid choice. Please try again." << endl;
         }
-    } while (choice != 0);
+    }
 }
+
 void RentalContractController::showMenu() {
+    // Kept for compatibility but not used anymore
     cout << "\n=== Rental Contract Management ===" << endl;
     cout << "1. Create Rental Contract" << endl;
     cout << "2. End Rental Contract" << endl;
@@ -58,131 +65,204 @@ void RentalContractController::showMenu() {
     cout << "0. Back to Main Menu" << endl;
 }
 
-void RentalContractController::handleCreateRentalContract(int buildingId , int apartmentId) {
-    cout << "\n--- Create Rental Contract ---" << endl;
+void RentalContractController::handleCreateRentalContract(int buildingId, int apartmentId) {
+    ConsoleUtils::clearScreen();
 
-    int tenantId;
-    double monthlyRent;
-    string startDate;
+    InputForm form("Create Rental Contract");
+    form.addNumberField("tenantId", "Tenant ID", true)
+        .addDecimalField("monthlyRent", "Monthly Rent ($)", true)
+        .addDateField("startDate", "Start Date (YYYY-MM-DD)", true);
 
-    cout << "Enter Tenant ID: ";
-    cin >> tenantId;
+    // Validate monthly rent is positive
+    form.setValidator("monthlyRent", [](const string& val) {
+        try {
+            double rent = stod(val);
+            return rent > 0;
+        }
+        catch (...) {
+            return false;
+        }
+        }, "Monthly rent must be a positive number");
 
-    cout << "Enter Monthly Rent: ";
-    cin >> monthlyRent;
+    FormResult result = form.show();
 
-    cin.ignore();
-    cout << "Enter Start Date (YYYY-MM-DD): ";
-    getline(cin, startDate);
+    if (result.submitted) {
+        try {
+            int tenantId = result.getInt("tenantId");
+            double monthlyRent = result.getDouble("monthlyRent");
+            string startDate = result.get("startDate");
 
-    try {
-        CreateRentalContractParams params{ buildingId ,apartmentId, tenantId, monthlyRent, startDate };
-        auto result = createRentalContractUseCase->execute(params);
-        int contractId = any_cast<int>(result);
+            CreateRentalContractParams params{ buildingId, apartmentId, tenantId, monthlyRent, startDate };
+            auto execResult = createRentalContractUseCase->execute(params);
+            int contractId = any_cast<int>(execResult);
 
-        cout << "\n✓ Rental contract created successfully!" << endl;
-        cout << "Contract ID: " << contractId << endl;
-        cout << "Apartment ID: " << apartmentId << endl;
-        cout << "Tenant ID: " << tenantId << endl;
-        cout << "Monthly Rent: $" << monthlyRent << endl;
-        cout << "Start Date: " << startDate << endl;
-    }
-    catch (const DomainException& e) {
-        cout << "\n✗ Error: " << e.what() << endl;
-    }
-    catch (const exception& e) {
-        cout << "\n✗ Unexpected error: " << e.what() << endl;
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Rental contract created successfully!" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "Contract ID: " << contractId << endl;
+            cout << "Building ID: " << buildingId << endl;
+            cout << "Apartment ID: " << apartmentId << endl;
+            cout << "Tenant ID: " << tenantId << endl;
+            cout << "Monthly Rent: $" << monthlyRent << endl;
+            cout << "Start Date: " << startDate << endl;
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const DomainException& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const exception& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Unexpected error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
     }
 }
 
 void RentalContractController::handleEndRentalContract() {
-    cout << "\n--- End Rental Contract ---" << endl;
+    ConsoleUtils::clearScreen();
 
-    int contractId;
-    string endDate;
+    InputForm form("End Rental Contract");
+    form.addNumberField("contractId", "Contract ID", true)
+        .addDateField("endDate", "End Date (YYYY-MM-DD)", true);
 
-    cout << "Enter Contract ID: ";
-    cin >> contractId;
+    FormResult result = form.show();
 
-    cin.ignore();
-    cout << "Enter End Date (YYYY-MM-DD): ";
-    getline(cin, endDate);
+    if (result.submitted) {
+        try {
+            int contractId = result.getInt("contractId");
+            string endDate = result.get("endDate");
 
-    try {
-        EndRentalContractParams params{ contractId, endDate };
-        endRentalContractUseCase->execute(params);
+            EndRentalContractParams params{ contractId, endDate };
+            endRentalContractUseCase->execute(params);
 
-        cout << "\n✓ Rental contract ended successfully!" << endl;
-        cout << "Contract ID: " << contractId << endl;
-        cout << "End Date: " << endDate << endl;
-        cout << "Status: Inactive" << endl;
-        cout << "Apartment Status: Vacant" << endl;
-    }
-    catch (const DomainException& e) {
-        cout << "\n✗ Error: " << e.what() << endl;
-    }
-    catch (const exception& e) {
-        cout << "\n✗ Unexpected error: " << e.what() << endl;
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Rental contract ended successfully!" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "Contract ID: " << contractId << endl;
+            cout << "End Date: " << endDate << endl;
+            cout << "Status: Inactive" << endl;
+            cout << "Apartment Status: Vacant" << endl;
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const DomainException& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const exception& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Unexpected error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
     }
 }
 
 void RentalContractController::handleViewActiveContracts() {
-    cout << "\n--- Active Rental Contracts ---" << endl;
+    ConsoleUtils::clearScreen();
+    ConsoleUtils::textattr(Colors::TITLE);
+    cout << "=== Active Rental Contracts ===" << endl;
+    ConsoleUtils::textattr(Colors::DEFAULT);
 
     try {
         vector<RentalContract> contracts = rentalContractRepository->getActiveContracts();
 
         if (contracts.empty()) {
-            cout << "No active rental contracts found." << endl;
-            return;
+            cout << "\nNo active rental contracts found." << endl;
         }
-
-        displayContractList(contracts);
+        else {
+            displayContractList(contracts);
+        }
     }
     catch (const exception& e) {
-        cout << "\n✗ Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 void RentalContractController::handleViewAllContracts() {
-    cout << "\n--- All Rental Contracts ---" << endl;
+    ConsoleUtils::clearScreen();
+    ConsoleUtils::textattr(Colors::TITLE);
+    cout << "=== All Rental Contracts ===" << endl;
+    ConsoleUtils::textattr(Colors::DEFAULT);
 
     try {
         vector<RentalContract> contracts = rentalContractRepository->getAll();
 
         if (contracts.empty()) {
-            cout << "No rental contracts found." << endl;
-            return;
+            cout << "\nNo rental contracts found." << endl;
         }
-
-        displayContractList(contracts);
+        else {
+            displayContractList(contracts);
+        }
     }
     catch (const exception& e) {
-        cout << "\n✗ Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 void RentalContractController::handleViewContractDetails() {
-    cout << "\n--- View Contract Details ---" << endl;
+    ConsoleUtils::clearScreen();
 
-    int contractId;
-    cout << "Enter Contract ID: ";
-    cin >> contractId;
+    SingleLineEditor editor("Contract ID", 10);
+    editor.setPosition(2, 2).setInputType(InputType::NUMERIC);
+
+    string idStr = editor.show();
+
+    if (idStr.empty()) return;
+
+    int contractId = stoi(idStr);
 
     try {
         RentalContract* contract = rentalContractRepository->findById(contractId);
 
+        ConsoleUtils::clearScreen();
         if (contract == nullptr) {
-            cout << "\n✗ Contract not found." << endl;
-            return;
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Contract not found." << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
         }
-
-        cout << "\n=== Contract Details ===" << endl;
-        displayContract(*contract);
+        else {
+            ConsoleUtils::textattr(Colors::TITLE);
+            cout << "=== Contract Details ===" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            displayContract(*contract);
+        }
     }
     catch (const exception& e) {
-        cout << "\n✗ Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
 
 void RentalContractController::displayContract(const RentalContract& contract) {

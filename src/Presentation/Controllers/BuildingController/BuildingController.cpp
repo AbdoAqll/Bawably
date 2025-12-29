@@ -6,6 +6,10 @@
 #include "Application/UseCases/Building/IsBuildingExists/IsBuildingExistsUseCase.h"
 #include "Controllers/ApartmentController/ApartmentController.h"
 #include "Controllers/MaintenanceRequestController/MaintenanceRequestController.h"
+#include "UI/ConsoleUtils.h"
+#include "UI/MenuDisplayer.h"
+#include "UI/InputForm.h"
+#include "UI/TextEditor.h"
 
 BuildingController::BuildingController(vector<shared_ptr<IUseCase>>& useCases,
     shared_ptr<ApartmentController> apartmentCtrl,
@@ -16,7 +20,9 @@ BuildingController::BuildingController(vector<shared_ptr<IUseCase>>& useCases,
     apartmentController = apartmentCtrl;
     maintenanceRequestController = maintenanceCtrl;
 }
+
 void BuildingController::displayMenu() {
+    // Kept for compatibility
     cout << "\nBuilding Menu:\n";
     cout << "1. Add Building\n";
     cout << "2. Manage Building\n";
@@ -28,27 +34,54 @@ void BuildingController::displayMenu() {
 }
 
 void BuildingController::createBuilding() {
-    string name, address;
-    cout << "Enter Building Name: ";
-    getline(cin, name);
-    cout << "Enter Building Address: ";
-    getline(cin, address);
+    ConsoleUtils::clearScreen();
 
-    AddBuildingParams params = { name, address };
-    useCases["AddBuilding"]->execute(params);
+    InputForm form("Add New Building");
+    form.addTextField("name", "Building Name", 20, true)
+        .addTextField("address", "Building Address", 100, true);
+
+    FormResult result = form.show();
+
+    if (result.submitted) {
+        string name = result.get("name");
+        string address = result.get("address");
+
+        AddBuildingParams params = { name, address };
+        useCases["AddBuilding"]->execute(params);
+
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::HIGHLIGHT);
+        cout << "\n Building created successfully!" << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "Name: " << name << endl;
+        cout << "Address: " << address << endl;
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
+    }
 }
 
 void BuildingController::manageBuilding() {
-    int buildingId;
-    cout << "Enter Building ID to manage: ";
-    cin >> buildingId;
-    cin.ignore();
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Building ID to manage", 10);
+    editor.setPosition(2, 2).setInputType(InputType::NUMERIC);
+
+    string idStr = editor.show();
+
+    if (idStr.empty()) return;
+
+    int buildingId = stoi(idStr);
 
     // Verify building exists
     auto result = useCases["IsBuildingExists"]->execute(buildingId);
     bool exists = any_cast<bool>(result);
     if (!exists) {
-        cout << "Building with ID " << buildingId << " does not exist.\n";
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Building with ID " << buildingId << " does not exist." << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
         return;
     }
 
@@ -56,92 +89,158 @@ void BuildingController::manageBuilding() {
 }
 
 void BuildingController::displayManageBuildingMenu(int buildingId) {
-    int choice = 0;
-    while (true) {
-        cout << "\n=== Manage Building (ID: " << buildingId << ") ===\n";
-        cout << "1. Apartment Management\n";
-        cout << "2. Maintenance Management\n";
-        cout << "0. Back to Building Menu\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-        cin.ignore();
+    bool running = true;
+
+    while (running) {
+        MenuDisplayer menu("Manage Building (ID: " + to_string(buildingId) + ")", {
+            "1. Apartment Management",
+            "2. Maintenance Management",
+            "0. Back to Building Menu"
+            });
+
+        int choice = menu.show();
 
         switch (choice) {
-        case 1:
+        case 0:
             apartmentController->execute(buildingId);
             break;
-        case 2:
+        case 1:
             maintenanceRequestController->execute(buildingId);
             break;
-        case 0:
-            return;
-        default:
-            cout << "Invalid choice.\n";
+        case 2:
+        case -1:
+            running = false;
+            break;
         }
     }
 }
 
 void BuildingController::getAllBuildings() {
+    ConsoleUtils::clearScreen();
+    ConsoleUtils::textattr(Colors::TITLE);
+    cout << "=== All Buildings ===" << endl;
+    ConsoleUtils::textattr(Colors::DEFAULT);
+
     auto result = useCases["GetAllBuilding"]->execute();
     vector<Building> buildings = any_cast<vector<Building>>(result);
-    for (auto building : buildings) {
-        cout << "ID: " << building.getId() << ", Name: " << building.getName() << ", Address: " << building.getAddress() << endl;
+
+    if (buildings.empty()) {
+        cout << "\nNo buildings found." << endl;
     }
+    else {
+        cout << "\nTotal Buildings: " << buildings.size() << "\n" << endl;
+        for (auto building : buildings) {
+            cout << "ID: " << building.getId() << endl;
+            cout << "Name: " << building.getName() << endl;
+            cout << "Address: " << building.getAddress() << endl;
+            cout << "------------------------------------" << endl;
+        }
+    }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
+
 void BuildingController::getBuildingDetails() {
-    int id;
-    cout << "Enter Building ID: ";
-    cin >> id;
-    cin.ignore();
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Building ID", 10);
+    editor.setPosition(2, 2).setInputType(InputType::NUMERIC);
+
+    string idStr = editor.show();
+
+    if (idStr.empty()) return;
+
+    int id = stoi(idStr);
+
     try {
         auto result = useCases["GetBuildingDetails"]->execute(id);
         Building building = any_cast<Building>(result);
-        cout << "ID: " << building.getId() << ", Name: " << building.getName() << ", Address: " << building.getAddress() << endl;
+
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::TITLE);
+        cout << "=== Building Details ===" << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "ID: " << building.getId() << endl;
+        cout << "Name: " << building.getName() << endl;
+        cout << "Address: " << building.getAddress() << endl;
     }
     catch (const exception& e) {
-        cout << e.what() << endl;
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
     }
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
+
 void BuildingController::isBuildingExists() {
-    int id;
-    cout << "Enter Building ID: ";
-    cin >> id;
-    cin.ignore();
+    ConsoleUtils::clearScreen();
+
+    SingleLineEditor editor("Building ID", 10);
+    editor.setPosition(2, 2).setInputType(InputType::NUMERIC);
+
+    string idStr = editor.show();
+
+    if (idStr.empty()) return;
+
+    int id = stoi(idStr);
+
     auto result = useCases["IsBuildingExists"]->execute(id);
     bool exists = any_cast<bool>(result);
+
+    ConsoleUtils::clearScreen();
     if (exists) {
-        cout << "Building with ID " << id << " exists.\n";
+        ConsoleUtils::textattr(Colors::HIGHLIGHT);
+        cout << "\n Building with ID " << id << " exists." << endl;
     }
     else {
-        cout << "Building with ID " << id << " does not exist.\n";
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Building with ID " << id << " does not exist." << endl;
     }
+    ConsoleUtils::textattr(Colors::DEFAULT);
+
+    cout << "\nPress any key to continue...";
+    ConsoleUtils::getKey();
 }
+
 void BuildingController::execute() {
-    int choice = 0;
-    while (true) {
-        displayMenu();
-        cin >> choice;
-        cin.ignore();
+    bool running = true;
+
+    while (running) {
+        MenuDisplayer menu("Building Management", {
+            "1. Add Building",
+            "2. Manage Building",
+            "3. Get All Buildings",
+            "4. Get Building Details",
+            "5. Check if Building Exists",
+            "0. Back to Main Menu"
+            });
+
+        int choice = menu.show();
+
         switch (choice) {
-        case 1:
+        case 0:
             createBuilding();
             break;
-        case 2:
+        case 1:
             manageBuilding();
             break;
-        case 3:
+        case 2:
             getAllBuildings();
             break;
-        case 4:
+        case 3:
             getBuildingDetails();
             break;
-        case 5:
+        case 4:
             isBuildingExists();
             break;
-        case 0:
-            return;
-        default:
-            cout << "Invalid choice.\n";
+        case 5:
+        case -1:
+            running = false;
+            break;
         }
     }
 }
