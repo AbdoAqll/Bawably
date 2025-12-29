@@ -268,17 +268,6 @@ void ApartmentController::manageApartment(int buildingId) {
     try {
         auto result = useCases["CheckApartmentExistsAndGetId"]->execute(params);
         int apartmentId = any_cast<int>(result);
-        bool isExist = (apartmentId != -1);
-        if (!isExist) {
-            ConsoleUtils::clearScreen();
-            ConsoleUtils::textattr(Colors::ERR);
-            cout << "\n Apartment does not exist." << endl;
-            ConsoleUtils::textattr(Colors::DEFAULT);
-            cout << "\nPress any key to continue...";
-            ConsoleUtils::getKey();
-            return;
-        }
-
         bool running = true;
         while (running) {
             std::vector<std::string> options = {

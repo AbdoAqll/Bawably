@@ -7,6 +7,9 @@
 #include "Controllers/BuildingController/BuildingController.h"
 #include "Controllers/MaintenanceRequestController/MaintenanceRequestController.h"
 #include "Controllers/RentalContractController/RentalContractController.h"
+#include "Controllers/AuthController/AuthController.h"
+#include "Controllers/OwnerMenuController/OwnerMenuController.h"
+#include "Controllers/TenantMenuController/TenantMenuController.h"
 #include "Application/UseCases/IUseCase.h"
 
 class DependencyContainer {
@@ -14,6 +17,9 @@ class DependencyContainer {
     std::shared_ptr<ApartmentController> apartmentController;
     std::shared_ptr<RentalContractController> rentalContractController;
     std::shared_ptr<MaintenanceRequestController> maintenanceRequestController;
+    std::shared_ptr<AuthController> authController;
+    std::shared_ptr<OwnerMenuController> ownerMenuController;
+    std::shared_ptr<TenantMenuController> tenantMenuController;
 
 public:
     DependencyContainer();
@@ -21,6 +27,9 @@ public:
     std::shared_ptr<ApartmentController> getApartmentController();
     std::shared_ptr<RentalContractController> getRentalContractController();
     std::shared_ptr<MaintenanceRequestController> getMaintenanceRequestController();
+    std::shared_ptr<AuthController> getAuthController();
+    std::shared_ptr<OwnerMenuController> getOwnerMenuController();
+    std::shared_ptr<TenantMenuController> getTenantMenuController();
 };
 
 #endif

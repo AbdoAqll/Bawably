@@ -3,6 +3,9 @@
 #include "Container/DependencyContainer.h"
 #include "UI/ConsoleUtils.h"
 #include "UI/MenuDisplayer.h"
+#include "Domain/User/User.h"
+#include "Domain/User/Owner.h"
+#include "Domain/User/TenantUser.h"
 #include <string>
 
 using namespace std;
@@ -13,24 +16,15 @@ int main() {
     ConsoleUtils::clearScreen();
 
     DependencyContainer container;
-    auto& buildingController = *container.getBuildingController();
+    auto& authController = *container.getAuthController();
+    auto& ownerMenuController = *container.getOwnerMenuController();
+    auto& tenantMenuController = *container.getTenantMenuController();
 
     bool running = true;
     while (running) {
-
-        std::vector<std::string> menuItems = {
-            "1. Building Management",
-            "0. Exit System"
-        };
-        MenuDisplayer menu("Bawably System", menuItems);
-        int choice = menu.show();
-
-        switch (choice) {
-        case 0:
-            buildingController.execute();
-            break;
-        case 1:
-        case -1:
+        shared_ptr<User> loggedInUser = authController.showLoginForm();
+        if (loggedInUser == nullptr) {
+            // User chose to exit
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::HIGHLIGHT);
             cout << "\n Thank you for using Bawably System!" << endl;
@@ -38,6 +32,23 @@ int main() {
             running = false;
             break;
         }
+
+        // Route to appropriate menu based on user role
+        if (loggedInUser->getRole() == UserRole::OWNER) {
+            // Cast to Owner and show owner menu
+            auto owner = dynamic_pointer_cast<Owner>(loggedInUser);
+            if (owner) {
+                ownerMenuController.execute(owner);
+            }
+        }
+        else if (loggedInUser->getRole() == UserRole::TENANT) {
+            // Cast to TenantUser and show tenant menu
+            auto tenant = dynamic_pointer_cast<TenantUser>(loggedInUser);
+            if (tenant) {
+                tenantMenuController.execute(tenant);
+            }
+        }
+        // After logout, loop back to login screen
     }
 
     return 0;

@@ -5,6 +5,9 @@ add_executable(Presentation
         Controllers/ApartmentController/ApartmentController.cpp
         Controllers/MaintenanceRequestController/MaintenanceRequestController.cpp
         Controllers/RentalContractController/RentalContractController.cpp
+        Controllers/AuthController/AuthController.cpp
+        Controllers/OwnerMenuController/OwnerMenuController.cpp
+        Controllers/TenantMenuController/TenantMenuController.cpp
         UI/ConsoleUtils.cpp
         UI/MenuDisplayer.cpp
         UI/TextEditor.cpp

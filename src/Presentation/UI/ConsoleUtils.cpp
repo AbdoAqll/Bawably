@@ -3,11 +3,9 @@
 using namespace std;
 
 void ConsoleUtils::initConsole() {
-    // Set console code page to 437 (DOS) for box-drawing characters
     SetConsoleOutputCP(437);
     SetConsoleCP(437);
 
-    // Enable virtual terminal processing for better compatibility
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
     GetConsoleMode(hOut, &dwMode);

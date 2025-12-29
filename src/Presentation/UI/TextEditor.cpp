@@ -134,7 +134,7 @@ string SingleLineEditor::show() {
                 return value;
             case Keys::ESC:
                 ConsoleUtils::showCursor();
-                return "";  // Return empty on escape
+                return "";
             default:
                 if (isValidChar(static_cast<char>(key))) {
                     insertChar(static_cast<char>(key));

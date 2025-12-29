@@ -6,10 +6,10 @@
 CreateRentalContractUseCase::CreateRentalContractUseCase(
     const shared_ptr<IRentalContractRepository>& rentalContractRepository,
     const shared_ptr<IApartmentRepository>& apartmentRepository,
-    const shared_ptr<ITenantRepository>& tenantRepository) {
+    const shared_ptr<IUserRepository>& userRepository) {
     _rentalContractRepository = rentalContractRepository;
     _apartmentRepository = apartmentRepository;
-    _tenantRepository = tenantRepository;
+    _userRepository = userRepository;
     UseCaseName = "CreateRentalContract";
 }
 
@@ -20,7 +20,7 @@ any CreateRentalContractUseCase::execute(const any& params) {
         throw ApartmentNotExistException(to_string(args.apartmentId), args.buildingId);
     }
 
-    if (!_tenantRepository->exists(args.tenantId)) {
+    if (!_userRepository->tenantUserExists(args.tenantId)) {
         throw DomainException("Tenant with ID " + to_string(args.tenantId) + " does not exist");
     }
 

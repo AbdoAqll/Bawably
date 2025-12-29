@@ -37,14 +37,14 @@ namespace Colors {
 
 class ConsoleUtils {
 public:
-    static void initConsole();  // Initialize console settings (call once at startup)
+    static void initConsole();
     static void gotoxy(int x, int y);
     static void textattr(int color);
     static void hideCursor();
     static void showCursor();
     static void clearScreen();
     static void clearLine(int y, int startX = 0, int length = 80);
-    static int getKey();  // Returns key code, handles extended keys
+    static int getKey();
     static void setTitle(const std::string& title);
     static std::pair<int, int> getConsoleSize();
 };

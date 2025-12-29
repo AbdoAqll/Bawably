@@ -5,7 +5,6 @@ add_library(Domain STATIC
     MaintenanceRequest/MaintenanceRequest.cpp
     RentalContract/RentalContract.cpp
     RentPayment/RentPayment.cpp
-    Tenant/Tenant.cpp
     Shared/DomainException.cpp
         Shared/CurrentDate.cpp
     Building/Exceptions/BuildingNotExistException.cpp
@@ -16,6 +15,9 @@ add_library(Domain STATIC
         MaintenanceRequest/Exceptions/MaintenanceRequestNotFoundException.cpp
     RentalContract/Exceptions/RentalContractNotFoundException.cpp
     RentalContract/Exceptions/ContractAlreadyExistsException.cpp
+    User/User.cpp
+    User/Owner.cpp
+    User/TenantUser.cpp
 )
 
 # this is to tell the cmake where to look for .h files

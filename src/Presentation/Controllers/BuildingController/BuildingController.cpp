@@ -92,11 +92,11 @@ void BuildingController::displayManageBuildingMenu(int buildingId) {
     bool running = true;
 
     while (running) {
-        MenuDisplayer menu("Manage Building (ID: " + to_string(buildingId) + ")", {
+        MenuDisplayer menu("Manage Building (ID: " + to_string(buildingId) + ")", vector<string>{
             "1. Apartment Management",
-            "2. Maintenance Management",
-            "0. Back to Building Menu"
-            });
+                "2. Maintenance Management",
+                "0. Back to Building Menu"
+        });
 
         int choice = menu.show();
 
@@ -105,7 +105,7 @@ void BuildingController::displayManageBuildingMenu(int buildingId) {
             apartmentController->execute(buildingId);
             break;
         case 1:
-            maintenanceRequestController->execute(buildingId);
+            maintenanceRequestController->executeForOwner(buildingId);
             break;
         case 2:
         case -1:
