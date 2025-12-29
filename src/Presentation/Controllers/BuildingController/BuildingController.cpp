@@ -38,7 +38,7 @@ void BuildingController::createBuilding() {
 
     InputForm form("Add New Building");
     form.addTextField("name", "Building Name", 20, true)
-        .addTextField("address", "Building Address", 100, true);
+        .addTextField("address", "Building Address", 50, true);
 
     FormResult result = form.show();
 

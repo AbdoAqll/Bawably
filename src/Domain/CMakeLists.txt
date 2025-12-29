@@ -1,5 +1,4 @@
 add_library(Domain STATIC
-    User/User.cpp
     Apartment/Apartment.cpp
     Building/Building.cpp
     Expense/Expense.cpp

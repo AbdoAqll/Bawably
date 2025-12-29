@@ -4,10 +4,11 @@
 #include <Apartment/Exceptions/ApartmentNotExistException.h>
 #include <Building/Exceptions/BuildingNotExistException.h>
 #include <UseCases/Apartment/AddApartment/AddApartmentUseCase.h>
-#include <UseCases/Apartment/CheckApartmentStatus/CheckApartmentStatusUseCase.h>
 #include <UseCases/Apartment/GetAllApartments/GetAllApartmentsUseCase.h>
 #include <UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.h>
 #include <UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.h>
+#include <UseCases/Apartment/CheckApartmentExistsAndGetId/CheckApartmentExistsAndGetIdUseCase.h>
+#include <UseCases/Apartment/CheckApartmentStatus/CheckApartmentStatusUseCase.h>
 #include "Controllers/RentalContractController/RentalContractController.h"
 #include "UI/ConsoleUtils.h"
 #include "UI/MenuDisplayer.h"
@@ -262,12 +263,12 @@ void ApartmentController::manageApartment(int buildingId) {
 
     if (apartmentNumber.empty()) return;
 
-    IsApartmentExistsParams params = { apartmentNumber, buildingId };
+    CheckApartmentExistsAndGetIdParams params = { apartmentNumber, buildingId };
 
     try {
-        auto result = useCases["IsApartmentExists"]->execute(params);
-        bool isExist = any_cast<bool>(result);
-
+        auto result = useCases["CheckApartmentExistsAndGetId"]->execute(params);
+        int apartmentId = any_cast<int>(result);
+        bool isExist = (apartmentId != -1);
         if (!isExist) {
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::ERR);
@@ -277,12 +278,6 @@ void ApartmentController::manageApartment(int buildingId) {
             ConsoleUtils::getKey();
             return;
         }
-
-        // Get apartment ID for rental contract
-        GetApartmentDetailsParams detailParams = { apartmentNumber, buildingId };
-        auto detailResult = useCases["GetApartmentDetails"]->execute(detailParams);
-        Apartment apartment = any_cast<Apartment>(detailResult);
-        int apartmentId = apartment.getId();
 
         bool running = true;
         while (running) {

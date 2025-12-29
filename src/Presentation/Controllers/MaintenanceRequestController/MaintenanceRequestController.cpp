@@ -35,8 +35,8 @@ void MaintenanceRequestController::createMaintenanceRequest(int buildingId) {
 
     InputForm form("Create Maintenance Request");
     form.addNumberField("apartmentId", "Apartment Number", true)
-        .addNumberField("tenantId", "Tenant ID (-1 if owner)", false)
-        .addTextField("description", "Problem Description", 500, true);
+        .addNumberField("tenantId", "Tenant ID (-1 if owner)", true)
+        .addTextField("description", "Problem Description", 50, true);
 
     FormResult result = form.show();
 
