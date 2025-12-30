@@ -1,5 +1,4 @@
 add_library(Infrastructure STATIC
-    User/Repositories/UserRepository.cpp
     Building/Repositories/BuildingRepository.cpp
     Apartment/Repositories/InMemoryApartmentRepository.cpp
         MaintenanceRequest/Repositories/InMemoryMaintenanceRequestRepository.cpp

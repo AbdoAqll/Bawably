@@ -22,7 +22,6 @@ public:
         GetTotalExpensesByBuildingAndMonthUseCase& total
     );
 
-    // الدوال اللي هتتعامل مع المستخدم
     void showMenu() const;
     void handleAddExpense();
     void handleViewExpenses();

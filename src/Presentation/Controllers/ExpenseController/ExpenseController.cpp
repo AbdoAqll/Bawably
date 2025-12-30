@@ -14,12 +14,12 @@ ExpenseController::ExpenseController(
 
 void ExpenseController::showMenu() const
 {
-    std::cout << "\n=== نظام إدارة المصروفات ===\n";
-    std::cout << "1. إضافة مصروف جديد\n";
-    std::cout << "2. عرض مصروفات مبنى\n";
-    std::cout << "3. حساب إجمالي مصروفات مبنى في شهر\n";
-    std::cout << "0. خروج\n";
-    std::cout << "اختيارك: ";
+    std::cout << "\n=== Expense management system ===\n";
+    std::cout << "1. Add Expense \n";
+    std::cout << "2.Get Expense By Building\n";
+    std::cout << "3.Get By Building And Month\n";
+    std::cout << "0. Exit\n";
+    std::cout << "Your Choice: ";
 }
 
 void ExpenseController::handleAddExpense()
@@ -28,38 +28,38 @@ void ExpenseController::handleAddExpense()
     double amount;
     std::string date, desc;
 
-    std::cout << "رقم المبنى: "; std::cin >> buildingId;
+    std::cout << "; Building Number: "; std::cin >> buildingId;
     std::cout << "التصنيف (0=Electricity, 1=Cleaning, 2=Plumbing, 3=Security, 4=Other): "; std::cin >> cat;
-    std::cout << "المبلغ: "; std::cin >> amount;
+    std::cout << "Amount: "; std::cin >> amount;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "التاريخ (YYYY-MM-DD): "; std::getline(std::cin, date);
-    std::cout << "الوصف: "; std::getline(std::cin, desc);
+    std::cout << "Date (YYYY-MM-DD): "; std::getline(std::cin, date);
+    std::cout << "Description: "; std::getline(std::cin, desc);
 
     try {
         createUseCase.execute(buildingId, static_cast<ExpenseCategory>(cat), amount, date, desc);
-        std::cout << "تم إضافة المصروف بنجاح ✓\n";
+        std::cout << "Expense Added Successfully ✓\n";
     } catch (const std::exception& e) {
-        std::cout << "خطأ: " << e.what() << "\n";
+        std::cout << "Wrong: " << e.what() << "\n";
     }
 }
 
 void ExpenseController::handleViewExpenses()
 {
     int buildingId;
-    std::cout << "رقم المبنى: "; std::cin >> buildingId;
+    std::cout << "Building Number: "; std::cin >> buildingId;
 
     auto expenses = listUseCase.execute(buildingId);
 
     if (expenses.empty()) {
-        std::cout << "لا يوجد مصروفات لهذا المبنى\n";
+        std::cout << "There is no Expense for this building \n";
         return;
     }
 
-    std::cout << "\nمصروفات المبنى " << buildingId << ":\n";
+    std::cout << "\nBuilding Expense " << buildingId << ":\n";
     std::cout << std::left << std::setw(10) << "ID"
-              << std::setw(12) << "المبلغ"
-              << std::setw(12) << "التاريخ"
-              << "الوصف\n";
+              << std::setw(12) << "Amount"
+              << std::setw(12) << "Date"
+              << "Description\n";
     std::cout << std::string(60, '-') << "\n";
 
     for (const auto& e : expenses) {
@@ -73,11 +73,11 @@ void ExpenseController::handleViewExpenses()
 void ExpenseController::handleCalculateTotal()
 {
     int buildingId, year, month;
-    std::cout << "رقم المبنى: "; std::cin >> buildingId;
-    std::cout << "السنة: "; std::cin >> year;
-    std::cout << "الشهر (1-12): "; std::cin >> month;
+    std::cout << "Building Expense: "; std::cin >> buildingId;
+    std::cout << "Year: "; std::cin >> year;
+    std::cout << "Month (1-12): "; std::cin >> month;
 
     double total = totalUseCase.execute(buildingId, year, month);
-    std::cout << "إجمالي المصروفات للمبنى " << buildingId
-              << " في " << month << "/" << year << ": " << total << " جنيه\n";
+    std::cout << "Total Expense " << buildingId
+              << " in " << month << "/" << year << ": " << total << " pound\n";
 }
