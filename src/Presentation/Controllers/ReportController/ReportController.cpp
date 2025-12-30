@@ -31,7 +31,6 @@ void ReportsController::handleMonthlyReport() {
     std::cout << "Enter Month (1-12): ";
     std::cin >> month;
 
-    // Clear input buffer for safety
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     try {

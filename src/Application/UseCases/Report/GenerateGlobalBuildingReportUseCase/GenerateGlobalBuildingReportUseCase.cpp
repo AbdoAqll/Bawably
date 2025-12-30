@@ -12,6 +12,7 @@ GlobalBuildingReport GenerateGlobalBuildingReportUseCase::execute(const std::str
 
     std::vector<int> buildingIds = buildingRepo_.getAllBuildingIds();
 
+
     GenerateMonthlyBuildingReportUseCase monthlyUseCase(expenseRepo_);
 
     for (int buildingId : buildingIds) {
