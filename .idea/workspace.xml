@@ -32,13 +32,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="56cc36d5-7758-439b-b90a-8639cce5fda5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Report/GlobalBuildingReport.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Report/GlobalBuildingReport.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Report/GlobalBuildingReport.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Report/GlobalBuildingReport.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Report/MonthlyBuildingReport.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Report/MonthlyBuildingReport.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Report/MonthlyBuildingReport.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Report/MonthlyBuildingReport.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +196,7 @@
       <workItem from="1767009203582" duration="228000" />
       <workItem from="1767057795977" duration="1253000" />
       <workItem from="1767104359116" duration="104000" />
-      <workItem from="1767115162868" duration="159000" />
+      <workItem from="1767115162868" duration="1443000" />
     </task>
     <servers />
   </component>
