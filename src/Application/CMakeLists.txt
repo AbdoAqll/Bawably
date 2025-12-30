@@ -10,9 +10,19 @@ add_library(Application STATIC
     UseCases/Apartment/CheckApartmentStatus/CheckApartmentStatusUseCase.cpp
     UseCases/Apartment/GetApartmentDetails/GetApartmentDetailsUseCase.cpp
     UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.cpp
-    UseCases/Expense/CreateExpenseUseCase.cpp
-    UseCases/Expense/GetExpensesByBuildingUseCase.cpp
-    UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
+        UseCases/Apartment/CheckApartmentExistsAndGetId/CheckApartmentExistsAndGetIdUseCase.cpp
+        UseCases/MaintenanceRequest/AddMaintenanceRequest/AddMaintenanceRequestUseCase.cpp
+        UseCases/MaintenanceRequest/ViewBuildingMaintenanceRequests/ViewBuildingMaintenanceRequestsUseCase.cpp
+        UseCases/MaintenanceRequest/ViewApartmentMaintenanceRequests/ViewApartmentMaintenanceRequestsUseCase.cpp
+        UseCases/MaintenanceRequest/CloseMaintenanceRequest/CloseMaintenanceRequestUseCase.cpp
+        UseCases/MaintenanceRequest/Interfaces/IMaintenanceRequestRepository.h
+        UseCases/RentalContract/CreateRentalContract/CreateRentalContractUseCase.cpp
+        UseCases/RentalContract/EndRentalContract/EndRentalContractUseCase.cpp
+        UseCases/User/Login/LoginUseCase.cpp
+        UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp
+        UseCases/Expense/CreateExpenseUseCase.cpp
+        UseCases/Expense/GetExpensesByBuildingUseCase.cpp
+        UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
 )
 
 target_include_directories(Application PUBLIC

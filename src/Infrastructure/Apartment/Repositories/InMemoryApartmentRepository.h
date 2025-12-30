@@ -11,7 +11,7 @@ public:
 
     ~InMemoryApartmentRepository() override = default;
 
-    bool save(const Apartment &apartment) override;
+    bool save(const Apartment& apartment) override;
 
     Apartment findById(int id, int buildingId) override;
 
@@ -19,6 +19,6 @@ public:
 
     vector<Apartment> getAll(int buildingId) override;
 
-    int getApartmentIdFromApartmentNumber(string apartmentNumber) override;
+    int getApartmentIdFromApartmentNumber(string apartmentNumber, int buildingId) override;
 };
 #endif //INMEMORYAPARTMENTREPOSITORY_H

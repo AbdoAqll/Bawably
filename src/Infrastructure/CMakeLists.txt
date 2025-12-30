@@ -2,7 +2,10 @@ add_library(Infrastructure STATIC
     User/Repositories/UserRepository.cpp
     Building/Repositories/BuildingRepository.cpp
     Apartment/Repositories/InMemoryApartmentRepository.cpp
-    Expense/Repositories/InMemoryExpenseRepository.cpp
+        MaintenanceRequest/Repositories/InMemoryMaintenanceRequestRepository.cpp
+        RentalContract/Repositories/InMemoryRentalContractRepository.cpp
+        User/Repositories/InMemoryUserRepository.cpp
+        Expense/Repositories/InMemoryExpenseRepository.cpp
 )
 
 target_include_directories(Infrastructure PUBLIC

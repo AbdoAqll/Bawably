@@ -1,7 +1,8 @@
+#pragma once
+
 #include <ostream>
 
-enum class ApartmentStatus
-{
+enum class ApartmentStatus {
     Vacant,
     Rented
 };
