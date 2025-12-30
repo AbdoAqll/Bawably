@@ -1,0 +1,14 @@
+//
+// Created by Badry Anas on 12/30/2025.
+//
+
+#ifndef FINALPROJECT_MONTHLYBUILDINGREPORT_H
+#define FINALPROJECT_MONTHLYBUILDINGREPORT_H
+
+
+class MonthlyBuildingReport
+{
+};
+
+
+#endif //FINALPROJECT_MONTHLYBUILDINGREPORT_H

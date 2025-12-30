@@ -1,0 +1,14 @@
+//
+// Created by Badry Anas on 12/30/2025.
+//
+
+#ifndef FINALPROJECT_GLOBALBUILDINGREPORT_H
+#define FINALPROJECT_GLOBALBUILDINGREPORT_H
+
+
+class GlobalBuildingReport
+{
+};
+
+
+#endif //FINALPROJECT_GLOBALBUILDINGREPORT_H

@@ -1,0 +1,14 @@
+//
+// Created by Badry Anas on 12/30/2025.
+//
+
+#ifndef FINALPROJECT_REPORTCONTROLLER_H
+#define FINALPROJECT_REPORTCONTROLLER_H
+
+
+class ReportController
+{
+};
+
+
+#endif //FINALPROJECT_REPORTCONTROLLER_H
