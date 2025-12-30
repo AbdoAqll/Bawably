@@ -21,6 +21,10 @@ add_library(Application STATIC
         UseCases/Expense/CreateExpenseUseCase.cpp
         UseCases/Expense/GetExpensesByBuildingUseCase.cpp
         UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
+        UseCases/RentPayment/RecordRentPayment/RecordRentPaymentUseCase.cpp
+        UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.cpp
+        UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.cpp
+        UseCases/RentPayment/ViewUnpaidOrPartialTenants/ViewUnpaidOrPartialTenantsUseCase.cpp
 )
 target_include_directories(Application PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

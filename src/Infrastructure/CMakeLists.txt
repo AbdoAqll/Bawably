@@ -5,6 +5,7 @@ add_library(Infrastructure STATIC
         RentalContract/Repositories/InMemoryRentalContractRepository.cpp
         User/Repositories/InMemoryUserRepository.cpp
         Expense/Repositories/InMemoryExpenseRepository.cpp
+        RentPayment/Repositories/InMemoryRentPaymentRepository.cpp
 )
 
 
