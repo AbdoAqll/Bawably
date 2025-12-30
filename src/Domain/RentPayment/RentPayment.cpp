@@ -1,64 +1,113 @@
 #include "RentPayment.h"
 
-RentPayment::RentPayment(int id, int contractId, int month, int year, double amountPaid, string &paymentDate)
-{
+RentPayment::RentPayment(int id, int contractId, int tenantId, int month, int year, double expectedAmount)
+    : paymentId(id), contractId(contractId), tenantId(tenantId), month(month), year(year),
+    amountPaid(0.0), expectedAmount(expectedAmount), status(PaymentStatus::Unpaid), paymentDate("") {
 }
 
-int RentPayment::getPaymentId() const
-{
-    return 0;
+RentPayment::RentPayment(int id, int contractId, int tenantId, int month, int year, double amountPaid, double expectedAmount, const string& paymentDate)
+    : paymentId(id), contractId(contractId), tenantId(tenantId), month(month), year(year),
+    amountPaid(amountPaid), expectedAmount(expectedAmount), paymentDate(paymentDate) {
+    calculateStatus();
 }
 
-int RentPayment::getContractId() const
-{
-    return 0;
+void RentPayment::calculateStatus() {
+    if (amountPaid <= 0) {
+        status = PaymentStatus::Unpaid;
+    }
+    else if (amountPaid >= expectedAmount) {
+        status = PaymentStatus::Paid;
+    }
+    else {
+        status = PaymentStatus::Partial;
+    }
 }
 
-int RentPayment::getMonth() const
-{
-    return 0;
+int RentPayment::getPaymentId() const {
+    return paymentId;
 }
 
-int RentPayment::getYear() const
-{
-    return 0;
+int RentPayment::getContractId() const {
+    return contractId;
 }
 
-double RentPayment::getAmountPaid() const
-{
-    return 0.0;
+int RentPayment::getTenantId() const {
+    return tenantId;
 }
 
-PaymentStatus RentPayment::getStatus() const
-{
-    return PaymentStatus();
+int RentPayment::getMonth() const {
+    return month;
 }
 
-string RentPayment::getPaymentDate() const
-{
-    return string();
+int RentPayment::getYear() const {
+    return year;
 }
 
-void RentPayment::setAmountPaid(double amount)
-{
+double RentPayment::getAmountPaid() const {
+    return amountPaid;
 }
 
-void RentPayment::setStatus(PaymentStatus newStatus)
-{
+double RentPayment::getExpectedAmount() const {
+    return expectedAmount;
 }
 
-void RentPayment::setPaymentDate(string &date)
-{
+PaymentStatus RentPayment::getStatus() const {
+    return status;
 }
 
-void RentPayment::markAsPaid(string &date)
-{
+string RentPayment::getPaymentDate() const {
+    return paymentDate;
 }
 
-void RentPayment::markAsPartial(double amount, string &date)
-{
+void RentPayment::addPayment(double amount, const string& date) {
+    amountPaid += amount;
+    paymentDate = date;
+    calculateStatus();
 }
 
-void RentPayment::markAsUnPaid()
-{
+void RentPayment::setAmountPaid(double amount) {
+    amountPaid = amount;
+    calculateStatus();
+}
+
+void RentPayment::setStatus(PaymentStatus newStatus) {
+    status = newStatus;
+}
+
+void RentPayment::setPaymentDate(const string& date) {
+    paymentDate = date;
+}
+
+void RentPayment::markAsPaid(const string& date) {
+    amountPaid = expectedAmount;
+    paymentDate = date;
+    status = PaymentStatus::Paid;
+}
+
+void RentPayment::markAsPartial(double amount, const string& date) {
+    amountPaid = amount;
+    paymentDate = date;
+    calculateStatus();
+}
+
+void RentPayment::markAsUnPaid() {
+    amountPaid = 0.0;
+    paymentDate = "";
+    status = PaymentStatus::Unpaid;
+}
+
+bool RentPayment::isPaid() const {
+    return status == PaymentStatus::Paid;
+}
+
+bool RentPayment::isPartial() const {
+    return status == PaymentStatus::Partial;
+}
+
+bool RentPayment::isUnpaid() const {
+    return status == PaymentStatus::Unpaid;
+}
+
+double RentPayment::getRemainingAmount() const {
+    return expectedAmount - amountPaid;
 }

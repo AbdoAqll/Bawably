@@ -14,6 +14,7 @@ add_executable(Presentation
         UI/InputForm.cpp
         Controllers/ExpenseController/ExpenseController.cpp
         Controllers/ExpenseController/ExpenseController.h
+        Controllers/RentPaymentController/RentPaymentController.cpp
 )
 
 target_include_directories(Presentation PUBLIC
