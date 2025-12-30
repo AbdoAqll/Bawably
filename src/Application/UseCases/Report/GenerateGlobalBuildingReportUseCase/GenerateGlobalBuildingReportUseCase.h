@@ -1,14 +1,19 @@
-//
-// Created by Badry Anas on 12/30/2025.
-//
+// src/Application/UseCases/Reports/GenerateGlobalBuildingReportUseCase.h
+#pragma once
 
-#ifndef FINALPROJECT_GENERATEGLOBALBUILDINGREPORTUSECASE_H
-#define FINALPROJECT_GENERATEGLOBALBUILDINGREPORTUSECASE_H
+#include "../../../../Domain/Reports/GlobalBuildingReport.h"
+#include "../../../../Domain/Expense/ExpenseRepository.h"
+// #include "../../../../Domain/Building/BuildingRepository.h"
+// #include "../../../../Domain/Apartment/ApartmentRepository.h"
 
+class GenerateGlobalBuildingReportUseCase {
+private:
+    ExpenseRepository& expenseRepo_;
+    // BuildingRepository& buildingRepo_;
+    // ApartmentRepository& apartmentRepo_;
 
-class GenerateGlobalBuildingReportUseCase
-{
+public:
+    GenerateGlobalBuildingReportUseCase(ExpenseRepository& expenseRepo);
+
+    GlobalBuildingReport execute(const std::string& generationDate = "");
 };
-
-
-#endif //FINALPROJECT_GENERATEGLOBALBUILDINGREPORTUSECASE_H

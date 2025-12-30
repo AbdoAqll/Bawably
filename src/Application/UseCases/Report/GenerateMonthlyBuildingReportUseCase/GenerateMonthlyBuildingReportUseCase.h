@@ -1,14 +1,23 @@
-//
-// Created by Badry Anas on 12/30/2025.
-//
+// src/Application/UseCases/Reports/GenerateMonthlyBuildingReportUseCase.h
+#pragma once
 
-#ifndef FINALPROJECT_GENERATEMONTHLYBUILDINGREPORTUSECASE_H
-#define FINALPROJECT_GENERATEMONTHLYBUILDINGREPORTUSECASE_H
+#include "../../../../Domain/Reports/MonthlyBuildingReport.h"
+#include "../../../../Domain/Expense/ExpenseRepository.h"
+// لو عندك ApartmentRepository و RentalContractRepository، ضيفهم هنا
+// #include "../../../../Domain/Apartment/ApartmentRepository.h"
+// #include "../../../../Domain/RentalContract/RentalContractRepository.h"
 
+class GenerateMonthlyBuildingReportUseCase {
+private:
+    ExpenseRepository& expenseRepo_;
+    // ApartmentRepository& apartmentRepo_;
+    // RentalContractRepository& contractRepo_;
 
-class GenerateMonthlyBuildingReportUseCase
-{
+public:
+    GenerateMonthlyBuildingReportUseCase(
+        ExpenseRepository& expenseRepo
+        // , ApartmentRepository& apartmentRepo, RentalContractRepository& contractRepo
+    );
+
+    MonthlyBuildingReport execute(int buildingId, int year, int month);
 };
-
-
-#endif //FINALPROJECT_GENERATEMONTHLYBUILDINGREPORTUSECASE_H
