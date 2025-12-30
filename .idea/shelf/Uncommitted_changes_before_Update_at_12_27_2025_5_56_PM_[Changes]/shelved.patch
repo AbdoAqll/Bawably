@@ -1,0 +1,434 @@
+Index: src/Infrastructure/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>add_library(Infrastructure STATIC\r\n    User/Repositories/UserRepository.cpp\r\n)\r\n\r\ntarget_include_directories(Infrastructure PUBLIC\r\n    ${CMAKE_CURRENT_SOURCE_DIR}\r\n    ${CMAKE_CURRENT_SOURCE_DIR}/..\r\n)\r\n\r\ntarget_link_libraries(Infrastructure PUBLIC Application Domain)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Infrastructure/CMakeLists.txt b/src/Infrastructure/CMakeLists.txt
+--- a/src/Infrastructure/CMakeLists.txt	(revision b5436597c5c491c833de6cee132bbb682b0ca0eb)
++++ b/src/Infrastructure/CMakeLists.txt	(date 1766785948140)
+@@ -1,5 +1,7 @@
+ add_library(Infrastructure STATIC
+     User/Repositories/UserRepository.cpp
++        Expense/Repositories/InMemoryExpenseRepository.cpp
++        Expense/Repositories/InMemoryExpenseRepository.h
+ )
+ 
+ target_include_directories(Infrastructure PUBLIC
+Index: src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp b/src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
+new file mode 100644
+--- /dev/null	(date 1766793516460)
++++ b/src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp	(date 1766793516460)
+@@ -0,0 +1,15 @@
++#include "GetTotalExpensesByBuildingAndMonthUseCase.h"
++
++GetTotalExpensesByBuildingAndMonthUseCase::GetTotalExpensesByBuildingAndMonthUseCase(ExpenseRepository& repository)
++    : repo(repository) {}
++
++double GetTotalExpensesByBuildingAndMonthUseCase::execute(int buildingId, int year, int month) {
++    vector<Expense> expenses = repo.getByBuildingAndMonth(buildingId, year, month);
++
++    double total = 0.0;
++    for (const auto& exp : expenses) {
++        total += exp.getAmount();
++    }
++
++    return total;
++}
+\ No newline at end of file
+Index: src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.h b/src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.h
+new file mode 100644
+--- /dev/null	(date 1766787187451)
++++ b/src/Application/Expense/GetTotalExpensesByBuildingAndMonthUseCase.h	(date 1766787187451)
+@@ -0,0 +1,14 @@
++#pragma once
++
++#include "../../Domain/Expense/Expense.h"
++#include "../../Domain/Expense/ExpenseRepository.h"
++
++class GetTotalExpensesByBuildingAndMonthUseCase {
++private:
++    ExpenseRepository& repo;
++
++public:
++    explicit GetTotalExpensesByBuildingAndMonthUseCase(ExpenseRepository& repository);
++
++    double execute(int buildingId, int year, int month);
++};
+\ No newline at end of file
+Index: src/Application/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>add_library(Application STATIC\r\n    UseCases/User/CreateUser/CreateUserUseCase.cpp\r\n    UseCases/User/DeleteUser/DeleteUserUseCase.cpp\r\n)\r\n\r\ntarget_include_directories(Application PUBLIC\r\n    ${CMAKE_CURRENT_SOURCE_DIR}\r\n    ${CMAKE_CURRENT_SOURCE_DIR}/..\r\n)\r\n\r\ntarget_link_libraries(Application PUBLIC Domain)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/CMakeLists.txt b/src/Application/CMakeLists.txt
+--- a/src/Application/CMakeLists.txt	(revision b5436597c5c491c833de6cee132bbb682b0ca0eb)
++++ b/src/Application/CMakeLists.txt	(date 1766787176863)
+@@ -1,6 +1,12 @@
+ add_library(Application STATIC
+     UseCases/User/CreateUser/CreateUserUseCase.cpp
+     UseCases/User/DeleteUser/DeleteUserUseCase.cpp
++        Expense/CreateExpenseUseCase.cpp
++        Expense/CreateExpenseUseCase.h
++        Expense/GetExpensesByBuildingUseCase.cpp
++        Expense/GetExpensesByBuildingUseCase.h
++        Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
++        Expense/GetTotalExpensesByBuildingAndMonthUseCase.h
+ )
+ 
+ target_include_directories(Application PUBLIC
+Index: src/Domain/Expense/ExpenseRepository.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Domain/Expense/ExpenseRepository.h b/src/Domain/Expense/ExpenseRepository.h
+new file mode 100644
+--- /dev/null	(date 1766785925977)
++++ b/src/Domain/Expense/ExpenseRepository.h	(date 1766785925977)
+@@ -0,0 +1,20 @@
++// ExpenseRepository.h
++#pragma once
++
++#include "Expense.h"
++#include <vector>
++
++class ExpenseRepository
++{
++public:
++    virtual ~ExpenseRepository() = default;
++
++    // إضافة مصروف جديد
++    virtual void add(const Expense& expense) = 0;
++
++    // جلب كل المصروفات لمبنى معين
++    virtual std::vector<Expense> getByBuilding(int buildingId) = 0;
++
++    // جلب مصروفات مبنى في شهر معين (لـ US-21 و US-22)
++    virtual std::vector<Expense> getByBuildingAndMonth(int buildingId, int year, int month) = 0;
++};
+\ No newline at end of file
+Index: src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.cpp b/src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.cpp
+new file mode 100644
+--- /dev/null	(date 1766793516477)
++++ b/src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.cpp	(date 1766793516477)
+@@ -0,0 +1,62 @@
++// src/Infrastructure/Persistence/InMemoryExpenseRepository.cpp
++#include "InMemoryExpenseRepository.h"
++
++void InMemoryExpenseRepository::add(const Expense& expense)
++{
++    Expense newExpense = expense;  // نسخة عشان نعدل الـ ID
++
++    // توليد ID تلقائي
++    newExpense.setExpenseId(nextId++);
++
++    // إضافة للقائمة
++    expenses.push_back(newExpense);
++}
++
++std::vector<Expense> InMemoryExpenseRepository::getByBuilding(int buildingId)
++{
++    std::vector<Expense> result;
++
++    // نرجع كل المصروفات اللي ليها نفس buildingId
++    for (const auto& exp : expenses)
++    {
++        if (exp.getBuildingId() == buildingId)
++        {
++            result.push_back(exp);
++        }
++    }
++
++    return result;
++}
++
++std::vector<Expense> InMemoryExpenseRepository::getByBuildingAndMonth( int buildingId, int year, int month)
++{
++    std::vector<Expense> result;
++
++    for (const auto& exp : expenses)
++    {
++        if (exp.getBuildingId() != buildingId)
++            continue;
++
++        // تحليل التاريخ (صيغة متوقعة: YYYY-MM-DD)
++        const std::string& dateStr = exp.getExpenseDate();
++        if (dateStr.length() >= 7)
++        {
++            try
++            {
++                int expYear = std::stoi(dateStr.substr(0, 4));
++                int expMonth = std::stoi(dateStr.substr(5, 2));
++
++                if (expYear == year && expMonth == month)
++                {
++                    result.push_back(exp);
++                }
++            }
++            catch (...)
++            {
++                // لو التاريخ مش صالح، نتجاهله في الفلتر
++            }
++        }
++    }
++
++    return result;
++}
+\ No newline at end of file
+Index: src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.h b/src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.h
+new file mode 100644
+--- /dev/null	(date 1766793516477)
++++ b/src/Infrastructure/Expense/Repositories/InMemoryExpenseRepository.h	(date 1766793516477)
+@@ -0,0 +1,21 @@
++// src/Infrastructure/Persistence/InMemoryExpenseRepository.h
++#pragma once
++
++#include "../Domain/Expense/ExpenseRepository.h"
++#include "../Domain/Expense/Expense.h"
++#include <vector>
++using namespace std;
++
++class InMemoryExpenseRepository : public ExpenseRepository
++{
++private:
++    vector<Expense> expenses;
++    int nextId = 1;
++
++public:
++    void add(const Expense& expense) override;
++
++    vector<Expense> getByBuilding(int buildingId) override;
++
++    vector<Expense> getByBuildingAndMonth(int buildingId, int year, int month) override;
++};
+\ No newline at end of file
+Index: src/Domain/CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>add_library(Domain STATIC\r\n    User/User.cpp\r\n    Apartment/Apartment.cpp\r\n    Building/Building.cpp\r\n    Expense/Expense.cpp\r\n    MaintenanceRequest/MaintenanceRequest.cpp\r\n    RentalContract/RentalContract.cpp\r\n    RentPayment/RentPayment.cpp\r\n    Tenant/Tenant.cpp\r\n)\r\n\r\n# this is to tell the cmake where to look for .h files\r\n# CMAKE_CURRENT_SOURCE_DIR => src/Domain\r\ntarget_include_directories(Domain PUBLIC\r\n    ${CMAKE_CURRENT_SOURCE_DIR}\r\n)\r\n\r\n# PRIVATE => only domain sees its headers\r\n# INTERFACE => Domain can't even see its own headers\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Domain/CMakeLists.txt b/src/Domain/CMakeLists.txt
+--- a/src/Domain/CMakeLists.txt	(revision b5436597c5c491c833de6cee132bbb682b0ca0eb)
++++ b/src/Domain/CMakeLists.txt	(date 1766785925977)
+@@ -7,6 +7,7 @@
+     RentalContract/RentalContract.cpp
+     RentPayment/RentPayment.cpp
+     Tenant/Tenant.cpp
++        Expense/ExpenseRepository.h
+ )
+ 
+ # this is to tell the cmake where to look for .h files
+Index: src/Application/Expense/CreateExpenseUseCase.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/Expense/CreateExpenseUseCase.cpp b/src/Application/Expense/CreateExpenseUseCase.cpp
+new file mode 100644
+--- /dev/null	(date 1766786995863)
++++ b/src/Application/Expense/CreateExpenseUseCase.cpp	(date 1766786995863)
+@@ -0,0 +1,25 @@
++#include "CreateExpenseUseCase.h"
++#include <stdexcept>
++
++CreateExpenseUseCase::CreateExpenseUseCase(ExpenseRepository& repository)
++    : repo(repository) {}
++
++void CreateExpenseUseCase::execute(
++    int buildingId,
++    ExpenseCategory category,
++    double amount,
++    const std::string& date,
++    const std::string& description)
++{
++    if (buildingId <= 0)
++        throw std::invalid_argument("Id is not valid");
++
++    if (amount <= 0)
++        throw std::invalid_argument("Amount is not valid");
++
++    if (date.empty())
++        throw std::invalid_argument("Date is required");
++
++    Expense expense(0, buildingId, category, amount, description, date);
++    repo.add(expense);
++}
+\ No newline at end of file
+Index: src/Application/Expense/CreateExpenseUseCase.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/Expense/CreateExpenseUseCase.h b/src/Application/Expense/CreateExpenseUseCase.h
+new file mode 100644
+--- /dev/null	(date 1766786896798)
++++ b/src/Application/Expense/CreateExpenseUseCase.h	(date 1766786896798)
+@@ -0,0 +1,20 @@
++#pragma once
++
++#include "../../Domain/Expense/Expense.h"
++#include "../../Domain/Expense/ExpenseRepository.h"
++
++class CreateExpenseUseCase {
++private:
++    ExpenseRepository& repo;
++
++public:
++    explicit CreateExpenseUseCase(ExpenseRepository& repository);
++
++    void execute(
++        int buildingId,
++        ExpenseCategory category,
++        double amount,
++        const std::string& date,
++        const std::string& description = ""
++    );
++};
+\ No newline at end of file
+Index: src/Domain/Expense/Expense.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"Expense.h\"\r\n\r\nExpense::Expense(int id, int buildingId, ExpenseCategory category, double amount, string &description, string &expenseDate)\r\n{\r\n}\r\n\r\nint Expense::getExpenseId() const\r\n{\r\n    return 0;\r\n}\r\n\r\nint Expense::getBuildingId() const\r\n{\r\n    return 0;\r\n}\r\n\r\nExpenseCategory Expense::getCategory() const\r\n{\r\n    return ExpenseCategory();\r\n}\r\n\r\ndouble Expense::getAmount() const\r\n{\r\n    return 0.0;\r\n}\r\n\r\nstring Expense::getDescription() const\r\n{\r\n    return string();\r\n}\r\n\r\nstring Expense::getExpenseDate() const\r\n{\r\n    return string();\r\n}\r\n\r\nvoid Expense::setCategory(ExpenseCategory newCategory)\r\n{\r\n}\r\n\r\nvoid Expense::setAmount(double newAmount)\r\n{\r\n}\r\n\r\nvoid Expense::setDescription(string &newDescription)\r\n{\r\n}\r\n\r\nvoid Expense::setExpenseDate(string &newDate)\r\n{\r\n}\r\n\r\nvoid Expense::increaseAmount(double extra)\r\n{\r\n}\r\n\r\nvoid Expense::decreaseAmount(double deduction)\r\n{\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Domain/Expense/Expense.cpp b/src/Domain/Expense/Expense.cpp
+--- a/src/Domain/Expense/Expense.cpp	(revision b5436597c5c491c833de6cee132bbb682b0ca0eb)
++++ b/src/Domain/Expense/Expense.cpp	(date 1766792496911)
+@@ -1,59 +1,84 @@
+ #include "Expense.h"
++#include <iostream>
++using namespace std;
+ 
+-Expense::Expense(int id, int buildingId, ExpenseCategory category, double amount, string &description, string &expenseDate)
++Expense::Expense(int id, int buildingId, ExpenseCategory category, double amount,const string &description,const string &expenseDate)
+ {
+ }
+ 
+ int Expense::getExpenseId() const
+ {
+-    return 0;
++    return expenseId;
+ }
+ 
+ int Expense::getBuildingId() const
+ {
+-    return 0;
++    return buildingId;
+ }
+ 
+ ExpenseCategory Expense::getCategory() const
+ {
+-    return ExpenseCategory();
++    return category;
+ }
+ 
+ double Expense::getAmount() const
+ {
+-    return 0.0;
++    return amount;
+ }
+ 
+ string Expense::getDescription() const
+ {
+-    return string();
++    return description;
+ }
+ 
+ string Expense::getExpenseDate() const
+ {
+-    return string();
++    return expenseDate;
+ }
+ 
+ void Expense::setCategory(ExpenseCategory newCategory)
+ {
++    category = newCategory;
+ }
+ 
+ void Expense::setAmount(double newAmount)
+ {
++    amount = newAmount;
+ }
+ 
+ void Expense::setDescription(string &newDescription)
+ {
++    description = newDescription;
+ }
+ 
+ void Expense::setExpenseDate(string &newDate)
+ {
++    expenseDate = newDate;
++}
++
++void Expense::setExpenseId(int _id)
++{
++    expenseId = _id;
+ }
+ 
+ void Expense::increaseAmount(double extra)
+ {
++    if (extra < 0) {
++        cout << "Extra amount cannot be negative\n";
++        return;
++    }
++    amount += extra;
+ }
+ 
+ void Expense::decreaseAmount(double deduction)
+ {
++    if (deduction < 0) {
++        cout << "Deduction cannot be negative\n";
++        return;
++    }
++    if (amount - deduction < 0) {
++        cout << "Cannot deduct more than current amount\n";
++        return;
++    }
++    amount -= deduction;
+ }
+Index: src/Domain/Expense/ExpenseCategory.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>enum class ExpenseCategory\r\n{\r\n    Electricity,\r\n    Cleaning,\r\n    Plumbing,\r\n    Security,\r\n    Other\r\n};
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Domain/Expense/ExpenseCategory.h b/src/Domain/Expense/ExpenseCategory.h
+--- a/src/Domain/Expense/ExpenseCategory.h	(revision b5436597c5c491c833de6cee132bbb682b0ca0eb)
++++ b/src/Domain/Expense/ExpenseCategory.h	(date 1766786228782)
+@@ -1,3 +1,8 @@
++#pragma once
++
++// ... باقي الكود
++
++// مفيش حاجة بعد #endif لو استخدمت pragma once
+ enum class ExpenseCategory
+ {
+     Electricity,

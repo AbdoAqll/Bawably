@@ -1,0 +1,84 @@
+Index: src/Domain/Expense/Expense.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"ExpenseCategory.h\"\r\n#include <string>\r\n\r\nusing namespace std;\r\n\r\nclass Expense\r\n{\r\nprivate:\r\n    int expenseId;\r\n    int buildingId;\r\n    ExpenseCategory category;\r\n    double amount;\r\n    string description;\r\n    string expenseDate;\r\n\r\npublic:\r\n    Expense(int id, int buildingId, ExpenseCategory category, double amount, string &description, string &expenseDate);\r\n\r\n    int getExpenseId() const;\r\n    int getBuildingId() const;\r\n    ExpenseCategory getCategory() const;\r\n    double getAmount() const;\r\n    string getDescription() const;\r\n    string getExpenseDate() const;\r\n\r\n    void setCategory(ExpenseCategory newCategory);\r\n    void setAmount(double newAmount);\r\n    void setDescription(string &newDescription);\r\n    void setExpenseDate(string &newDate);\r\n\r\n    void increaseAmount(double extra);\r\n    void decreaseAmount(double deduction);\r\n};
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Domain/Expense/Expense.h b/src/Domain/Expense/Expense.h
+--- a/src/Domain/Expense/Expense.h	(revision b5436597c5c491c833de6cee132bbb682b0ca0eb)
++++ b/src/Domain/Expense/Expense.h	(date 1766787118687)
+@@ -2,7 +2,11 @@
+ #include <string>
+ 
+ using namespace std;
++#pragma once
+ 
++// ... باقي الكود
++
++// مفيش حاجة بعد #endif لو استخدمت pragma once
+ class Expense
+ {
+ private:
+@@ -14,7 +18,7 @@
+     string expenseDate;
+ 
+ public:
+-    Expense(int id, int buildingId, ExpenseCategory category, double amount, string &description, string &expenseDate);
++    Expense(int id, int buildingId, ExpenseCategory category, double amount,const string &description,const string &expenseDate);
+ 
+     int getExpenseId() const;
+     int getBuildingId() const;
+@@ -24,6 +28,7 @@
+     string getExpenseDate() const;
+ 
+     void setCategory(ExpenseCategory newCategory);
++    void setExpenseId(int _id);
+     void setAmount(double newAmount);
+     void setDescription(string &newDescription);
+     void setExpenseDate(string &newDate);
+Index: src/Application/Expense/GetExpensesByBuildingUseCase.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/Expense/GetExpensesByBuildingUseCase.cpp b/src/Application/Expense/GetExpensesByBuildingUseCase.cpp
+new file mode 100644
+--- /dev/null	(date 1766787166596)
++++ b/src/Application/Expense/GetExpensesByBuildingUseCase.cpp	(date 1766787166596)
+@@ -0,0 +1,8 @@
++#include "GetExpensesByBuildingUseCase.h"
++
++GetExpensesByBuildingUseCase::GetExpensesByBuildingUseCase(ExpenseRepository& repository)
++    : repo(repository) {}
++
++std::vector<Expense> GetExpensesByBuildingUseCase::execute(int buildingId) {
++    return repo.getByBuilding(buildingId);
++}
+\ No newline at end of file
+Index: src/Application/Expense/GetExpensesByBuildingUseCase.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Application/Expense/GetExpensesByBuildingUseCase.h b/src/Application/Expense/GetExpensesByBuildingUseCase.h
+new file mode 100644
+--- /dev/null	(date 1766787158509)
++++ b/src/Application/Expense/GetExpensesByBuildingUseCase.h	(date 1766787158509)
+@@ -0,0 +1,15 @@
++#pragma once
++
++#include "../../Domain/Expense/Expense.h"
++#include "../../Domain/Expense/ExpenseRepository.h"
++#include <vector>
++
++class GetExpensesByBuildingUseCase {
++private:
++    ExpenseRepository& repo;
++
++public:
++    explicit GetExpensesByBuildingUseCase(ExpenseRepository& repository);
++
++    std::vector<Expense> execute(int buildingId);
++};
+\ No newline at end of file
