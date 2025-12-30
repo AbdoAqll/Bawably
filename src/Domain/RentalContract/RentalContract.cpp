@@ -1,57 +1,50 @@
 #include "RentalContract.h"
 
-RentalContract::RentalContract(int id, int apartmentId, int tenantId, double monthlyRent, string &startDate)
-{
+RentalContract::RentalContract(int id, int buildingId, int apartmentId, int tenantId, double monthlyRent, string& startDate) {
     contractId = id;
-    apartmentId = apartmentId;
-    tenantId = tenantId;
-    monthlyRent = monthlyRent;
-    startDate = startDate;
+    this->buildingId = buildingId;
+    this->apartmentId = apartmentId;
+    this->tenantId = tenantId;
+    this->monthlyRent = monthlyRent;
+    this->startDate = startDate;
     isActive = true;
 }
 
-int RentalContract::getContractId() const
-{
+int RentalContract::getContractId() const {
     return contractId;
 }
 
-int RentalContract::getApartmentId() const
-{
+int RentalContract::getApartmentId() const {
     return apartmentId;
 }
 
-int RentalContract::getTenantId() const
-{
+int RentalContract::getTenantId() const {
     return tenantId;
 }
 
-double RentalContract::getMonthlyRent() const
-{
+double RentalContract::getMonthlyRent() const {
     return monthlyRent;
 }
 
-string RentalContract::getStartDate() const
-{
+string RentalContract::getStartDate() const {
     return startDate;
 }
 
-string RentalContract::getEndDate() const
-{
+string RentalContract::getEndDate() const {
     return endDate;
 }
-
-bool RentalContract::getIsActive() const
-{
+int RentalContract::getBuildingId() const {
+    return buildingId;
+}
+bool RentalContract::getIsActive() const {
     return isActive;
 }
 
-void RentalContract::setEndDate(string &newEndDate)
-{
+void RentalContract::setEndDate(string& newEndDate) {
     endDate = newEndDate;
 }
 
-void RentalContract::terminateContract(string &terminationDate)
-{
+void RentalContract::terminateContract(string& terminationDate) {
     isActive = false;
     endDate = terminationDate;
 }
