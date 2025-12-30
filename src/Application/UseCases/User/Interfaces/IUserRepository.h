@@ -1,16 +1,24 @@
-#ifndef IUSER_REPOSITORY_H
-#define IUSER_REPOSITORY_H
+#ifndef IUSERREPOSITORY_H
+#define IUSERREPOSITORY_H
 
 #include "Domain/User/User.h"
+#include "Domain/User/Owner.h"
+#include "Domain/User/TenantUser.h"
+#include <memory>
+#include <vector>
 
-class IUserRepository
-{
+using namespace std;
+
+class IUserRepository {
 public:
     virtual ~IUserRepository() = default;
 
-    virtual bool save(const User &user) = 0;
-    virtual User findById(int id) = 0;
-    virtual bool exists(int id) = 0;
+    virtual shared_ptr<User> findByCredentials(const string& username, const string& password) = 0;
+    virtual shared_ptr<User> findByUsername(const string& username) = 0;
+    virtual bool saveTenantUser(const TenantUser& tenantUser) = 0;
+    virtual vector<TenantUser> getAllTenantUsers() = 0;
+    virtual bool tenantUserExists(int tenantId) = 0;
+    virtual TenantUser* findTenantUserByTenantId(int tenantId) = 0;
 };
 
-#endif // IUSER_REPOSITORY_H
+#endif // IUSERREPOSITORY_H

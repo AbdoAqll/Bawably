@@ -1,8 +1,10 @@
 #include "Building.h"
 
-Building::Building(int id, string &name, string &address)
+int Building::nextId=0;
+
+Building::Building(string &name, string &address)
 {
-    buildingId = id;
+    buildingId = Building::nextId++;
     buildingName = name;
     buildingAddress = address;
 }

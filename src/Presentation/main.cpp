@@ -1,51 +1,54 @@
 #include <iostream>
 #include <memory>
-#include "Controllers/UserController.h"
-#include "Infrastructure/User/Repositories/UserRepository.h"
+#include "Container/DependencyContainer.h"
+#include "UI/ConsoleUtils.h"
+#include "UI/MenuDisplayer.h"
+#include "Domain/User/User.h"
+#include "Domain/User/Owner.h"
+#include "Domain/User/TenantUser.h"
+#include <string>
 
-int main()
-{
-    // Create dependencies
-    auto userRepository = std::make_shared<UserRepository>();
-    auto createUserUseCase = std::make_shared<CreateUserUseCase>(userRepository);
+using namespace std;
 
-    // Create controller
-    UserController controller(createUserUseCase);
+int main() {
+    // Initialize console for proper character encoding (box-drawing chars)
+    ConsoleUtils::initConsole();
+    ConsoleUtils::clearScreen();
 
-    int choice = 0;
+    DependencyContainer container;
+    auto& authController = *container.getAuthController();
+    auto& ownerMenuController = *container.getOwnerMenuController();
+    auto& tenantMenuController = *container.getTenantMenuController();
 
-    while (true)
-    {
-        controller.displayMenu();
-        std::cin >> choice;
-        std::cin.ignore(); // Clear newline from input buffer
-
-        if (choice == 1)
-        {
-            int id;
-            std::string name, email;
-
-            std::cout << "\nEnter User ID: ";
-            std::cin >> id;
-            std::cin.ignore();
-
-            std::cout << "Enter Name: ";
-            std::getline(std::cin, name);
-
-            std::cout << "Enter Email: ";
-            std::getline(std::cin, email);
-
-            controller.createUser(id, name, email);
-        }
-        else if (choice == 2)
-        {
-            std::cout << "Exiting...\n";
+    bool running = true;
+    while (running) {
+        shared_ptr<User> loggedInUser = authController.showLoginForm();
+        if (loggedInUser == nullptr) {
+            // User chose to exit
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Thank you for using Bawably System!" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            running = false;
             break;
         }
-        else
-        {
-            std::cout << "Invalid choice. Please try again.\n";
+
+        // Route to appropriate menu based on user role
+        if (loggedInUser->getRole() == UserRole::OWNER) {
+            // Cast to Owner and show owner menu
+            auto owner = dynamic_pointer_cast<Owner>(loggedInUser);
+            if (owner) {
+                ownerMenuController.execute(owner);
+            }
         }
+        else if (loggedInUser->getRole() == UserRole::TENANT) {
+            // Cast to TenantUser and show tenant menu
+            auto tenant = dynamic_pointer_cast<TenantUser>(loggedInUser);
+            if (tenant) {
+                tenantMenuController.execute(tenant);
+            }
+        }
+        // After logout, loop back to login screen
     }
 
     return 0;

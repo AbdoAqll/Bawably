@@ -10,9 +10,10 @@ private:
     int buildingId;
     string apartmentNumber;
     ApartmentStatus status;
+    static int nextId;
 
 public:
-    Apartment(int id, int buildingId, string &number);
+    Apartment(int buildingId, string &number);
     int getId() const;
     int getBuildingId() const;
     string getApartmentNumber() const;
