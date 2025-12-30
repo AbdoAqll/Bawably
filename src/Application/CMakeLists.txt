@@ -18,8 +18,10 @@ add_library(Application STATIC
         UseCases/RentalContract/EndRentalContract/EndRentalContractUseCase.cpp
         UseCases/User/Login/LoginUseCase.cpp
         UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp
+        UseCases/Expense/CreateExpenseUseCase.cpp
+        UseCases/Expense/GetExpensesByBuildingUseCase.cpp
+        UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
 )
-
 target_include_directories(Application PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..

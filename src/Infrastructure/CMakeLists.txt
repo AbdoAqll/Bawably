@@ -4,7 +4,9 @@ add_library(Infrastructure STATIC
         MaintenanceRequest/Repositories/InMemoryMaintenanceRequestRepository.cpp
         RentalContract/Repositories/InMemoryRentalContractRepository.cpp
         User/Repositories/InMemoryUserRepository.cpp
+        Expense/Repositories/InMemoryExpenseRepository.cpp
 )
+
 
 target_include_directories(Infrastructure PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
