@@ -4,9 +4,7 @@
 using namespace std;
 #pragma once
 
-// ... باقي الكود
 
-// مفيش حاجة بعد #endif لو استخدمت pragma once
 class Expense
 {
 private:

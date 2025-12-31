@@ -4,17 +4,24 @@
 
 bool InMemoryApartmentRepository::save(const Apartment& apartment) {
     int id = apartment.getId();
-    bool exists = false;
+
+    // Check if apartment with this ID already exists
+    auto it = apartments.find(id);
+    if (it != apartments.end()) {
+        // Update existing apartment
+        it->second = apartment;
+        return true;
+    }
+
+    // Check if apartment with same number and building already exists (for new apartments)
     for (const auto& pair : apartments) {
         if (pair.second.getApartmentNumber() == apartment.getApartmentNumber()
             && pair.second.getBuildingId() == apartment.getBuildingId()) {
-            exists = true;
-            break;
+            return false;  // Can't add duplicate apartment
         }
     }
-    if (exists) {
-        return false;
-    }
+
+    // Add new apartment
     apartments.insert({ id, apartment });
     return true;
 }

@@ -39,6 +39,13 @@
 #include "UseCases/User/GetAllTenants/GetAllTenantsUseCase.h"
 #include "UseCases/User/RemoveTenant/RemoveTenantUseCase.h"
 
+#include "Infrastructure/Expense/Repositories/InMemoryExpenseRepository.h"
+#include "Application/UseCases/Expense/Interfaces/IExpenseRepository.h"
+#include "Application/UseCases/Expense/AddExpense/AddExpenseUseCase.h"
+#include "Application/UseCases/Expense/GetBuildingExpenses/GetBuildingExpensesUseCase.h"
+#include "Application/UseCases/Expense/GetExpensesByBuildingAndMonth/GetExpensesByBuildingAndMonthUseCase.h"
+#include "Application/UseCases/Expense/GetAllExpenses/GetAllExpensesUseCase.h"
+
 
 using namespace std;
 
@@ -49,6 +56,7 @@ DependencyContainer::DependencyContainer() {
     shared_ptr<IMaintenanceRequestRepository> maintenanceRequestRepository = make_shared<InMemoryMaintenanceRequestRepository>();
     shared_ptr<IUserRepository> userRepository = make_shared<InMemoryUserRepository>();
     shared_ptr<IRentPaymentRepository> rentPaymentRepository = make_shared<InMemoryRentPaymentRepository>();
+    shared_ptr<IExpenseRepository> expenseRepository = make_shared<InMemoryExpenseRepository>();
 
 
     vector<shared_ptr<IUseCase>> buildingUseCases = {
@@ -80,38 +88,43 @@ DependencyContainer::DependencyContainer() {
         make_shared<RemoveTenantUseCase>(userRepository)
     };
 
+    vector<shared_ptr<IUseCase>> expenseUseCases = {
+        make_shared<AddExpenseUseCase>(expenseRepository),
+        make_shared<GetBuildingExpensesUseCase>(expenseRepository),
+        make_shared<GetExpensesByBuildingAndMonthUseCase>(expenseRepository),
+        make_shared<GetAllExpensesUseCase>(expenseRepository)
+    };
+
     auto loginUseCase = make_shared<LoginUseCase>(userRepository);
 
-    auto createRentalContractUseCase = make_shared<CreateRentalContractUseCase>(
-        rentalContractRepository, apartmentRepository, userRepository);
-    auto endRentalContractUseCase = make_shared<EndRentalContractUseCase>(
-        rentalContractRepository, apartmentRepository);
-    auto getRentalContractByTenantId = make_shared<GetRentalContractByTenantIdUseCase>(rentalContractRepository, userRepository);
+    vector<shared_ptr<IUseCase>> rentalContractUseCases = {
+        make_shared<CreateRentalContractUseCase>(rentalContractRepository, apartmentRepository, userRepository),
+        make_shared<EndRentalContractUseCase>(rentalContractRepository, apartmentRepository),
+        make_shared<GetRentalContractByTenantIdUseCase>(rentalContractRepository, userRepository)
+    };
 
     // Rent Payment Use Cases
-    auto recordRentPaymentUseCase = make_shared<RecordRentPaymentUseCase>(
-        rentPaymentRepository, rentalContractRepository);
-    auto addPartialPaymentUseCase = make_shared<AddPartialPaymentUseCase>(
-        rentPaymentRepository, rentalContractRepository);
-    auto viewPaidTenantsUseCase = make_shared<ViewPaidTenantsUseCase>(
-        rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository);
-    auto viewUnpaidOrPartialTenantsUseCase = make_shared<ViewUnpaidOrPartialTenantsUseCase>(
-        rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository);
+    vector<shared_ptr<IUseCase>> rentPaymentUseCases = {
+        make_shared<RecordRentPaymentUseCase>(rentPaymentRepository, rentalContractRepository),
+        make_shared<AddPartialPaymentUseCase>(rentPaymentRepository, rentalContractRepository),
+        make_shared<ViewPaidTenantsUseCase>(rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository),
+        make_shared<ViewUnpaidOrPartialTenantsUseCase>(rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository)
+    };
 
     // Initialize controllers
     authController = make_shared<AuthController>(loginUseCase);
     rentalContractController = make_shared<RentalContractController>(
-        createRentalContractUseCase, endRentalContractUseCase, getRentalContractByTenantId, rentalContractRepository);
+        rentalContractUseCases, rentalContractRepository);
     rentPaymentController = make_shared<RentPaymentController>(
-        recordRentPaymentUseCase, addPartialPaymentUseCase,
-        viewPaidTenantsUseCase, viewUnpaidOrPartialTenantsUseCase, rentPaymentRepository);
+        rentPaymentUseCases, rentPaymentRepository);
     maintenanceRequestController = make_shared<MaintenanceRequestController>(maintenanceRequestUseCases);
+    expenseController = make_shared<ExpenseController>(expenseUseCases);
     apartmentController = make_shared<ApartmentController>(apartmentUseCases, rentalContractController);
-    buildingController = make_shared<BuildingController>(buildingUseCases, apartmentController, maintenanceRequestController);
+    buildingController = make_shared<BuildingController>(buildingUseCases, apartmentController, maintenanceRequestController, expenseController);
     tenantController = make_shared<TenantController>(tenantUseCases);
 
     // Initialize menu controllers
-    ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController, tenantController);
+    ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController, tenantController, expenseController);
     tenantMenuController = make_shared<TenantMenuController>(maintenanceRequestController, apartmentRepository);
 
 }
@@ -135,6 +148,10 @@ std::shared_ptr<RentPaymentController> DependencyContainer::getRentPaymentContro
 
 std::shared_ptr<MaintenanceRequestController> DependencyContainer::getMaintenanceRequestController() {
     return maintenanceRequestController;
+}
+
+std::shared_ptr<ExpenseController> DependencyContainer::getExpenseController() {
+    return expenseController;
 }
 
 std::shared_ptr<AuthController> DependencyContainer::getAuthController() {

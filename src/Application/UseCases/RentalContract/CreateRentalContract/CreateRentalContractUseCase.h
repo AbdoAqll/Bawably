@@ -16,6 +16,13 @@ struct CreateRentalContractParams {
     string startDate;
 };
 
+struct CreateRentalContractResult {
+    int contractId;
+    bool isTransfer;
+    int previousApartmentId;
+    string message;
+};
+
 class CreateRentalContractUseCase : public IUseCase {
 private:
     shared_ptr<IRentalContractRepository> _rentalContractRepository;

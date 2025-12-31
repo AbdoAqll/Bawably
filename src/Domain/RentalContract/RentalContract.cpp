@@ -41,6 +41,10 @@ void RentalContract::setEndDate(string& newEndDate) {
     endDate = newEndDate;
 }
 
+void RentalContract::setActive(bool active) {
+    isActive = active;
+}
+
 void RentalContract::terminateContract(string& terminationDate) {
     isActive = false;
     endDate = terminationDate;

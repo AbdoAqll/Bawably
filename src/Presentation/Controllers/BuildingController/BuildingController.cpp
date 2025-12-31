@@ -6,6 +6,7 @@
 #include "Application/UseCases/Building/IsBuildingExists/IsBuildingExistsUseCase.h"
 #include "Controllers/ApartmentController/ApartmentController.h"
 #include "Controllers/MaintenanceRequestController/MaintenanceRequestController.h"
+#include "Controllers/ExpenseController/ExpenseController.h"
 #include "UI/ConsoleUtils.h"
 #include "UI/MenuDisplayer.h"
 #include "UI/InputForm.h"
@@ -13,12 +14,14 @@
 
 BuildingController::BuildingController(vector<shared_ptr<IUseCase>>& useCases,
     shared_ptr<ApartmentController> apartmentCtrl,
-    shared_ptr<MaintenanceRequestController> maintenanceCtrl) {
+    shared_ptr<MaintenanceRequestController> maintenanceCtrl,
+    shared_ptr<ExpenseController> expenseCtrl) {
     for (auto useCase : useCases) {
         this->useCases[useCase->UseCaseName] = useCase;
     }
     apartmentController = apartmentCtrl;
     maintenanceRequestController = maintenanceCtrl;
+    expenseController = expenseCtrl;
 }
 
 void BuildingController::displayMenu() {
@@ -95,6 +98,7 @@ void BuildingController::displayManageBuildingMenu(int buildingId) {
         MenuDisplayer menu("Manage Building (ID: " + to_string(buildingId) + ")", vector<string>{
             "1. Apartment Management",
                 "2. Maintenance Management",
+                "3. Expense Management",
                 "0. Back to Building Menu"
         });
 
@@ -108,6 +112,9 @@ void BuildingController::displayManageBuildingMenu(int buildingId) {
             maintenanceRequestController->executeForOwner(buildingId);
             break;
         case 2:
+            expenseController->executeForBuilding(buildingId);
+            break;
+        case 3:
         case -1:
             running = false;
             break;

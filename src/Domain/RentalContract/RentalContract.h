@@ -25,6 +25,7 @@ public:
     bool getIsActive() const;
 
     void setEndDate(string& newEndDate);
+    void setActive(bool active);
 
     void terminateContract(string& terminationDate);
 };

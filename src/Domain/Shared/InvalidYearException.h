@@ -1,7 +1,7 @@
 #ifndef INVALIDYEAREXCEPTION_H
 #define INVALIDYEAREXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include "./Shared/DomainException.h"
 
 class InvalidYearException : public DomainException {
 public:

@@ -6,15 +6,11 @@
 #include <iomanip>
 
 RentPaymentController::RentPaymentController(
-    shared_ptr<RecordRentPaymentUseCase> recordUseCase,
-    shared_ptr<AddPartialPaymentUseCase> addPartialUseCase,
-    shared_ptr<ViewPaidTenantsUseCase> viewPaidUseCase,
-    shared_ptr<ViewUnpaidOrPartialTenantsUseCase> viewUnpaidUseCase,
+    vector<shared_ptr<IUseCase>>& useCases,
     shared_ptr<IRentPaymentRepository> repository) {
-    recordRentPaymentUseCase = recordUseCase;
-    addPartialPaymentUseCase = addPartialUseCase;
-    viewPaidTenantsUseCase = viewPaidUseCase;
-    viewUnpaidOrPartialTenantsUseCase = viewUnpaidUseCase;
+    for (auto useCase : useCases) {
+        this->useCases[useCase->UseCaseName] = useCase;
+    }
     rentPaymentRepository = repository;
 }
 
@@ -111,7 +107,7 @@ void RentPaymentController::handleRecordRentPayment() {
             params.amountPaid = result.getDouble("amountPaid");
             params.paymentDate = result.get("paymentDate");
 
-            auto execResult = recordRentPaymentUseCase->execute(params);
+            auto execResult = useCases["RecordRentPayment"]->execute(params);
             auto paymentResult = any_cast<RecordRentPaymentResult>(execResult);
 
             displayPaymentDetails(paymentResult);
@@ -189,7 +185,7 @@ void RentPaymentController::handleAddPartialPayment() {
             params.amount = result.getDouble("amount");
             params.paymentDate = result.get("paymentDate");
 
-            auto execResult = addPartialPaymentUseCase->execute(params);
+            auto execResult = useCases["AddPartialPayment"]->execute(params);
             auto paymentResult = any_cast<AddPartialPaymentResult>(execResult);
 
             displayPartialPaymentResult(paymentResult);
@@ -250,7 +246,7 @@ void RentPaymentController::handleViewPaidTenants() {
             params.month = result.getInt("month");
             params.year = result.getInt("year");
 
-            auto execResult = viewPaidTenantsUseCase->execute(params);
+            auto execResult = useCases["ViewPaidTenants"]->execute(params);
             auto paidTenants = any_cast<vector<PaidTenantInfo>>(execResult);
 
             displayPaidTenantsList(paidTenants, params.month, params.year);
@@ -311,7 +307,7 @@ void RentPaymentController::handleViewUnpaidOrPartialTenants() {
             params.month = result.getInt("month");
             params.year = result.getInt("year");
 
-            auto execResult = viewUnpaidOrPartialTenantsUseCase->execute(params);
+            auto execResult = useCases["ViewUnpaidOrPartialTenants"]->execute(params);
             auto tenants = any_cast<vector<UnpaidOrPartialTenantInfo>>(execResult);
 
             displayUnpaidOrPartialTenantsList(tenants, params.month, params.year);

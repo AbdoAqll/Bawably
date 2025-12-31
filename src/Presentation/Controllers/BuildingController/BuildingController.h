@@ -11,16 +11,19 @@ using namespace std;
 
 class ApartmentController;
 class MaintenanceRequestController;
+class ExpenseController;
 
 class BuildingController {
     unordered_map<string, shared_ptr<IUseCase>> useCases;
     shared_ptr<ApartmentController> apartmentController;
     shared_ptr<MaintenanceRequestController> maintenanceRequestController;
+    shared_ptr<ExpenseController> expenseController;
 
 public:
     BuildingController(vector<shared_ptr<IUseCase>>& useCases,
         shared_ptr<ApartmentController> apartmentController,
-        shared_ptr<MaintenanceRequestController> maintenanceRequestController);
+        shared_ptr<MaintenanceRequestController> maintenanceRequestController,
+        shared_ptr<ExpenseController> expenseController);
     void displayMenu();
     void createBuilding();
     void manageBuilding();

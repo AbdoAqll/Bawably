@@ -18,9 +18,10 @@ add_library(Application STATIC
         UseCases/RentalContract/EndRentalContract/EndRentalContractUseCase.cpp
         UseCases/User/Login/LoginUseCase.cpp
         UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp
-        UseCases/Expense/CreateExpenseUseCase.cpp
-        UseCases/Expense/GetExpensesByBuildingUseCase.cpp
-        UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
+        UseCases/Expense/AddExpense/AddExpenseUseCase.cpp
+        UseCases/Expense/GetBuildingExpenses/GetBuildingExpensesUseCase.cpp
+        UseCases/Expense/GetExpensesByBuildingAndMonth/GetExpensesByBuildingAndMonthUseCase.cpp
+        UseCases/Expense/GetAllExpenses/GetAllExpensesUseCase.cpp
         UseCases/RentPayment/RecordRentPayment/RecordRentPaymentUseCase.cpp
         UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.cpp
         UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.cpp

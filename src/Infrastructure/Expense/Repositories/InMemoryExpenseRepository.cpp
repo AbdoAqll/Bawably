@@ -1,14 +1,11 @@
-// src/Infrastructure/Persistence/InMemoryExpenseRepository.cpp
 #include "InMemoryExpenseRepository.h"
 
 void InMemoryExpenseRepository::add(const Expense& expense) {
-    Expense newExpense = expense;
-    newExpense.setExpenseId(nextId++);
-    expenses.push_back(newExpense);
+    expenses.push_back(expense);
 }
 
-std::vector<Expense> InMemoryExpenseRepository::getByBuilding(int buildingId) {
-    std::vector<Expense> result;
+vector<Expense> InMemoryExpenseRepository::getByBuilding(int buildingId) {
+    vector<Expense> result;
     for (const auto& e : expenses) {
         if (e.getBuildingId() == buildingId) {
             result.push_back(e);
@@ -17,24 +14,32 @@ std::vector<Expense> InMemoryExpenseRepository::getByBuilding(int buildingId) {
     return result;
 }
 
-std::vector<Expense> InMemoryExpenseRepository::getByBuildingAndMonth(
-    int buildingId, int year, int month) {
-    std::vector<Expense> result;
+vector<Expense> InMemoryExpenseRepository::getByBuildingAndMonth(int buildingId, int year, int month) {
+    vector<Expense> result;
     for (const auto& e : expenses) {
         if (e.getBuildingId() != buildingId) continue;
 
-        const std::string& date = e.getExpenseDate();
+        const string& date = e.getExpenseDate();
         if (date.size() < 7) continue;
 
         try {
-            int expYear = std::stoi(date.substr(0, 4));
-            int expMonth = std::stoi(date.substr(5, 2));
+            int expYear = stoi(date.substr(0, 4));
+            int expMonth = stoi(date.substr(5, 2));
             if (expYear == year && expMonth == month) {
                 result.push_back(e);
             }
-        } catch (...) {
+        }
+        catch (...) {
             // skip invalid date
         }
     }
     return result;
+}
+
+vector<Expense> InMemoryExpenseRepository::getAll() {
+    return expenses;
+}
+
+int InMemoryExpenseRepository::getNextId() {
+    return nextId++;
 }

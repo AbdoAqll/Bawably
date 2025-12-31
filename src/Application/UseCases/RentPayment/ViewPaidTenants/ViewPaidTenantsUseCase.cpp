@@ -1,6 +1,6 @@
 #include "ViewPaidTenantsUseCase.h"
-#include "Domain/RentPayment/Exceptions/InvalidMonthException.h"
-#include "Domain/RentPayment/Exceptions/InvalidYearException.h"
+#include "Domain/Shared/InvalidMonthException.h"
+#include "Domain/Shared/InvalidYearException.h"
 
 ViewPaidTenantsUseCase::ViewPaidTenantsUseCase(
     const shared_ptr<IRentPaymentRepository>& rentPaymentRepository,

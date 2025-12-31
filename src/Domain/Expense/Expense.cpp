@@ -1,59 +1,57 @@
 #include "Expense.h"
 
-Expense::Expense(int id, int buildingId, ExpenseCategory category, double amount,const string &description,const string &expenseDate)
-{
+Expense::Expense(int id, int buildingId, ExpenseCategory category, double amount, const string& description, const string& expenseDate)
+    : expenseId(id), buildingId(buildingId), category(category), amount(amount), description(description), expenseDate(expenseDate) {
 }
 
-int Expense::getExpenseId() const
-{
-    return 0;
+int Expense::getExpenseId() const {
+    return expenseId;
 }
 
-int Expense::getBuildingId() const
-{
-    return 0;
+int Expense::getBuildingId() const {
+    return buildingId;
 }
 
-ExpenseCategory Expense::getCategory() const
-{
-    return ExpenseCategory();
+ExpenseCategory Expense::getCategory() const {
+    return category;
 }
 
-double Expense::getAmount() const
-{
-    return 0.0;
+double Expense::getAmount() const {
+    return amount;
 }
 
-string Expense::getDescription() const
-{
-    return string();
+string Expense::getDescription() const {
+    return description;
 }
 
-string Expense::getExpenseDate() const
-{
-    return string();
+string Expense::getExpenseDate() const {
+    return expenseDate;
 }
 
-void Expense::setCategory(ExpenseCategory newCategory)
-{
+void Expense::setCategory(ExpenseCategory newCategory) {
+    category = newCategory;
 }
 
-void Expense::setAmount(double newAmount)
-{
+void Expense::setExpenseId(int _id) {
+    expenseId = _id;
 }
 
-void Expense::setDescription(string &newDescription)
-{
+void Expense::setAmount(double newAmount) {
+    amount = newAmount;
 }
 
-void Expense::setExpenseDate(string &newDate)
-{
+void Expense::setDescription(string& newDescription) {
+    description = newDescription;
 }
 
-void Expense::increaseAmount(double extra)
-{
+void Expense::setExpenseDate(string& newDate) {
+    expenseDate = newDate;
 }
 
-void Expense::decreaseAmount(double deduction)
-{
+void Expense::increaseAmount(double extra) {
+    amount += extra;
+}
+
+void Expense::decreaseAmount(double deduction) {
+    amount -= deduction;
 }

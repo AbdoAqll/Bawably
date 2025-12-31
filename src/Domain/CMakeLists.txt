@@ -7,6 +7,8 @@ add_library(Domain STATIC
     RentPayment/RentPayment.cpp
     Shared/DomainException.cpp
         Shared/CurrentDate.cpp
+    Shared/InvalidMonthException.cpp
+    Shared/InvalidYearException.cpp
     Building/Exceptions/BuildingNotExistException.cpp
     Apartment/Exceptions/ApartmentNotExistException.cpp
     Apartment/Exceptions/ApartmentAlreadyExistsException.cpp
@@ -20,12 +22,15 @@ add_library(Domain STATIC
     RentalContract/Exceptions/ContractCreationFailedException.cpp
     RentalContract/Exceptions/ContractUpdateFailedException.cpp
     RentalContract/Exceptions/NoActiveContractException.cpp
-    RentPayment/Exceptions/InvalidMonthException.cpp
-    RentPayment/Exceptions/InvalidYearException.cpp
     RentPayment/Exceptions/InvalidPaymentAmountException.cpp
     RentPayment/Exceptions/PaymentCreationFailedException.cpp
     RentPayment/Exceptions/PaymentRecordExistsException.cpp
     RentPayment/Exceptions/PaymentUpdateFailedException.cpp
+    Expense/Exceptions/InvalidExpenseAmountException.cpp
+    Expense/Exceptions/InvalidExpenseDateException.cpp
+    Expense/Exceptions/InvalidBuildingIdForExpenseException.cpp
+    Expense/Exceptions/ExpenseNotFoundException.cpp
+    Expense/Exceptions/InvalidExpenseCategoryException.cpp
     User/User.cpp
     User/Owner.cpp
     User/TenantUser.cpp

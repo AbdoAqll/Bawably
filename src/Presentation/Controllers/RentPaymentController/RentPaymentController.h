@@ -3,20 +3,21 @@
 
 #include <memory>
 #include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include "Application/UseCases/IUseCase.h"
+#include "Application/UseCases/RentPayment/Interfaces/IRentPaymentRepository.h"
 #include "Application/UseCases/RentPayment/RecordRentPayment/RecordRentPaymentUseCase.h"
 #include "Application/UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.h"
 #include "Application/UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.h"
 #include "Application/UseCases/RentPayment/ViewUnpaidOrPartialTenants/ViewUnpaidOrPartialTenantsUseCase.h"
-#include "Application/UseCases/RentPayment/Interfaces/IRentPaymentRepository.h"
 
 using namespace std;
 
 class RentPaymentController {
 private:
-    shared_ptr<RecordRentPaymentUseCase> recordRentPaymentUseCase;
-    shared_ptr<AddPartialPaymentUseCase> addPartialPaymentUseCase;
-    shared_ptr<ViewPaidTenantsUseCase> viewPaidTenantsUseCase;
-    shared_ptr<ViewUnpaidOrPartialTenantsUseCase> viewUnpaidOrPartialTenantsUseCase;
+    unordered_map<string, shared_ptr<IUseCase>> useCases;
     shared_ptr<IRentPaymentRepository> rentPaymentRepository;
 
     void displayPaymentDetails(const RecordRentPaymentResult& result);
@@ -28,10 +29,7 @@ private:
 
 public:
     RentPaymentController(
-        shared_ptr<RecordRentPaymentUseCase> recordUseCase,
-        shared_ptr<AddPartialPaymentUseCase> addPartialUseCase,
-        shared_ptr<ViewPaidTenantsUseCase> viewPaidUseCase,
-        shared_ptr<ViewUnpaidOrPartialTenantsUseCase> viewUnpaidUseCase,
+        vector<shared_ptr<IUseCase>>& useCases,
         shared_ptr<IRentPaymentRepository> repository);
 
     void execute();
