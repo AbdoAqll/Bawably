@@ -115,21 +115,21 @@ DependencyContainer::DependencyContainer() {
             buildingRepository, expenseRepository)
     };
 
-    auto loginUseCase = make_shared<LoginUseCase>(userRepository);
-
     vector<shared_ptr<IUseCase>> rentalContractUseCases = {
         make_shared<CreateRentalContractUseCase>(rentalContractRepository, apartmentRepository, userRepository),
         make_shared<EndRentalContractUseCase>(rentalContractRepository, apartmentRepository),
         make_shared<GetRentalContractByTenantIdUseCase>(rentalContractRepository, userRepository)
     };
 
-    // Rent Payment Use Cases
     vector<shared_ptr<IUseCase>> rentPaymentUseCases = {
         make_shared<RecordRentPaymentUseCase>(rentPaymentRepository, rentalContractRepository),
         make_shared<AddPartialPaymentUseCase>(rentPaymentRepository, rentalContractRepository),
         make_shared<ViewPaidTenantsUseCase>(rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository),
         make_shared<ViewUnpaidOrPartialTenantsUseCase>(rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository)
     };
+
+    
+    auto loginUseCase = make_shared<LoginUseCase>(userRepository);
 
     // Initialize controllers
     authController = make_shared<AuthController>(loginUseCase);
