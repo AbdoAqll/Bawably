@@ -50,6 +50,14 @@ int main() {
                 if (rentalContract) {
                     tenantMenuController.execute(tenant, rentalContract);
                 }
+                else {
+                    ConsoleUtils::clearScreen();
+                    ConsoleUtils::textattr(Colors::ERR);
+                    cout << "\n You have been logged out due to no active rental contract." << endl;
+                    ConsoleUtils::textattr(Colors::DEFAULT);
+                    cout << "\nPress any key to continue...";
+                    ConsoleUtils::getKey();
+                }
             }
         }
         // After logout, loop back to login screen

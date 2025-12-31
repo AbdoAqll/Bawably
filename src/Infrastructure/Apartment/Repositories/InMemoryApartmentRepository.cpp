@@ -37,6 +37,14 @@ Apartment InMemoryApartmentRepository::findById(int id, int buildingId) {
     throw ApartmentNotExistException(to_string(id), buildingId);
 }
 
+Apartment InMemoryApartmentRepository::findById(int id) {
+    auto it = apartments.find(id);
+    if (it != apartments.end()) {
+        return it->second;
+    }
+    throw ApartmentNotExistException(to_string(id));
+}
+
 bool InMemoryApartmentRepository::exists(int id, int buildingId) {
     auto it = apartments.find(id);
     if (it != apartments.end() && it->second.getBuildingId() == buildingId) {

@@ -10,7 +10,6 @@
 using namespace std;
 
 struct CreateRentalContractParams {
-    int buildingId;
     int apartmentId;
     int tenantId;
     double monthlyRent;

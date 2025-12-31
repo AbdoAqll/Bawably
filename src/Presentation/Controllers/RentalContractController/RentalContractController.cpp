@@ -94,7 +94,7 @@ void RentalContractController::handleCreateRentalContract(int buildingId, int ap
             double monthlyRent = result.getDouble("monthlyRent");
             string startDate = result.get("startDate");
 
-            CreateRentalContractParams params{ buildingId, apartmentId, tenantId, monthlyRent, startDate };
+            CreateRentalContractParams params{ apartmentId, tenantId, monthlyRent, startDate };
             auto execResult = createRentalContractUseCase->execute(params);
             int contractId = any_cast<int>(execResult);
 
@@ -271,12 +271,9 @@ shared_ptr<RentalContract> RentalContractController::getContractForTenantId(int 
     try {
         auto res = getRentalContractByTenantId->execute(tenantId);
         return make_shared<RentalContract>(any_cast<RentalContract>(res));
-    }catch (const exception& e) {
-        ConsoleUtils::textattr(Colors::ERR);
-        cout << "\n Error: " << e.what() << endl;
-        ConsoleUtils::textattr(Colors::DEFAULT);
-        cout << "\nPress any key to continue...";
-        ConsoleUtils::getKey();
+    }
+    catch (const exception& e) {
+        return nullptr;
     }
 }
 

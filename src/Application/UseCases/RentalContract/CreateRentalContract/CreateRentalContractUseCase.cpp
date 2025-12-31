@@ -1,7 +1,10 @@
 #include "CreateRentalContractUseCase.h"
 #include "Domain/RentalContract/Exceptions/ContractAlreadyExistsException.h"
+#include "Domain/RentalContract/Exceptions/ContractCreationFailedException.h"
 #include "Domain/Apartment/Exceptions/ApartmentNotExistException.h"
+#include "Domain/Apartment/Exceptions/ApartmentAlreadyRentedException.h"
 #include "Domain/Apartment/ApartmentStatus.h"
+#include "Domain/User/Exceptions/TenantNotExistException.h"
 
 CreateRentalContractUseCase::CreateRentalContractUseCase(
     const shared_ptr<IRentalContractRepository>& rentalContractRepository,
@@ -16,29 +19,28 @@ CreateRentalContractUseCase::CreateRentalContractUseCase(
 any CreateRentalContractUseCase::execute(const any& params) {
     auto args = any_cast<CreateRentalContractParams>(params);
 
-    if (!_apartmentRepository->exists(args.apartmentId, args.buildingId)) {
-        throw ApartmentNotExistException(to_string(args.apartmentId), args.buildingId);
-    }
+    // Get the apartment to validate it exists
+    Apartment apartment = _apartmentRepository->findById(args.apartmentId);
+
 
     if (!_userRepository->tenantUserExists(args.tenantId)) {
-        throw DomainException("Tenant with ID " + to_string(args.tenantId) + " does not exist");
+        throw TenantNotExistException(args.tenantId);
     }
 
     if (_rentalContractRepository->existsActiveContract(args.apartmentId, args.tenantId)) {
         throw ContractAlreadyExistsException(args.apartmentId, args.tenantId);
     }
 
-    auto apartment = _apartmentRepository->findById(args.apartmentId, args.buildingId);
     if (apartment.getStatus() == ApartmentStatus::Rented) {
-        throw DomainException("Apartment is already rented");
+        throw ApartmentAlreadyRentedException(args.apartmentId);
     }
 
     static int nextContractId = 1;
-    RentalContract contract(nextContractId++, args.buildingId, args.apartmentId, args.tenantId,
+    RentalContract contract(nextContractId++, args.apartmentId, args.tenantId,
         args.monthlyRent, args.startDate);
 
     if (!_rentalContractRepository->save(contract)) {
-        throw DomainException("Failed to create rental contract");
+        throw ContractCreationFailedException();
     }
 
     apartment.setStatus(ApartmentStatus::Rented);

@@ -7,7 +7,7 @@
 #include "UI/InputForm.h"
 #include "UI/TextEditor.h"
 
-TenantController::TenantController(vector<shared_ptr<IUseCase>>& useCases){
+TenantController::TenantController(vector<shared_ptr<IUseCase>>& useCases) {
     for (auto useCase : useCases) {
         this->useCases[useCase->UseCaseName] = useCase;
     }
@@ -26,11 +26,11 @@ void TenantController::createTenant() {
     ConsoleUtils::clearScreen();
 
     InputForm form("Add New Tenant");
-        form.addTextField("username", "Tenant Username", 50, true)
+    form.addTextField("username", "Tenant Username", 50, true)
         .addTextField("password", "Password", 50, true)
         .addTextField("nationalId", "Tenant National Id", 20, true)
-        .addTextField("phone", "Tenant Phone Number", 100, true)
-        .addTextField("name", "Tenant Full Name", 100 , true);
+        .addTextField("phone", "Tenant Phone Number", 20, true)
+        .addTextField("name", "Tenant Full Name", 20, true);
     FormResult result = form.show();
 
     if (result.submitted) {
@@ -40,7 +40,7 @@ void TenantController::createTenant() {
         string phone = result.get("phone");
         string name = result.get("name");
 
-        CreateTenantUserParams params = {username, password, phone,nationalId, name };
+        CreateTenantUserParams params = { username, password, phone,nationalId, name };
         auto res = useCases["CreateTenantUser"]->execute(params);
 
         ConsoleUtils::clearScreen();

@@ -1,5 +1,10 @@
 #include "AddPartialPaymentUseCase.h"
-#include "Domain/Shared/DomainException.h"
+#include "Domain/RentalContract/Exceptions/RentalContractNotFoundException.h"
+#include "Domain/RentPayment/Exceptions/InvalidMonthException.h"
+#include "Domain/RentPayment/Exceptions/InvalidYearException.h"
+#include "Domain/RentPayment/Exceptions/InvalidPaymentAmountException.h"
+#include "Domain/RentPayment/Exceptions/PaymentCreationFailedException.h"
+#include "Domain/RentPayment/Exceptions/PaymentUpdateFailedException.h"
 
 AddPartialPaymentUseCase::AddPartialPaymentUseCase(
     const shared_ptr<IRentPaymentRepository>& rentPaymentRepository,
@@ -15,22 +20,22 @@ any AddPartialPaymentUseCase::execute(const any& params) {
     // Validate contract exists
     auto contract = _rentalContractRepository->findById(args.contractId);
     if (contract == nullptr) {
-        throw DomainException("Rental contract with ID " + to_string(args.contractId) + " does not exist");
+        throw RentalContractNotFoundException(args.contractId);
     }
 
     // Validate month (1-12)
     if (args.month < 1 || args.month > 12) {
-        throw DomainException("Invalid month. Must be between 1 and 12");
+        throw InvalidMonthException(args.month);
     }
 
     // Validate year
     if (args.year < 2000 || args.year > 2100) {
-        throw DomainException("Invalid year. Must be between 2000 and 2100");
+        throw InvalidYearException(args.year);
     }
 
     // Validate amount
     if (args.amount <= 0) {
-        throw DomainException("Payment amount must be positive");
+        throw InvalidPaymentAmountException(args.amount, true);
     }
 
     double expectedAmount = contract->getMonthlyRent();
@@ -51,7 +56,7 @@ any AddPartialPaymentUseCase::execute(const any& params) {
         payment->addPayment(args.amount, args.paymentDate);
 
         if (!_rentPaymentRepository->update(*payment)) {
-            throw DomainException("Failed to update rent payment");
+            throw PaymentUpdateFailedException(payment->getPaymentId());
         }
 
         result.totalAmountPaid = payment->getAmountPaid();
@@ -65,7 +70,7 @@ any AddPartialPaymentUseCase::execute(const any& params) {
             args.amount, expectedAmount, args.paymentDate);
 
         if (!_rentPaymentRepository->save(newPayment)) {
-            throw DomainException("Failed to create rent payment");
+            throw PaymentCreationFailedException();
         }
 
         result.paymentId = paymentId;

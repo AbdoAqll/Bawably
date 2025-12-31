@@ -1,8 +1,7 @@
 #include "RentalContract.h"
 
-RentalContract::RentalContract(int id, int buildingId, int apartmentId, int tenantId, double monthlyRent, string& startDate) {
+RentalContract::RentalContract(int id, int apartmentId, int tenantId, double monthlyRent, string& startDate) {
     contractId = id;
-    this->buildingId = buildingId;
     this->apartmentId = apartmentId;
     this->tenantId = tenantId;
     this->monthlyRent = monthlyRent;
@@ -33,9 +32,7 @@ string RentalContract::getStartDate() const {
 string RentalContract::getEndDate() const {
     return endDate;
 }
-int RentalContract::getBuildingId() const {
-    return buildingId;
-}
+
 bool RentalContract::getIsActive() const {
     return isActive;
 }

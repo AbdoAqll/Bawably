@@ -1,13 +1,16 @@
 #include "ViewPaidTenantsUseCase.h"
-#include "Domain/Shared/DomainException.h"
+#include "Domain/RentPayment/Exceptions/InvalidMonthException.h"
+#include "Domain/RentPayment/Exceptions/InvalidYearException.h"
 
 ViewPaidTenantsUseCase::ViewPaidTenantsUseCase(
     const shared_ptr<IRentPaymentRepository>& rentPaymentRepository,
     const shared_ptr<IRentalContractRepository>& rentalContractRepository,
-    const shared_ptr<IUserRepository>& userRepository) {
+    const shared_ptr<IUserRepository>& userRepository,
+    const shared_ptr<IApartmentRepository>& apartmentRepository) {
     _rentPaymentRepository = rentPaymentRepository;
     _rentalContractRepository = rentalContractRepository;
     _userRepository = userRepository;
+    _apartmentRepository = apartmentRepository;
     UseCaseName = "ViewPaidTenants";
 }
 
@@ -16,12 +19,12 @@ any ViewPaidTenantsUseCase::execute(const any& params) {
 
     // Validate month (1-12)
     if (args.month < 1 || args.month > 12) {
-        throw DomainException("Invalid month. Must be between 1 and 12");
+        throw InvalidMonthException(args.month);
     }
 
     // Validate year
     if (args.year < 2000 || args.year > 2100) {
-        throw DomainException("Invalid year. Must be between 2000 and 2100");
+        throw InvalidYearException(args.year);
     }
 
     // Get all payments with Paid status for the specified month/year
@@ -41,7 +44,14 @@ any ViewPaidTenantsUseCase::execute(const any& params) {
         auto contract = _rentalContractRepository->findById(payment.getContractId());
         if (contract != nullptr) {
             info.apartmentId = contract->getApartmentId();
-            info.buildingId = contract->getBuildingId();
+            // Get buildingId from apartment
+            try {
+                auto apartment = _apartmentRepository->findById(contract->getApartmentId());
+                info.buildingId = apartment.getBuildingId();
+            }
+            catch (...) {
+                info.buildingId = 0;
+            }
         }
         else {
             info.apartmentId = 0;

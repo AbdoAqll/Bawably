@@ -7,6 +7,7 @@
 #include <UseCases/RentPayment/Interfaces/IRentPaymentRepository.h>
 #include <UseCases/RentalContract/Interfaces/IRentalContractRepository.h>
 #include <UseCases/User/Interfaces/IUserRepository.h>
+#include <UseCases/Apartment/Interfaces/IApartmentRepository.h>
 
 using namespace std;
 
@@ -31,12 +32,14 @@ private:
     shared_ptr<IRentPaymentRepository> _rentPaymentRepository;
     shared_ptr<IRentalContractRepository> _rentalContractRepository;
     shared_ptr<IUserRepository> _userRepository;
+    shared_ptr<IApartmentRepository> _apartmentRepository;
 
 public:
     explicit ViewPaidTenantsUseCase(
         const shared_ptr<IRentPaymentRepository>& rentPaymentRepository,
         const shared_ptr<IRentalContractRepository>& rentalContractRepository,
-        const shared_ptr<IUserRepository>& userRepository);
+        const shared_ptr<IUserRepository>& userRepository,
+        const shared_ptr<IApartmentRepository>& apartmentRepository);
 
     any execute(const any& params = {}) override;
     ~ViewPaidTenantsUseCase() override = default;

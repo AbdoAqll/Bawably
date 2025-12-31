@@ -1,5 +1,7 @@
 #include "EndRentalContractUseCase.h"
 #include "Domain/RentalContract/Exceptions/RentalContractNotFoundException.h"
+#include "Domain/RentalContract/Exceptions/ContractAlreadyTerminatedException.h"
+#include "Domain/RentalContract/Exceptions/ContractUpdateFailedException.h"
 #include "Domain/Apartment/ApartmentStatus.h"
 
 EndRentalContractUseCase::EndRentalContractUseCase(
@@ -19,16 +21,16 @@ any EndRentalContractUseCase::execute(const any& params) {
     }
 
     if (!contract->getIsActive()) {
-        throw DomainException("Contract is already terminated");
+        throw ContractAlreadyTerminatedException(args.contractId);
     }
 
     contract->terminateContract(args.endDate);
 
     if (!_rentalContractRepository->update(*contract)) {
-        throw DomainException("Failed to update rental contract");
+        throw ContractUpdateFailedException(args.contractId);
     }
 
-    auto apartment = _apartmentRepository->findById(contract->getApartmentId(), contract->getBuildingId());
+    auto apartment = _apartmentRepository->findById(contract->getApartmentId());
     apartment.setStatus(ApartmentStatus::Vacant);
     _apartmentRepository->save(apartment);
 

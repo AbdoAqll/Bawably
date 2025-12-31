@@ -94,9 +94,9 @@ DependencyContainer::DependencyContainer() {
     auto addPartialPaymentUseCase = make_shared<AddPartialPaymentUseCase>(
         rentPaymentRepository, rentalContractRepository);
     auto viewPaidTenantsUseCase = make_shared<ViewPaidTenantsUseCase>(
-        rentPaymentRepository, rentalContractRepository, userRepository);
+        rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository);
     auto viewUnpaidOrPartialTenantsUseCase = make_shared<ViewUnpaidOrPartialTenantsUseCase>(
-        rentPaymentRepository, rentalContractRepository, userRepository);
+        rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository);
 
     // Initialize controllers
     authController = make_shared<AuthController>(loginUseCase);
@@ -112,7 +112,7 @@ DependencyContainer::DependencyContainer() {
 
     // Initialize menu controllers
     ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController, tenantController);
-    tenantMenuController = make_shared<TenantMenuController>(maintenanceRequestController);
+    tenantMenuController = make_shared<TenantMenuController>(maintenanceRequestController, apartmentRepository);
 
 }
 

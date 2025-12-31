@@ -5,5 +5,6 @@
 class ApartmentNotExistException : public DomainException {
 public:
     explicit ApartmentNotExistException(string apartmentNumber, int buildingId);
+    explicit ApartmentNotExistException(string apartmentId);
 };
 #endif //APARTMENTNOTEXISTEXCEPTION_H

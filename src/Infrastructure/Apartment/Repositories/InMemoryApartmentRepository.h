@@ -15,6 +15,8 @@ public:
 
     Apartment findById(int id, int buildingId) override;
 
+    Apartment findById(int id) override;
+
     bool exists(int id, int buildingId) override;
 
     vector<Apartment> getAll(int buildingId) override;
