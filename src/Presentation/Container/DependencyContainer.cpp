@@ -8,6 +8,7 @@
 #include <UseCases/Apartment/Interfaces/IApartmentRepository.h>
 #include <UseCases/Apartment/IsApartmentExists/IsApartmentExistsUseCase.h>
 #include <UseCases/Apartment/CheckApartmentExistsAndGetId/CheckApartmentExistsAndGetIdUseCase.h>
+#include <UseCases/RentalContract/GetRentalContractByTenantId/GetRentalContractByTenantIdUseCase.h>
 
 #include "Infrastructure/Building/Repositories/BuildingRepository.h"
 #include "Application/UseCases/Building/AddBuilding/AddBuildingUseCase.h"
@@ -85,6 +86,7 @@ DependencyContainer::DependencyContainer() {
         rentalContractRepository, apartmentRepository, userRepository);
     auto endRentalContractUseCase = make_shared<EndRentalContractUseCase>(
         rentalContractRepository, apartmentRepository);
+    auto getRentalContractByTenantId = make_shared<GetRentalContractByTenantIdUseCase>(rentalContractRepository, userRepository);
 
     // Rent Payment Use Cases
     auto recordRentPaymentUseCase = make_shared<RecordRentPaymentUseCase>(
@@ -99,7 +101,7 @@ DependencyContainer::DependencyContainer() {
     // Initialize controllers
     authController = make_shared<AuthController>(loginUseCase);
     rentalContractController = make_shared<RentalContractController>(
-        createRentalContractUseCase, endRentalContractUseCase, rentalContractRepository);
+        createRentalContractUseCase, endRentalContractUseCase, getRentalContractByTenantId, rentalContractRepository);
     rentPaymentController = make_shared<RentPaymentController>(
         recordRentPaymentUseCase, addPartialPaymentUseCase,
         viewPaidTenantsUseCase, viewUnpaidOrPartialTenantsUseCase, rentPaymentRepository);

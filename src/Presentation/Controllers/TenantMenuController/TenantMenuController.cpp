@@ -9,7 +9,7 @@ TenantMenuController::TenantMenuController(shared_ptr<MaintenanceRequestControll
     : maintenanceRequestController(maintenanceCtrl) {
 }
 
-void TenantMenuController::execute(shared_ptr<TenantUser> tenant) {
+void TenantMenuController::execute(shared_ptr<TenantUser> tenant, shared_ptr<RentalContract> contract) {
     bool running = true;
 
     while (running) {
@@ -27,15 +27,15 @@ void TenantMenuController::execute(shared_ptr<TenantUser> tenant) {
         switch (choice) {
         case 0:
             maintenanceRequestController->getApartmentMaintenanceHistory(
-                tenant->getBuildingId(),
-                tenant->getApartmentId()
+                contract->getBuildingId(),
+                contract->getApartmentId()
             );
             break;
         case 1:
             maintenanceRequestController->createMaintenanceRequestForTenant(
-                tenant->getBuildingId(),
-                tenant->getApartmentId(),
-                tenant->getTenantId()
+                contract->getBuildingId(),
+                contract->getApartmentId(),
+                contract->getTenantId()
             );
             break;
         case 2:

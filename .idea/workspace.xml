@@ -32,36 +32,16 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56cc36d5-7758-439b-b90a-8639cce5fda5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Bawably.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_27_2025_5_56_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_27_2025_5_56_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_27_2025_5_56_PM__Changes_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_27_2025_5_56_PM__Changes_1.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_30_2025_3_25_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_30_2025_3_25_AM__Changes_.xml" afterDir="false" />
+    <list default="true" id="56cc36d5-7758-439b-b90a-8639cce5fda5" name="Changes" comment="fixed some bugs in the tenant managemment">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/User/CreateTenantUser/CreateTenantUserUseCase.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/User/CreateTenantUser/CreateTenantUserUseCase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/User/GetAllTenants/GetAllTenantsUseCase.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/User/GetAllTenants/GetAllTenantsUseCase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/User/Interfaces/IUserRepository.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/User/Interfaces/IUserRepository.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/UseCases/User/Login/LoginUseCase.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/UseCases/User/Login/LoginUseCase.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/User/Owner.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/User/Owner.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/User/Owner.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/User/Owner.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/User/TenantUser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/User/TenantUser.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/User/TenantUser.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/User/TenantUser.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/User/User.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/User/User.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/User/User.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/User/User.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Infrastructure/User/Repositories/InMemoryUserRepository.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/User/Repositories/InMemoryUserRepository.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Infrastructure/User/Repositories/InMemoryUserRepository.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/User/Repositories/InMemoryUserRepository.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Domain/RentalContract/RentalContract.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/RentalContract/RentalContract.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Presentation/Container/DependencyContainer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Container/DependencyContainer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Container/DependencyContainer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Container/DependencyContainer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/OwnerMenuController/OwnerMenuController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/OwnerMenuController/OwnerMenuController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/OwnerMenuController/OwnerMenuController.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/OwnerMenuController/OwnerMenuController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/TenantController/TenantController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/TenantController/TenantController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/TenantController/TenantController.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/TenantController/TenantController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/RentalContractController/RentalContractController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/RentalContractController/RentalContractController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/RentalContractController/RentalContractController.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/RentalContractController/RentalContractController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/TenantMenuController/TenantMenuController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/TenantMenuController/TenantMenuController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/Controllers/TenantMenuController/TenantMenuController.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/Controllers/TenantMenuController/TenantMenuController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Presentation/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Presentation/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,12 +66,12 @@
     &quot;assignee&quot;: &quot;BadryAnas&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/AbdoAqll/Bawably.git&quot;,
-    &quot;accountId&quot;: &quot;be9f9189-3223-4325-a7be-1722dd1eaf73&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/AbdoAqll/Bawably.git",
+    "accountId": "31a07008-8cf1-4889-862a-0dbcd44a5c5b"
   }
-}</component>
+}]]></component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="kcCD5hIY" />
   </component>
@@ -203,6 +183,15 @@
       <workItem from="1767057795977" duration="1253000" />
       <workItem from="1767104359116" duration="104000" />
     </task>
+    <task id="LOCAL-00001" summary="fixed some bugs in the tenant managemment">
+      <option name="closed" value="true" />
+      <created>1767195520540</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1767195520540</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,5 +201,9 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fixed some bugs in the tenant managemment" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed some bugs in the tenant managemment" />
   </component>
 </project>

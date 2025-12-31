@@ -9,10 +9,12 @@
 RentalContractController::RentalContractController(
     shared_ptr<CreateRentalContractUseCase> createUseCase,
     shared_ptr<EndRentalContractUseCase> endUseCase,
+    shared_ptr<GetRentalContractByTenantIdUseCase> getRentalContractByTenId,
     shared_ptr<IRentalContractRepository> repository) {
     createRentalContractUseCase = createUseCase;
     endRentalContractUseCase = endUseCase;
     rentalContractRepository = repository;
+    getRentalContractByTenantId = getRentalContractByTenId;
 }
 
 void RentalContractController::execute(int buildingId, int apartmentId) {
@@ -265,6 +267,19 @@ void RentalContractController::handleViewContractDetails() {
     ConsoleUtils::getKey();
 }
 
+shared_ptr<RentalContract> RentalContractController::getContractForTenantId(int tenantId) {
+    try {
+        auto res = getRentalContractByTenantId->execute(tenantId);
+        return make_shared<RentalContract>(any_cast<RentalContract>(res));
+    }catch (const exception& e) {
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n Error: " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
+    }
+}
+
 void RentalContractController::displayContract(const RentalContract& contract) {
     cout << "Contract ID: " << contract.getContractId() << endl;
     cout << "Apartment ID: " << contract.getApartmentId() << endl;
@@ -283,3 +298,4 @@ void RentalContractController::displayContractList(const vector<RentalContract>&
         displayContract(contract);
     }
 }
+

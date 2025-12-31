@@ -19,6 +19,7 @@ int main() {
     auto& authController = *container.getAuthController();
     auto& ownerMenuController = *container.getOwnerMenuController();
     auto& tenantMenuController = *container.getTenantMenuController();
+    auto& rentalContractController = *container.getRentalContractController();
 
     bool running = true;
     while (running) {
@@ -45,7 +46,10 @@ int main() {
             // Cast to TenantUser and show tenant menu
             auto tenant = dynamic_pointer_cast<TenantUser>(loggedInUser);
             if (tenant) {
-                tenantMenuController.execute(tenant);
+                auto rentalContract = rentalContractController.getContractForTenantId(tenant->getUserId());
+                if (rentalContract) {
+                    tenantMenuController.execute(tenant, rentalContract);
+                }
             }
         }
         // After logout, loop back to login screen
