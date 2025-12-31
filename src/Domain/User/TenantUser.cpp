@@ -1,8 +1,8 @@
 #include "TenantUser.h"
 using namespace std;
 
-TenantUser::TenantUser(int userId, const string &username, const string &password, const string &name, const string &natlId, const string &phoneNum)
-    : User (userId, username, password, UserRole::TENANT)
+TenantUser::TenantUser(const string &username, const string &password, const string &name, const string &natlId, const string &phoneNum)
+    : User (username, password, UserRole::TENANT)
 {
     fullName = name;
     nationalId = natlId;

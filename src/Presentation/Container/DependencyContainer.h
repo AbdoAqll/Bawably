@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 #include <Controllers/ApartmentController/ApartmentController.h>
+#include <Controllers/TenantController/TenantController.h>
+
 #include "Controllers/BuildingController/BuildingController.h"
 #include "Controllers/MaintenanceRequestController/MaintenanceRequestController.h"
 #include "Controllers/RentalContractController/RentalContractController.h"
@@ -22,6 +24,7 @@ class DependencyContainer {
     std::shared_ptr<AuthController> authController;
     std::shared_ptr<OwnerMenuController> ownerMenuController;
     std::shared_ptr<TenantMenuController> tenantMenuController;
+    std::shared_ptr<TenantController> tenantController;
 
 public:
     DependencyContainer();
@@ -33,6 +36,7 @@ public:
     std::shared_ptr<AuthController> getAuthController();
     std::shared_ptr<OwnerMenuController> getOwnerMenuController();
     std::shared_ptr<TenantMenuController> getTenantMenuController();
+    std::shared_ptr<TenantController> getTenantController();
 };
 
 #endif

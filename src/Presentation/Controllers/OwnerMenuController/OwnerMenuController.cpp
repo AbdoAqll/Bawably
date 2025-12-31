@@ -7,8 +7,9 @@ using namespace std;
 
 OwnerMenuController::OwnerMenuController(
     shared_ptr<BuildingController> buildingCtrl,
-    shared_ptr<RentPaymentController> rentPaymentCtrl)
-    : buildingController(buildingCtrl), rentPaymentController(rentPaymentCtrl) {
+    shared_ptr<RentPaymentController> rentPaymentCtrl,
+    shared_ptr<TenantController>tenantCtrl)
+    : buildingController(buildingCtrl), rentPaymentController(rentPaymentCtrl), tenantController(tenantCtrl) {
 }
 
 void OwnerMenuController::execute(shared_ptr<Owner> owner) {
@@ -22,6 +23,7 @@ void OwnerMenuController::execute(shared_ptr<Owner> owner) {
         vector<string> menuOptions = {
             "1. Building Management",
             "2. Rent Payment Management",
+            "3. Tenant Management",
             "0. Logout"
             // 3 ten man
         };
@@ -38,6 +40,8 @@ void OwnerMenuController::execute(shared_ptr<Owner> owner) {
             rentPaymentController->execute();
             break;
         case 2:
+            tenantController->execute();
+        case 3:
         case -1:
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::HIGHLIGHT);

@@ -1,12 +1,11 @@
 #include "InMemoryUserRepository.h"
 
 InMemoryUserRepository::InMemoryUserRepository() {
-    owner = make_shared<Owner>(1, "admin", "admin123");
+    owner = make_shared<Owner>("admin", "admin123");
 
-    TenantUser defaultTenant(100,"shoura","asd123",
+    TenantUser defaultTenant("shoura","asd123",
                   "mahmoud Ahmed Shoura", "123456789", "0123456789");
     tenantUsers.insert({ defaultTenant.getUserId(), defaultTenant });
-    nextTenantUserId = 101;
 }
 
 shared_ptr<User> InMemoryUserRepository::findByCredentials(const string& username, const string& password) {
@@ -47,7 +46,6 @@ bool InMemoryUserRepository::saveTenantUser(const TenantUser& tenantUser) {
     }
 
     tenantUsers.insert({ tenantUser.getUserId(), tenantUser });
-    nextTenantUserId++;
     return true;
 }
 
@@ -68,6 +66,15 @@ bool InMemoryUserRepository::tenantUserExists(int tenantId) {
     return false;
 }
 
+bool InMemoryUserRepository::tenantUserExists(const string& ssn) {
+    for (const auto& pair : tenantUsers) {
+        if (pair.second.getNationalId() == ssn) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool InMemoryUserRepository::removeTenant(int tenantId) {     /// Added by Shoura
     for (const auto& pair : tenantUsers) {
         if (pair.second.getUserId() == tenantId) {
@@ -79,11 +86,10 @@ bool InMemoryUserRepository::removeTenant(int tenantId) {     /// Added by Shour
 }
 
 
-TenantUser* InMemoryUserRepository::findTenantUserByTenantId(int tenantId) {
-    for (auto& pair : tenantUsers) {
-        if (pair.second.getUserId() == tenantId) {
-            return &(pair.second);
-        }
+shared_ptr<TenantUser> InMemoryUserRepository::findTenantUserByTenantId(int tenantId) {
+    auto it = tenantUsers.find(tenantId);
+    if (it != tenantUsers.end()) {
+        return make_shared<TenantUser>(it->second);
     }
     return nullptr;
 }

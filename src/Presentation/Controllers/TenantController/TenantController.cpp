@@ -2,27 +2,19 @@
 #include <iostream>
 #include "Application/UseCases/User/CreateTenantUser/CreateTenantUserUseCase.h"
 #include "Application/UseCases/User/GetAllTenants/GetAllTenantsUseCase.h"
-#include "Application/UseCases/User/RemoveTenant/RemoveTenantUseCase.h"
 #include "UI/ConsoleUtils.h"
 #include "UI/MenuDisplayer.h"
 #include "UI/InputForm.h"
 #include "UI/TextEditor.h"
-#include "UseCases/User/CreateTenantUser/CreateTenantUserUseCase.h"
 
-TenantController::TenantController(vector<shared_ptr<IUseCase>>& useCases,
-                                   shared_ptr<TenantController> tenController){
-    ///shared_ptr<MaintenanceRequestController> maintenanceCtrl) {
+TenantController::TenantController(vector<shared_ptr<IUseCase>>& useCases){
     for (auto useCase : useCases) {
         this->useCases[useCase->UseCaseName] = useCase;
     }
-    tenantController = tenController;
-    // apartmentController = apartmentCtrl;
-    // maintenanceRequestController = maintenanceCtrl;
 }
 
 void TenantController::displayMenu() {
-    // Kept for compatibility
-    cout << "\Tenant Menu:\n";
+    cout << "\nTenant Menu:\n";
     cout << "1. Add Tenant\n";
     cout << "2. Get All Tenants\n";
     cout << "3. Remove Tenant\n";
@@ -34,8 +26,7 @@ void TenantController::createTenant() {
     ConsoleUtils::clearScreen();
 
     InputForm form("Add New Tenant");
-    form.addTextField("Id", "Tenant Id", 20, true)
-        .addTextField("username", "Tenant Username", 50, true)
+        form.addTextField("username", "Tenant Username", 50, true)
         .addTextField("password", "Password", 50, true)
         .addTextField("nationalId", "Tenant National Id", 20, true)
         .addTextField("phone", "Tenant Phone Number", 100, true)
@@ -43,22 +34,21 @@ void TenantController::createTenant() {
     FormResult result = form.show();
 
     if (result.submitted) {
-        int id = result.get("Id");
         string username = result.get("username");
         string password = result.get("password");
         string nationalId = result.get("nationalId");
         string phone = result.get("phone");
         string name = result.get("name");
 
-        CreateTenantUserParams params = (id,username, password, phone,nationalId, name);
-        useCases["CreateTenantUser"]->execute(params);
+        CreateTenantUserParams params = {username, password, phone,nationalId, name };
+        auto res = useCases["CreateTenantUser"]->execute(params);
 
         ConsoleUtils::clearScreen();
         ConsoleUtils::textattr(Colors::HIGHLIGHT);
         cout << "\n Tenant created successfully!" << endl;
         ConsoleUtils::textattr(Colors::DEFAULT);
 
-        cout << "Id: " << id << endl;
+        cout << "Id: " << any_cast<int>(res) << endl;
         cout << "UserName: " << username << endl;
         cout << "Full Name: " << name << endl;
         cout << "National Id: " << nationalId << endl;
@@ -110,8 +100,9 @@ void TenantController::removeTenant() {
         return;
     int id = stoi(idStr);
 
-    auto isDeleted = useCases["RemoveTenant"]->execute(id);
+    auto res = useCases["RemoveTenant"]->execute(id);
 
+    bool isDeleted = any_cast<bool>(res);
     ConsoleUtils::clearScreen();
     if (isDeleted) {
         ConsoleUtils::textattr(Colors::HIGHLIGHT);
@@ -128,7 +119,7 @@ void TenantController::removeTenant() {
 }
 
 
-void BuildingController::execute() {
+void TenantController::execute() {
     bool running = true;
 
     while (running) {

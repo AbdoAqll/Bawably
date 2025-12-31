@@ -11,7 +11,7 @@ private:
     shared_ptr<IUserRepository> userRepository;
 
 public:
-    GetAllTenantsUseCase(shared_ptr<IUserRepository> userRepo);
+    explicit GetAllTenantsUseCase(shared_ptr<IUserRepository> userRepo);
     any execute(const any &params = {}) override;
 };
 

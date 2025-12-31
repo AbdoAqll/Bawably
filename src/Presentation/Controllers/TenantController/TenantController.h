@@ -6,20 +6,16 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "../Application/UseCases/IUseCase.h"
+#include <UseCases/IUseCase.h>
 
 using namespace std;
 
-// class ApartmentController;
-// class MaintenanceRequestController;
-
 class TenantController {
+private:
     unordered_map<string, shared_ptr<IUseCase>> useCases;
-    shared_ptr<TenantController> tenantController;
 
 public:
-    TenantController(vector<shared_ptr<IUseCase>>& useCases,
-        shared_ptr<TenantController> tenantController);
+    explicit TenantController(vector<shared_ptr<IUseCase>>& useCases);
     void displayMenu();
     void createTenant();
     void removeTenant();

@@ -18,8 +18,9 @@ public:
     virtual bool saveTenantUser(const TenantUser& tenantUser) = 0;
     virtual vector<TenantUser> getAllTenantUsers() = 0;
     virtual bool tenantUserExists(int tenantId) = 0;
+    virtual bool tenantUserExists(const string& ssn) = 0;
     virtual bool removeTenant(int tenantId) = 0;         /// Added by Shoura
-    virtual TenantUser* findTenantUserByTenantId(int tenantId) = 0;
+    virtual shared_ptr<TenantUser> findTenantUserByTenantId(int tenantId) = 0;
 };
 
 #endif // IUSERREPOSITORY_H

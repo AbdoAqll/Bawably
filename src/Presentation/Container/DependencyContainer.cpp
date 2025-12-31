@@ -35,6 +35,8 @@
 #include "Application/UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.h"
 #include "Application/UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.h"
 #include "Application/UseCases/RentPayment/ViewUnpaidOrPartialTenants/ViewUnpaidOrPartialTenantsUseCase.h"
+#include "UseCases/User/GetAllTenants/GetAllTenantsUseCase.h"
+#include "UseCases/User/RemoveTenant/RemoveTenantUseCase.h"
 
 
 using namespace std;
@@ -71,6 +73,12 @@ DependencyContainer::DependencyContainer() {
         make_shared<CloseMaintenanceRequestUseCase>(maintenanceRequestRepository)
     };
 
+    vector<shared_ptr<IUseCase>> tenantUseCases = {
+        make_shared<CreateTenantUserUseCase>(userRepository),
+        make_shared<GetAllTenantsUseCase>(userRepository),
+        make_shared<RemoveTenantUseCase>(userRepository)
+    };
+
     auto loginUseCase = make_shared<LoginUseCase>(userRepository);
 
     auto createRentalContractUseCase = make_shared<CreateRentalContractUseCase>(
@@ -98,10 +106,12 @@ DependencyContainer::DependencyContainer() {
     maintenanceRequestController = make_shared<MaintenanceRequestController>(maintenanceRequestUseCases);
     apartmentController = make_shared<ApartmentController>(apartmentUseCases, rentalContractController);
     buildingController = make_shared<BuildingController>(buildingUseCases, apartmentController, maintenanceRequestController);
+    tenantController = make_shared<TenantController>(tenantUseCases);
 
     // Initialize menu controllers
-    ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController);
+    ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController, tenantController);
     tenantMenuController = make_shared<TenantMenuController>(maintenanceRequestController);
+
 }
 
 
@@ -135,5 +145,9 @@ std::shared_ptr<OwnerMenuController> DependencyContainer::getOwnerMenuController
 
 std::shared_ptr<TenantMenuController> DependencyContainer::getTenantMenuController() {
     return tenantMenuController;
+}
+
+std::shared_ptr<TenantController> DependencyContainer::getTenantController() {
+    return tenantController;
 }
 

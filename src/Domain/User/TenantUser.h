@@ -10,7 +10,7 @@ private:
     std::string phoneNumber;
 
 public:
-    TenantUser(int userId, const string& username, const string& password,
+    TenantUser(const string& username, const string& password,
         const string& fullName, const string& nationalId, const string& phoneNumber);
 
     int getUserId() const;

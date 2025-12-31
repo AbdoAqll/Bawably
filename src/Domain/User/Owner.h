@@ -5,7 +5,7 @@
 
 class Owner : public User {
 public:
-    Owner(int id, const string& username, const string& password);
+    Owner(const string& username, const string& password);
 };
 
 #endif // OWNER_H

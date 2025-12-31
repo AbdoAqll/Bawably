@@ -8,7 +8,6 @@
 using namespace std;
 
 struct CreateTenantUserParams {
-    int tenantId;
     string username;
     string password;
     string phoneNum;
@@ -21,7 +20,7 @@ private:
     shared_ptr<IUserRepository> userRepository;
 
 public:
-    CreateTenantUserUseCase(shared_ptr<IUserRepository> userRepo);
+    explicit CreateTenantUserUseCase(shared_ptr<IUserRepository> userRepo);
     any execute(const any &params = {}) override;
 };
 

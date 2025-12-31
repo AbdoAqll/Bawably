@@ -2,6 +2,8 @@
 #define OWNERMENUCONTROLLER_H
 
 #include <memory>
+#include <Controllers/TenantController/TenantController.h>
+
 #include "Domain/User/Owner.h"
 #include "Controllers/BuildingController/BuildingController.h"
 #include "Controllers/RentPaymentController/RentPaymentController.h"
@@ -12,11 +14,13 @@ class OwnerMenuController {
 private:
     shared_ptr<BuildingController> buildingController;
     shared_ptr<RentPaymentController> rentPaymentController;
+    shared_ptr<TenantController> tenantController;
 
 public:
     explicit OwnerMenuController(
         shared_ptr<BuildingController> buildingCtrl,
-        shared_ptr<RentPaymentController> rentPaymentCtrl);
+        shared_ptr<RentPaymentController> rentPaymentCtrl,
+        shared_ptr<TenantController>tenantCtrl);
 
     void execute(shared_ptr<Owner> owner);
 

@@ -11,8 +11,6 @@ class InMemoryUserRepository : public IUserRepository {
 private:
     shared_ptr<Owner> owner;
     map<int, TenantUser> tenantUsers;
-    int nextTenantUserId;
-
 public:
     InMemoryUserRepository();
     ~InMemoryUserRepository() override = default;
@@ -22,8 +20,9 @@ public:
     bool saveTenantUser(const TenantUser& tenantUser) override;
     vector<TenantUser> getAllTenantUsers() override;
     bool tenantUserExists(int tenantId) override;
-    virtual bool removeTenant(int tenantId) = 0;         /// Added by Shoura
-    TenantUser* findTenantUserByTenantId(int tenantId) override;
+    bool tenantUserExists(const string& ssn) override;
+    bool removeTenant(int tenantId) override;         /// Added by Shoura
+    shared_ptr<TenantUser> findTenantUserByTenantId(int tenantId) override;
 };
 
 #endif // INMEMORYUSERREPOSITORY_H
