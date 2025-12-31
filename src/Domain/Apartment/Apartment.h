@@ -3,8 +3,7 @@
 
 using namespace std;
 
-class Apartment
-{
+class Apartment {
 private:
     int apartmentId;
     int buildingId;
@@ -13,7 +12,8 @@ private:
     static int nextId;
 
 public:
-    Apartment(int buildingId, string &number);
+    Apartment() = default;
+    Apartment(int buildingId, string& number);
     int getId() const;
     int getBuildingId() const;
     string getApartmentNumber() const;

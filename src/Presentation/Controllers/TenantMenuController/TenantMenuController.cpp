@@ -5,12 +5,18 @@
 
 using namespace std;
 
-TenantMenuController::TenantMenuController(shared_ptr<MaintenanceRequestController> maintenanceCtrl)
-    : maintenanceRequestController(maintenanceCtrl) {
+TenantMenuController::TenantMenuController(
+    shared_ptr<MaintenanceRequestController> maintenanceCtrl,
+    shared_ptr<IApartmentRepository> apartmentRepo)
+    : maintenanceRequestController(maintenanceCtrl), apartmentRepository(apartmentRepo) {
 }
 
-void TenantMenuController::execute(shared_ptr<TenantUser> tenant) {
+void TenantMenuController::execute(shared_ptr<TenantUser> tenant, shared_ptr<RentalContract> contract) {
     bool running = true;
+
+    // Get buildingId from apartment
+    auto apartment = apartmentRepository->findById(contract->getApartmentId());
+    int buildingId = apartment.getBuildingId();
 
     while (running) {
         ConsoleUtils::clearScreen();
@@ -19,7 +25,7 @@ void TenantMenuController::execute(shared_ptr<TenantUser> tenant) {
             "1. View Maintenance History",
             "2. Create Maintenance Request",
             "0. Logout"
-            };
+        };
         MenuDisplayer menu(tenantLabel, menuOptions);
 
         int choice = menu.show();
@@ -27,15 +33,15 @@ void TenantMenuController::execute(shared_ptr<TenantUser> tenant) {
         switch (choice) {
         case 0:
             maintenanceRequestController->getApartmentMaintenanceHistory(
-                tenant->getBuildingId(),
-                tenant->getApartmentId()
+                buildingId,
+                contract->getApartmentId()
             );
             break;
         case 1:
             maintenanceRequestController->createMaintenanceRequestForTenant(
-                tenant->getBuildingId(),
-                tenant->getApartmentId(),
-                tenant->getTenantId()
+                buildingId,
+                contract->getApartmentId(),
+                contract->getTenantId()
             );
             break;
         case 2:

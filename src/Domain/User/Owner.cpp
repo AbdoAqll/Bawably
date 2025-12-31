@@ -1,5 +1,5 @@
 #include "Owner.h"
 
-Owner::Owner(int id, const string& username, const string& password)
-    : User(id, username, password, UserRole::OWNER) {
+Owner::Owner(const string& username, const string& password)
+    : User(username, password, UserRole::OWNER) {
 }

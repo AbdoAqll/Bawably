@@ -10,11 +10,17 @@
 using namespace std;
 
 struct CreateRentalContractParams {
-    int buildingId;
     int apartmentId;
     int tenantId;
     double monthlyRent;
     string startDate;
+};
+
+struct CreateRentalContractResult {
+    int contractId;
+    bool isTransfer;
+    int previousApartmentId;
+    string message;
 };
 
 class CreateRentalContractUseCase : public IUseCase {

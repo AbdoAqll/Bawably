@@ -18,13 +18,19 @@ add_library(Application STATIC
         UseCases/RentalContract/EndRentalContract/EndRentalContractUseCase.cpp
         UseCases/User/Login/LoginUseCase.cpp
         UseCases/User/CreateTenantUser/CreateTenantUserUseCase.cpp
-        UseCases/Expense/CreateExpenseUseCase.cpp
-        UseCases/Expense/GetExpensesByBuildingUseCase.cpp
-        UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.cpp
+        UseCases/Expense/AddExpense/AddExpenseUseCase.cpp
+        UseCases/Expense/GetBuildingExpenses/GetBuildingExpensesUseCase.cpp
+        UseCases/Expense/GetExpensesByBuildingAndMonth/GetExpensesByBuildingAndMonthUseCase.cpp
+        UseCases/Expense/GetAllExpenses/GetAllExpensesUseCase.cpp
         UseCases/RentPayment/RecordRentPayment/RecordRentPaymentUseCase.cpp
         UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.cpp
         UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.cpp
         UseCases/RentPayment/ViewUnpaidOrPartialTenants/ViewUnpaidOrPartialTenantsUseCase.cpp
+        UseCases/User/GetAllTenants/GetAllTenantsUseCase.h
+        UseCases/User/GetAllTenants/GetAllTenantsUseCase.cpp
+        UseCases/User/RemoveTenant/RemoveTenantUseCase.cpp
+        UseCases/User/RemoveTenant/RemoveTenantUseCase.h
+        UseCases/RentalContract/GetRentalContractByTenantId/GetRentalContractByTenantIdUseCase.cpp
 )
 target_include_directories(Application PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

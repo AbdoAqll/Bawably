@@ -1,5 +1,5 @@
 #include "LoginUseCase.h"
-#include <stdexcept>
+#include "Domain/User/Exceptions/InvalidCredentialsException.h"
 
 LoginUseCase::LoginUseCase(shared_ptr<IUserRepository> repo)
     : userRepository(repo) {
@@ -7,15 +7,12 @@ LoginUseCase::LoginUseCase(shared_ptr<IUserRepository> repo)
 }
 
 any LoginUseCase::execute(const any& params) {
-    LoginParams loginParams = any_cast<LoginParams>(params);
+    auto loginParams = any_cast<LoginParams>(params);
 
-    shared_ptr<User> user = userRepository->findByCredentials(
-        loginParams.username,
-        loginParams.password
-    );
+    shared_ptr<User> user = userRepository->findByCredentials(loginParams.username, loginParams.password);
 
     if (user == nullptr) {
-        throw runtime_error("Invalid username or password");
+        throw InvalidCredentialsException();
     }
 
     return user;

@@ -1,17 +1,20 @@
-// src/Infrastructure/Persistence/InMemoryExpenseRepository.h
-#pragma once
+#ifndef INMEMORYEXPENSEREPOSITORY_H
+#define INMEMORYEXPENSEREPOSITORY_H
 
-#include "../Domain/Expense/ExpenseRepository.h"
-#include "../Domain/Expense/Expense.h"
+#include "Application/UseCases/Expense/Interfaces/IExpenseRepository.h"
 #include <vector>
 
-class InMemoryExpenseRepository : public ExpenseRepository {
+class InMemoryExpenseRepository : public IExpenseRepository {
 private:
-    std::vector<Expense> expenses;
+    vector<Expense> expenses;
     int nextId = 1;
 
 public:
     void add(const Expense& expense) override;
-    std::vector<Expense> getByBuilding(int buildingId) override;
-    std::vector<Expense> getByBuildingAndMonth(int buildingId, int year, int month) override;
+    vector<Expense> getByBuilding(int buildingId) override;
+    vector<Expense> getByBuildingAndMonth(int buildingId, int year, int month) override;
+    vector<Expense> getAll() override;
+    int getNextId() override;
 };
+
+#endif // INMEMORYEXPENSEREPOSITORY_H

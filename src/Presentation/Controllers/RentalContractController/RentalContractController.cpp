@@ -7,11 +7,11 @@
 #include <limits>
 
 RentalContractController::RentalContractController(
-    shared_ptr<CreateRentalContractUseCase> createUseCase,
-    shared_ptr<EndRentalContractUseCase> endUseCase,
+    vector<shared_ptr<IUseCase>>& useCases,
     shared_ptr<IRentalContractRepository> repository) {
-    createRentalContractUseCase = createUseCase;
-    endRentalContractUseCase = endUseCase;
+    for (auto useCase : useCases) {
+        this->useCases[useCase->UseCaseName] = useCase;
+    }
     rentalContractRepository = repository;
 }
 
@@ -92,15 +92,25 @@ void RentalContractController::handleCreateRentalContract(int buildingId, int ap
             double monthlyRent = result.getDouble("monthlyRent");
             string startDate = result.get("startDate");
 
-            CreateRentalContractParams params{ buildingId, apartmentId, tenantId, monthlyRent, startDate };
-            auto execResult = createRentalContractUseCase->execute(params);
-            int contractId = any_cast<int>(execResult);
+            CreateRentalContractParams params{ apartmentId, tenantId, monthlyRent, startDate };
+            auto execResult = useCases["CreateRentalContract"]->execute(params);
+            auto result = any_cast<CreateRentalContractResult>(execResult);
 
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::HIGHLIGHT);
-            cout << "\n Rental contract created successfully!" << endl;
+            cout << "\n=== CONTRACT CREATION RESULT ===\n\n";
             ConsoleUtils::textattr(Colors::DEFAULT);
-            cout << "Contract ID: " << contractId << endl;
+            cout << "Contract ID: " << result.contractId << "\n";
+            cout << "Status: " << result.message << "\n\n";
+
+            if (result.isTransfer) {
+                ConsoleUtils::textattr(Colors::HIGHLIGHT);
+                cout << "** APARTMENT TRANSFER COMPLETED **\n";
+                cout << "Previous Apartment ID: " << result.previousApartmentId << "\n";
+                cout << "New Apartment ID: " << apartmentId << "\n\n";
+            }
+
+            ConsoleUtils::textattr(Colors::DEFAULT);
             cout << "Building ID: " << buildingId << endl;
             cout << "Apartment ID: " << apartmentId << endl;
             cout << "Tenant ID: " << tenantId << endl;
@@ -143,7 +153,7 @@ void RentalContractController::handleEndRentalContract() {
             string endDate = result.get("endDate");
 
             EndRentalContractParams params{ contractId, endDate };
-            endRentalContractUseCase->execute(params);
+            useCases["EndRentalContract"]->execute(params);
 
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::HIGHLIGHT);
@@ -265,6 +275,22 @@ void RentalContractController::handleViewContractDetails() {
     ConsoleUtils::getKey();
 }
 
+shared_ptr<RentalContract> RentalContractController::getContractForTenantId(int tenantId) {
+    try {
+        auto res = useCases["GetRentalContractByTenantId"]->execute(tenantId);
+        return make_shared<RentalContract>(any_cast<RentalContract>(res));
+    }
+    catch (const exception& e) {
+        ConsoleUtils::clearScreen();
+        ConsoleUtils::textattr(Colors::ERR);
+        cout << "\n " << e.what() << endl;
+        ConsoleUtils::textattr(Colors::DEFAULT);
+        cout << "\nPress any key to continue...";
+        ConsoleUtils::getKey();
+    }
+    return nullptr;
+}
+
 void RentalContractController::displayContract(const RentalContract& contract) {
     cout << "Contract ID: " << contract.getContractId() << endl;
     cout << "Apartment ID: " << contract.getApartmentId() << endl;
@@ -283,3 +309,4 @@ void RentalContractController::displayContractList(const vector<RentalContract>&
         displayContract(contract);
     }
 }
+

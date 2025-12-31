@@ -16,9 +16,10 @@ protected:
     string username;
     string password;
     UserRole role;
+    static int nextId;
 
 public:
-    User(int id, const string& username, const string& password, UserRole role);
+    User(const string& username, const string& password, UserRole role);
     virtual ~User() = default;
 
     int getUserId() const;

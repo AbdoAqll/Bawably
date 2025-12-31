@@ -1,29 +1,32 @@
-// src/Presentation/Cli/ExpenseController.h
-#pragma once
+#ifndef EXPENSE_CONTROLLER_H
+#define EXPENSE_CONTROLLER_H
 
-#include "../Application/UseCases/Expense/CreateExpenseUseCase.h"
-#include "../Application/UseCases/Expense/GetExpensesByBuildingUseCase.h"
-#include "../Application/UseCases/Expense/GetTotalExpensesByBuildingAndMonthUseCase.h"
-#include <iostream>
 #include <string>
+#include <unordered_map>
+#include <vector>
+#include <memory>
+#include "Application/UseCases/IUseCase.h"
 
-class ExpenseController
-{
-private:
-    CreateExpenseUseCase& createUseCase;
-    GetExpensesByBuildingUseCase& listUseCase;
-    GetTotalExpensesByBuildingAndMonthUseCase& totalUseCase;
+using namespace std;
+
+class ExpenseController {
+    unordered_map<string, shared_ptr<IUseCase>> useCases;
 
 public:
-    // Constructor ياخد الـ Use Cases جاهزة (Dependency Injection)
-    ExpenseController(
-        CreateExpenseUseCase& create,
-        GetExpensesByBuildingUseCase& list,
-        GetTotalExpensesByBuildingAndMonthUseCase& total
-    );
+    explicit ExpenseController(vector<shared_ptr<IUseCase>>& useCases);
 
-    void showMenu() const;
-    void handleAddExpense();
-    void handleViewExpenses();
-    void handleCalculateTotal();
+    // For building-specific expense management (inside Manage Building menu)
+    void executeForBuilding(int buildingId);
+    void addExpense(int buildingId);
+    void viewBuildingExpenses(int buildingId);
+
+    // For main menu expense viewing
+    void execute();
+    void viewAllExpenses();
+    void getExpensesByBuilding();
+    void getExpensesByBuildingAndMonth();
+
+    ~ExpenseController() = default;
 };
+
+#endif // EXPENSE_CONTROLLER_H

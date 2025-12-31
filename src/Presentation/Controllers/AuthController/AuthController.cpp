@@ -70,7 +70,7 @@ shared_ptr<User> AuthController::performLogin() {
 
             return user;
         }
-        catch (const runtime_error& e) {
+        catch (const exception& e) {
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::ERR);
             cout << "\n Login failed: " << e.what() << endl;

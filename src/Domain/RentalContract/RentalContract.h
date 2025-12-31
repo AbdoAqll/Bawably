@@ -1,10 +1,10 @@
+#pragma once
 #include <string>
 
 using namespace std;
 
 class RentalContract {
 private:
-    int buildingId;
     int contractId;
     int apartmentId;
     int tenantId;
@@ -14,10 +14,9 @@ private:
     bool isActive;
 
 public:
-    RentalContract(int id, int buildingId, int apartmentId, int tenantId, double monthlyRent, string& startDate);
+    RentalContract(int id, int apartmentId, int tenantId, double monthlyRent, string& startDate);
 
     int getContractId() const;
-    int getBuildingId() const;
     int getApartmentId() const;
     int getTenantId() const;
     double getMonthlyRent() const;
@@ -26,6 +25,7 @@ public:
     bool getIsActive() const;
 
     void setEndDate(string& newEndDate);
+    void setActive(bool active);
 
     void terminateContract(string& terminationDate);
 };

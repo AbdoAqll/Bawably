@@ -1,7 +1,8 @@
 #include "User.h"
 
-User::User(int id, const string& username, const string& password, UserRole role)
-    : userId(id), username(username), password(password), role(role) {
+int User::nextId = 0;
+User::User(const string& username, const string& password, UserRole role)
+    : userId(++nextId), username(username), password(password), role(role) {
 }
 
 int User::getUserId() const {
