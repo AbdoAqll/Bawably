@@ -9,9 +9,10 @@ OwnerMenuController::OwnerMenuController(
     shared_ptr<BuildingController> buildingCtrl,
     shared_ptr<RentPaymentController> rentPaymentCtrl,
     shared_ptr<TenantController> tenantCtrl,
-    shared_ptr<ExpenseController> expenseCtrl)
+    shared_ptr<ExpenseController> expenseCtrl,
+    shared_ptr<ReportsController> reportsCtrl)
     : buildingController(buildingCtrl), rentPaymentController(rentPaymentCtrl),
-    tenantController(tenantCtrl), expenseController(expenseCtrl) {
+    tenantController(tenantCtrl), expenseController(expenseCtrl), reportsController(reportsCtrl) {
 }
 
 void OwnerMenuController::execute(shared_ptr<Owner> owner) {
@@ -27,6 +28,7 @@ void OwnerMenuController::execute(shared_ptr<Owner> owner) {
             "2. Rent Payment Management",
             "3. Tenant Management",
             "4. Expense Reports",
+            "5. Reports and Statistics",
             "0. Logout"
         };
 
@@ -42,13 +44,15 @@ void OwnerMenuController::execute(shared_ptr<Owner> owner) {
             rentPaymentController->execute();
             break;
         case 2:
-            tenantController->execute();
+                tenantController->execute();
             break;
         case 3:
             expenseController->execute();
             break;
         case 4:
-        case -1:
+                reportsController->execute();
+            break;
+        case 5:
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::HIGHLIGHT);
             cout << "\n Logged out successfully!" << endl;

@@ -8,6 +8,7 @@
 #include "Controllers/BuildingController/BuildingController.h"
 #include "Controllers/RentPaymentController/RentPaymentController.h"
 #include "Controllers/ExpenseController/ExpenseController.h"
+#include "Controllers/ReportController/ReportsController.h"
 
 using namespace std;
 
@@ -17,13 +18,15 @@ private:
     shared_ptr<RentPaymentController> rentPaymentController;
     shared_ptr<TenantController> tenantController;
     shared_ptr<ExpenseController> expenseController;
+    shared_ptr<ReportsController> reportsController;
 
 public:
     explicit OwnerMenuController(
         shared_ptr<BuildingController> buildingCtrl,
         shared_ptr<RentPaymentController> rentPaymentCtrl,
         shared_ptr<TenantController> tenantCtrl,
-        shared_ptr<ExpenseController> expenseCtrl);
+        shared_ptr<ExpenseController> expenseCtrl,
+        shared_ptr<ReportsController> reportsCtrl);
 
     void execute(shared_ptr<Owner> owner);
 

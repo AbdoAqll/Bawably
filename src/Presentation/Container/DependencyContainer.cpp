@@ -46,6 +46,12 @@
 #include "Application/UseCases/Expense/GetExpensesByBuildingAndMonth/GetExpensesByBuildingAndMonthUseCase.h"
 #include "Application/UseCases/Expense/GetAllExpenses/GetAllExpensesUseCase.h"
 
+#include "Application/UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.h"
+#include "Application/UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.h"
+#include "Application/UseCases/Report/GenerateOccupancyStatisticsUseCase/GenerateOccupancyStatisticsUseCase.h"
+#include "Application/UseCases/Report/GenerateRevenueStatisticsUseCase/GenerateRevenueStatisticsUseCase.h"
+#include "Application/UseCases/Report/GenerateExpenseStatisticsUseCase/GenerateExpenseStatisticsUseCase.h"
+
 
 using namespace std;
 
@@ -95,6 +101,20 @@ DependencyContainer::DependencyContainer() {
         make_shared<GetAllExpensesUseCase>(expenseRepository)
     };
 
+    vector<shared_ptr<IUseCase>> reportsUseCases = {
+        make_shared<GenerateMonthlyBuildingReportUseCase>(
+            expenseRepository, apartmentRepository, rentalContractRepository, buildingRepository),
+        make_shared<GenerateGlobalBuildingReportUseCase>(
+            expenseRepository, buildingRepository, apartmentRepository, rentalContractRepository
+        ),
+        make_shared<GenerateOccupancyStatisticsUseCase>(
+            buildingRepository, apartmentRepository, rentalContractRepository),
+        make_shared<GenerateRevenueStatisticsUseCase>(
+            buildingRepository, apartmentRepository, rentalContractRepository, rentPaymentRepository),
+        make_shared<GenerateExpenseStatisticsUseCase>(
+            buildingRepository, expenseRepository)
+    };
+
     auto loginUseCase = make_shared<LoginUseCase>(userRepository);
 
     vector<shared_ptr<IUseCase>> rentalContractUseCases = {
@@ -119,12 +139,13 @@ DependencyContainer::DependencyContainer() {
         rentPaymentUseCases, rentPaymentRepository);
     maintenanceRequestController = make_shared<MaintenanceRequestController>(maintenanceRequestUseCases);
     expenseController = make_shared<ExpenseController>(expenseUseCases);
+    reportsController = make_shared<ReportsController>(reportsUseCases);
     apartmentController = make_shared<ApartmentController>(apartmentUseCases, rentalContractController);
     buildingController = make_shared<BuildingController>(buildingUseCases, apartmentController, maintenanceRequestController, expenseController);
     tenantController = make_shared<TenantController>(tenantUseCases);
 
     // Initialize menu controllers
-    ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController, tenantController, expenseController);
+    ownerMenuController = make_shared<OwnerMenuController>(buildingController, rentPaymentController, tenantController, expenseController, reportsController);
     tenantMenuController = make_shared<TenantMenuController>(maintenanceRequestController, apartmentRepository);
 
 }
@@ -156,6 +177,10 @@ std::shared_ptr<ExpenseController> DependencyContainer::getExpenseController() {
 
 std::shared_ptr<AuthController> DependencyContainer::getAuthController() {
     return authController;
+}
+
+std::shared_ptr<ReportsController> DependencyContainer::getReportsController() {
+    return reportsController;
 }
 
 std::shared_ptr<OwnerMenuController> DependencyContainer::getOwnerMenuController() {

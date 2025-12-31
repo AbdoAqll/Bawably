@@ -10,6 +10,7 @@ private:
     int nextId = 1;
 
 public:
+    InMemoryExpenseRepository();
     void add(const Expense& expense) override;
     vector<Expense> getByBuilding(int buildingId) override;
     vector<Expense> getByBuildingAndMonth(int buildingId, int year, int month) override;

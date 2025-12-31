@@ -7,7 +7,7 @@ class InMemoryApartmentRepository : public IApartmentRepository {
 private:
     unordered_map<int, Apartment> apartments;
 public:
-    InMemoryApartmentRepository() = default;
+    InMemoryApartmentRepository();
 
     ~InMemoryApartmentRepository() override = default;
 

@@ -12,6 +12,7 @@
 #include "Controllers/RentPaymentController/RentPaymentController.h"
 #include "Controllers/ExpenseController/ExpenseController.h"
 #include "Controllers/AuthController/AuthController.h"
+#include "Controllers/ReportController/ReportsController.h"
 #include "Controllers/OwnerMenuController/OwnerMenuController.h"
 #include "Controllers/TenantMenuController/TenantMenuController.h"
 #include "Application/UseCases/IUseCase.h"
@@ -24,6 +25,7 @@ class DependencyContainer {
     std::shared_ptr<MaintenanceRequestController> maintenanceRequestController;
     std::shared_ptr<ExpenseController> expenseController;
     std::shared_ptr<AuthController> authController;
+    std::shared_ptr<ReportsController> reportsController;
     std::shared_ptr<OwnerMenuController> ownerMenuController;
     std::shared_ptr<TenantMenuController> tenantMenuController;
     std::shared_ptr<TenantController> tenantController;
@@ -37,6 +39,7 @@ public:
     std::shared_ptr<MaintenanceRequestController> getMaintenanceRequestController();
     std::shared_ptr<ExpenseController> getExpenseController();
     std::shared_ptr<AuthController> getAuthController();
+    std::shared_ptr<ReportsController> getReportsController();
     std::shared_ptr<OwnerMenuController> getOwnerMenuController();
     std::shared_ptr<TenantMenuController> getTenantMenuController();
     std::shared_ptr<TenantController> getTenantController();

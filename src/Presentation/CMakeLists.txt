@@ -16,6 +16,7 @@ add_executable(Presentation
         Controllers/ExpenseController/ExpenseController.h
         Controllers/RentPaymentController/RentPaymentController.cpp
         Controllers/TenantController/TenantController.cpp
+        Controllers/ReportController/ReportsController.cpp
 )
 
 target_include_directories(Presentation PUBLIC

@@ -1,23 +1,37 @@
 // src/Application/UseCases/Reports/GenerateMonthlyBuildingReportUseCase.h
 #pragma once
 
-#include "../../../../Domain/Reports/MonthlyBuildingReport.h"
-#include "../../../../Domain/Expense/ExpenseRepository.h"
+#include "../../../UseCases/IUseCase.h"
+#include "../../../../Domain/Report/MonthlyBuildingReport.h"
+#include "../../../UseCases/Expense/Interfaces/IExpenseRepository.h"
+#include "../../../UseCases/Apartment/Interfaces/IApartmentRepository.h"
+#include "../../../UseCases/RentalContract/Interfaces/IRentalContractRepository.h"
+#include "../../../UseCases/Building/Interfaces/IBuildingRepository.h"
 
-#include "../../../../Domain/Apartment/ApartmentRepository.h"
- #include "../../../../Domain/RentalContract/RentalContractRepository.h"
+using namespace std;
 
-class GenerateMonthlyBuildingReportUseCase {
+struct GenerateMonthlyReportParams {
+    int buildingId;
+    int year;
+    int month;
+};
+
+class GenerateMonthlyBuildingReportUseCase : public IUseCase {
 private:
-    ExpenseRepository& expenseRepo_;
-    ApartmentRepository& apartmentRepo_;
-    RentalContractRepository& contractRepo_;
+    shared_ptr<IExpenseRepository> expenseRepo_;
+    shared_ptr<IApartmentRepository> apartmentRepo_;
+    shared_ptr<IRentalContractRepository> contractRepo_;
+    shared_ptr<IBuildingRepository> buildingRepo_;
 
 public:
     GenerateMonthlyBuildingReportUseCase(
-        ExpenseRepository& expenseRepo
-         , ApartmentRepository& apartmentRepo, RentalContractRepository& contractRepo
+        shared_ptr<IExpenseRepository> expenseRepo,
+        shared_ptr<IApartmentRepository> apartmentRepo,
+        shared_ptr<IRentalContractRepository> contractRepo,
+        shared_ptr<IBuildingRepository> buildingRepo
     );
 
+    any execute(const any& params = {}) override;
     MonthlyBuildingReport execute(int buildingId, int year, int month);
+    ~GenerateMonthlyBuildingReportUseCase() override = default;
 };

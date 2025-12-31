@@ -2,6 +2,24 @@
 
 InMemoryRentPaymentRepository::InMemoryRentPaymentRepository() {
     nextId = 1;
+
+    RentPayment payment1(nextId++, 1, 1, 12, 2025, 2000.0, 2000.0, "2025-12-01");
+    payments.insert({ payment1.getPaymentId(), payment1 });
+
+    RentPayment payment2(nextId++, 2, 2, 12, 2025, 2200.0, 2200.0, "2025-12-05");
+    payments.insert({ payment2.getPaymentId(), payment2 });
+    
+    RentPayment payment3(nextId++, 3, 3, 12, 2025, 1000.0, 1800.0, "2025-12-10");
+    payments.insert({ payment3.getPaymentId(), payment3 });
+
+    RentPayment payment4(nextId++, 1, 1, 11, 2025, 2000.0, 2000.0, "2025-11-01");
+    payments.insert({ payment4.getPaymentId(), payment4 });
+
+    RentPayment payment5(nextId++, 2, 2, 11, 2025, 2200.0, 2200.0, "2025-11-02");
+    payments.insert({ payment5.getPaymentId(), payment5 });
+
+    RentPayment payment6(nextId++, 3, 3, 11, 2025, 1800.0, 1800.0, "2025-11-03");
+    payments.insert({ payment6.getPaymentId(), payment6 });
 }
 
 bool InMemoryRentPaymentRepository::save(const RentPayment& payment) {

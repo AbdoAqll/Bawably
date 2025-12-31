@@ -3,9 +3,19 @@
 InMemoryUserRepository::InMemoryUserRepository() {
     owner = make_shared<Owner>("admin", "admin123");
 
-    TenantUser defaultTenant("shoura","asd123",
-                  "mahmoud Ahmed Shoura", "123456789", "0123456789");
+    TenantUser defaultTenant("tenant1", "tenant123",
+        "Test Tenant", "123456789", "0123456789");
+
+    TenantUser defaultTenant2("tenant2", "tenant123",
+        "Second Tenant", "987654321", "0987654321");
+
+    TenantUser defaultTenant3("tenant3", "tenant123",
+        "Third Tenant", "111222333", "0111222333");
+
+
     tenantUsers.insert({ defaultTenant.getUserId(), defaultTenant });
+    tenantUsers.insert({ defaultTenant2.getUserId(), defaultTenant2 });
+    tenantUsers.insert({ defaultTenant3.getUserId(), defaultTenant3 });
 }
 
 shared_ptr<User> InMemoryUserRepository::findByCredentials(const string& username, const string& password) {

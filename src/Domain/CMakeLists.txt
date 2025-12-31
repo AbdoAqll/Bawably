@@ -5,6 +5,10 @@ add_library(Domain STATIC
     MaintenanceRequest/MaintenanceRequest.cpp
     RentalContract/RentalContract.cpp
     RentPayment/RentPayment.cpp
+    Report/MonthlyBuildingReport.cpp
+    Report/GlobalBuildingReport.cpp
+    Report/Exceptions/InvalidBuildingIdException.cpp
+    Report/Exceptions/ReportGenerationFailedException.cpp
     Shared/DomainException.cpp
         Shared/CurrentDate.cpp
     Shared/InvalidMonthException.cpp

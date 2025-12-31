@@ -31,6 +31,11 @@ add_library(Application STATIC
         UseCases/User/RemoveTenant/RemoveTenantUseCase.cpp
         UseCases/User/RemoveTenant/RemoveTenantUseCase.h
         UseCases/RentalContract/GetRentalContractByTenantId/GetRentalContractByTenantIdUseCase.cpp
+        UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.cpp
+        UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.cpp
+        UseCases/Report/GenerateOccupancyStatisticsUseCase/GenerateOccupancyStatisticsUseCase.cpp
+        UseCases/Report/GenerateRevenueStatisticsUseCase/GenerateRevenueStatisticsUseCase.cpp
+        UseCases/Report/GenerateExpenseStatisticsUseCase/GenerateExpenseStatisticsUseCase.cpp
 )
 target_include_directories(Application PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
