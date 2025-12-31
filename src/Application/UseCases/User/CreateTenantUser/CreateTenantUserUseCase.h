@@ -11,8 +11,9 @@ struct CreateTenantUserParams {
     int tenantId;
     string username;
     string password;
-    int apartmentId;
-    int buildingId;
+    string phoneNum;
+    string natId;
+    string fullName;
 };
 
 class CreateTenantUserUseCase : public IUseCase {

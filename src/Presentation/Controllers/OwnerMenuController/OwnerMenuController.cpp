@@ -23,6 +23,7 @@ void OwnerMenuController::execute(shared_ptr<Owner> owner) {
             "1. Building Management",
             "2. Rent Payment Management",
             "0. Logout"
+            // 3 ten man
         };
 
         MenuDisplayer menu(menuLabel, menuOptions);

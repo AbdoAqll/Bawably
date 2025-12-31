@@ -22,10 +22,11 @@ any CreateTenantUserUseCase::execute(const any& params) {
     }
 
     // Generate user ID (using tenantId + 100 as a simple ID scheme)
-    int userId = createParams.tenantId + 100;
+    int userId = createParams.tenantId + 100;     /// May have problems
 
-    TenantUser tenantUser(userId, createParams.username, createParams.password,
-        createParams.tenantId, createParams.apartmentId, createParams.buildingId);
+
+    TenantUser tenantUser(userId,createParams.username,createParams.password,createParams.fullName,
+                          createParams.natId, createParams.phoneNum);
 
     if (!userRepository->saveTenantUser(tenantUser)) {
         throw runtime_error("Failed to create tenant user account");

@@ -2,7 +2,9 @@
 
 InMemoryUserRepository::InMemoryUserRepository() {
     owner = make_shared<Owner>(1, "admin", "admin123");
-    TenantUser defaultTenant(100, "tenant1", "tenant123", 1, 101, 201);
+
+    TenantUser defaultTenant(100,"shoura","asd123",
+                  "mahmoud Ahmed Shoura", "123456789", "0123456789");
     tenantUsers.insert({ defaultTenant.getUserId(), defaultTenant });
     nextTenantUserId = 101;
 }
@@ -36,7 +38,7 @@ shared_ptr<User> InMemoryUserRepository::findByUsername(const string& username) 
 }
 
 bool InMemoryUserRepository::saveTenantUser(const TenantUser& tenantUser) {
-    if (tenantUserExists(tenantUser.getTenantId())) {
+    if (tenantUserExists(tenantUser.getUserId())) {
         return false;
     }
 
@@ -59,16 +61,27 @@ vector<TenantUser> InMemoryUserRepository::getAllTenantUsers() {
 
 bool InMemoryUserRepository::tenantUserExists(int tenantId) {
     for (const auto& pair : tenantUsers) {
-        if (pair.second.getTenantId() == tenantId) {
+        if (pair.second.getUserId() == tenantId) {
             return true;
         }
     }
     return false;
 }
 
+bool InMemoryUserRepository::removeTenant(int tenantId) {     /// Added by Shoura
+    for (const auto& pair : tenantUsers) {
+        if (pair.second.getUserId() == tenantId) {
+            tenantUsers.erase(pair.second.getUserId());
+            return true;
+        }
+    }
+    return false;
+}
+
+
 TenantUser* InMemoryUserRepository::findTenantUserByTenantId(int tenantId) {
     for (auto& pair : tenantUsers) {
-        if (pair.second.getTenantId() == tenantId) {
+        if (pair.second.getUserId() == tenantId) {
             return &(pair.second);
         }
     }

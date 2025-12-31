@@ -22,6 +22,7 @@ public:
     bool saveTenantUser(const TenantUser& tenantUser) override;
     vector<TenantUser> getAllTenantUsers() override;
     bool tenantUserExists(int tenantId) override;
+    virtual bool removeTenant(int tenantId) = 0;         /// Added by Shoura
     TenantUser* findTenantUserByTenantId(int tenantId) override;
 };
 
