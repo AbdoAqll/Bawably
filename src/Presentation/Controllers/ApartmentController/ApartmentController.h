@@ -19,7 +19,6 @@ private:
 public:
     explicit ApartmentController(vector<shared_ptr<IUseCase>>& useCases,
         shared_ptr<RentalContractController> rentalContractCtrl);
-    void displayMenu();
     void createApartment(int buildingId);
     void manageApartment(int buildingId);
     void getAllApartments(int buildingId);

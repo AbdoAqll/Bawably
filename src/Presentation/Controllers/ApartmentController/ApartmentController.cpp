@@ -24,18 +24,6 @@ ApartmentController::ApartmentController(vector<shared_ptr<IUseCase> >& useCases
 }
 
 
-void ApartmentController::displayMenu() {
-    // Kept for compatibility
-    cout << "\nApartment Menu:\n";
-    cout << "1. Add Apartment\n";
-    cout << "2. Manage Apartment\n";
-    cout << "3. Get All Apartments\n";
-    cout << "4. Get Apartment Details\n";
-    cout << "5. Check Apartment Status\n";
-    cout << "6. Check if Apartment Exists\n";
-    cout << "0. Back to Building Menu\n";
-    cout << "Enter your choice: ";
-}
 
 void ApartmentController::createApartment(int buildingId) {
     ConsoleUtils::clearScreen();

@@ -16,7 +16,6 @@ private:
 
 public:
     explicit TenantController(vector<shared_ptr<IUseCase>>& useCases);
-    void displayMenu();
     void createTenant();
     void removeTenant();
     void getAllTenants();

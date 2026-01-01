@@ -22,14 +22,7 @@ MaintenanceRequestController::MaintenanceRequestController(vector<shared_ptr<IUs
     }
 }
 
-void MaintenanceRequestController::displayMenu() {
-    // Kept for compatibility
-    cout << "Maintenance Request Menu: " << endl;
-    cout << "1. Request maintenance for apartment" << endl;
-    cout << "2. View maintenance requests for a building" << endl;
-    cout << "3. Close a maintenance request" << endl;
-    cout << "0. Back to Main Menu" << endl;
-}
+
 
 void MaintenanceRequestController::createMaintenanceRequest(int buildingId) {
     ConsoleUtils::clearScreen();

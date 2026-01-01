@@ -12,7 +12,6 @@ private:
 
 public:
     explicit MaintenanceRequestController(vector<shared_ptr<IUseCase>>& useCases);
-    void displayMenu();
     void createMaintenanceRequest(int buildingId);
     void createMaintenanceRequestForTenant(int buildingId, int apartmentId, int tenantId);
     void getBuildingMaintenanceRequest(int buildingId);

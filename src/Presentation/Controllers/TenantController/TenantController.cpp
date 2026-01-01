@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Application/UseCases/User/CreateTenantUser/CreateTenantUserUseCase.h"
 #include "Application/UseCases/User/GetAllTenants/GetAllTenantsUseCase.h"
+#include "Application/UseCases/User/RemoveTenant/RemoveTenantUseCase.h"
 #include "UI/ConsoleUtils.h"
 #include "UI/MenuDisplayer.h"
 #include "UI/InputForm.h"
@@ -13,14 +14,6 @@ TenantController::TenantController(vector<shared_ptr<IUseCase>>& useCases) {
     }
 }
 
-void TenantController::displayMenu() {
-    cout << "\nTenant Menu:\n";
-    cout << "1. Add Tenant\n";
-    cout << "2. Get All Tenants\n";
-    cout << "3. Remove Tenant\n";
-    cout << "0. Back to Main Menu\n";
-    cout << "Enter your choice: ";
-}
 
 void TenantController::createTenant() {
     ConsoleUtils::clearScreen();
@@ -100,7 +93,7 @@ void TenantController::removeTenant() {
         return;
     int id = stoi(idStr);
 
-    auto res = useCases["RemoveTenant"]->execute(id);
+    auto res = useCases["RemoveTenant"]->execute(RemoveTenantParams{ id });
 
     bool isDeleted = any_cast<bool>(res);
     ConsoleUtils::clearScreen();
@@ -126,7 +119,7 @@ void TenantController::execute() {
         MenuDisplayer menu("Tenant Management", {
             "1. Add Tenant",
             "2. Get All Tenants",
-            "3. Remove Tenant",
+            // "3. Remove Tenant",
             "0. Back to Main Menu"
             });
 
@@ -139,10 +132,10 @@ void TenantController::execute() {
         case 1:
             getAllTenants();
             break;
+            // case 2:
+            //     removeTenant();
+            //     break;
         case 2:
-            removeTenant();
-            break;
-        case 3:
         case -1:
             running = false;
             break;

@@ -24,17 +24,6 @@ BuildingController::BuildingController(vector<shared_ptr<IUseCase>>& useCases,
     expenseController = expenseCtrl;
 }
 
-void BuildingController::displayMenu() {
-    // Kept for compatibility
-    cout << "\nBuilding Menu:\n";
-    cout << "1. Add Building\n";
-    cout << "2. Manage Building\n";
-    cout << "3. Get All Buildings\n";
-    cout << "4. Get Building Details\n";
-    cout << "5. Check if Building Exists\n";
-    cout << "0. Back to Main Menu\n";
-    cout << "Enter your choice: ";
-}
 
 void BuildingController::createBuilding() {
     ConsoleUtils::clearScreen();

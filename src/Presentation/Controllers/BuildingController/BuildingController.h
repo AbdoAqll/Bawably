@@ -24,7 +24,6 @@ public:
         shared_ptr<ApartmentController> apartmentController,
         shared_ptr<MaintenanceRequestController> maintenanceRequestController,
         shared_ptr<ExpenseController> expenseController);
-    void displayMenu();
     void createBuilding();
     void manageBuilding();
     void displayManageBuildingMenu(int buildingId);
