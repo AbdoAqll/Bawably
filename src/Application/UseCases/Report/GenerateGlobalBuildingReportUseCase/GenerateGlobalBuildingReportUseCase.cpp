@@ -2,6 +2,7 @@
 #include "GenerateGlobalBuildingReportUseCase.h"
 #include "../GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.h"
 #include "Domain/Report/Exceptions/ReportGenerationFailedException.h"
+#include <sstream>
 
 GenerateGlobalBuildingReportUseCase::GenerateGlobalBuildingReportUseCase(
     shared_ptr<IExpenseRepository> expenseRepo,
@@ -16,28 +17,15 @@ GenerateGlobalBuildingReportUseCase::GenerateGlobalBuildingReportUseCase(
 }
 
 any GenerateGlobalBuildingReportUseCase::execute(const any& params) {
-    string date = "";
-    if (params.has_value()) {
-        try {
-            date = any_cast<string>(params);
-        }
-        catch (...) {
-            // If it's not a string, try const char*
-            try {
-                date = string(any_cast<const char*>(params));
-            }
-            catch (...) {
-                // Use empty string as default
-                date = "";
-            }
-        }
-    }
-    GlobalBuildingReport result = execute(date);
+    auto p = any_cast<GenerateGlobalReportParams>(params);
+    GlobalBuildingReport result = execute(p.year, p.month);
     return any(result);
 }
 
-GlobalBuildingReport GenerateGlobalBuildingReportUseCase::execute(const std::string& generationDate) {
-    GlobalBuildingReport globalReport(generationDate.empty() ? "" : generationDate);
+GlobalBuildingReport GenerateGlobalBuildingReportUseCase::execute(int endYear, int endMonth) {
+    std::ostringstream dateStream;
+    dateStream << "Report up to " << endMonth << "/" << endYear;
+    GlobalBuildingReport globalReport(dateStream.str());
 
     auto buildings = buildingRepo_->getAll();
 
@@ -47,18 +35,42 @@ GlobalBuildingReport GenerateGlobalBuildingReportUseCase::execute(const std::str
 
     GenerateMonthlyBuildingReportUseCase monthlyUseCase(expenseRepo_, apartmentRepo_, contractRepo_, buildingRepo_);
 
-    for (const auto& building : buildings) {
-        time_t now = time(0);
-        tm* ltm = localtime(&now);
-        int year = 1900 + ltm->tm_year;
-        int month = 1 + ltm->tm_mon;
+    const int startYear = 2000;
+    const int startMonth = 1;
 
-        MonthlyBuildingReport monthlyReport = monthlyUseCase.execute(
-            building.getId(),
-            year,
-            month
-        );
-        globalReport.addReport(monthlyReport);
+    for (const auto& building : buildings) {
+        double totalExpensesForBuilding = 0.0;
+        double totalRentForBuilding = 0.0;
+        int totalApartments = 0;
+        int rentedApartments = 0;
+
+        // Loop through all months from start to end
+        for (int year = startYear; year <= endYear; year++) {
+            int monthStart = (year == startYear) ? startMonth : 1;
+            int monthEnd = (year == endYear) ? endMonth : 12;
+
+            for (int month = monthStart; month <= monthEnd; month++) {
+                MonthlyBuildingReport monthlyReport = monthlyUseCase.execute(
+                    building.getId(),
+                    year,
+                    month
+                );
+                totalExpensesForBuilding += monthlyReport.getTotalExpenses();
+                totalRentForBuilding += monthlyReport.getTotalRentIncome();
+                // Keep the latest apartment counts
+                totalApartments = monthlyReport.getTotalApartments();
+                rentedApartments = monthlyReport.getRentedApartments();
+            }
+        }
+
+        // Create a summary report for this building with accumulated data
+        MonthlyBuildingReport summaryReport(building.getId(), endYear, endMonth);
+        summaryReport.setTotalApartments(totalApartments);
+        summaryReport.setRentedApartments(rentedApartments);
+        summaryReport.setTotalRentIncome(totalRentForBuilding);
+        summaryReport.setTotalExpenses(totalExpensesForBuilding);
+
+        globalReport.addReport(summaryReport);
     }
 
     return globalReport;

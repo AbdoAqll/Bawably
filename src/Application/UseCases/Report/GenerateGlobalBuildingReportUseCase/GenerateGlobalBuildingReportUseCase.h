@@ -10,6 +10,11 @@
 
 using namespace std;
 
+struct GenerateGlobalReportParams {
+    int year;
+    int month;
+};
+
 class GenerateGlobalBuildingReportUseCase : public IUseCase {
 private:
     shared_ptr<IExpenseRepository> expenseRepo_;
@@ -25,6 +30,6 @@ public:
         shared_ptr<IRentalContractRepository> contractRepo);
 
     any execute(const any& params = {}) override;
-    GlobalBuildingReport execute(const std::string& generationDate = "");
+    GlobalBuildingReport execute(int year, int month);
     ~GenerateGlobalBuildingReportUseCase() override = default;
 };

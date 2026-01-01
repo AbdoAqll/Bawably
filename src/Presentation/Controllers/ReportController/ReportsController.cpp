@@ -96,27 +96,61 @@ void ReportsController::handleMonthlyReport() {
 void ReportsController::handleGlobalReport() {
     ConsoleUtils::clearScreen();
 
-    try {
-        auto result = useCases["GenerateGlobalBuildingReport"]->execute(std::string(""));
-        auto report = any_cast<GlobalBuildingReport>(result);
+    InputForm form("Global Portfolio Report");
+    form.addNumberField("year", "End Year (e.g., 2025)", true)
+        .addNumberField("month", "End Month (1-12)", true);
 
-        displayGlobalReport(report);
-    }
-    catch (const DomainException& e) {
-        ConsoleUtils::clearScreen();
-        ConsoleUtils::textattr(Colors::ERR);
-        cout << "\n Error: " << e.what() << endl;
-        ConsoleUtils::textattr(Colors::DEFAULT);
-        cout << "\nPress any key to continue...";
-        ConsoleUtils::getKey();
-    }
-    catch (const exception& e) {
-        ConsoleUtils::clearScreen();
-        ConsoleUtils::textattr(Colors::ERR);
-        cout << "\n Unexpected error: " << e.what() << endl;
-        ConsoleUtils::textattr(Colors::DEFAULT);
-        cout << "\nPress any key to continue...";
-        ConsoleUtils::getKey();
+    // Validate month
+    form.setValidator("month", [](const string& val) {
+        try {
+            int month = stoi(val);
+            return month >= 1 && month <= 12;
+        }
+        catch (...) {
+            return false;
+        }
+        }, "Month must be between 1 and 12");
+
+    // Validate year
+    form.setValidator("year", [](const string& val) {
+        try {
+            int year = stoi(val);
+            return year >= 2000 && year <= 2100;
+        }
+        catch (...) {
+            return false;
+        }
+        }, "Year must be between 2000 and 2100");
+
+    FormResult result = form.show();
+
+    if (result.submitted) {
+        try {
+            GenerateGlobalReportParams params;
+            params.year = result.getInt("year");
+            params.month = result.getInt("month");
+
+            auto execResult = useCases["GenerateGlobalBuildingReport"]->execute(params);
+            auto report = any_cast<GlobalBuildingReport>(execResult);
+
+            displayGlobalReport(report);
+        }
+        catch (const DomainException& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
+        catch (const exception& e) {
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Unexpected error: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+            cout << "\nPress any key to continue...";
+            ConsoleUtils::getKey();
+        }
     }
 }
 

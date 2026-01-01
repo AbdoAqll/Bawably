@@ -17,6 +17,7 @@
 #include "../../../Domain/Report/RevenueStatistics.h"
 #include "../../../Domain/Report/ExpenseStatistics.h"
 #include "../../../Application/UseCases/Report/GenerateMonthlyBuildingReportUseCase/GenerateMonthlyBuildingReportUseCase.h"
+#include "../../../Application/UseCases/Report/GenerateGlobalBuildingReportUseCase/GenerateGlobalBuildingReportUseCase.h"
 #include "../../../Application/UseCases/Report/GenerateOccupancyStatisticsUseCase/GenerateOccupancyStatisticsUseCase.h"
 #include "../../../Application/UseCases/Report/GenerateRevenueStatisticsUseCase/GenerateRevenueStatisticsUseCase.h"
 #include "../../../Application/UseCases/Report/GenerateExpenseStatisticsUseCase/GenerateExpenseStatisticsUseCase.h"
