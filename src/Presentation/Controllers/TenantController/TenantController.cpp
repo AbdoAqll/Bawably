@@ -11,13 +11,10 @@
 
 TenantController::TenantController(vector<shared_ptr<IUseCase>>& useCases,
                                    shared_ptr<TenantController> tenController){
-    ///shared_ptr<MaintenanceRequestController> maintenanceCtrl) {
     for (auto useCase : useCases) {
         this->useCases[useCase->UseCaseName] = useCase;
     }
     tenantController = tenController;
-    // apartmentController = apartmentCtrl;
-    // maintenanceRequestController = maintenanceCtrl;
 }
 
 void TenantController::displayMenu() {
@@ -50,20 +47,28 @@ void TenantController::createTenant() {
         string phone = result.get("phone");
         string name = result.get("name");
 
-        CreateTenantUserParams params = (id,username, password, phone,nationalId, name);
-        useCases["CreateTenantUser"]->execute(params);
+        CreateTenantUserParams params = {id,username, password, phone,nationalId, name};
 
-        ConsoleUtils::clearScreen();
-        ConsoleUtils::textattr(Colors::HIGHLIGHT);
-        cout << "\n Tenant created successfully!" << endl;
-        ConsoleUtils::textattr(Colors::DEFAULT);
+        try {
+            useCases["CreateTenantUser"]->execute(params);
 
-        cout << "Id: " << id << endl;
-        cout << "UserName: " << username << endl;
-        cout << "Full Name: " << name << endl;
-        cout << "National Id: " << nationalId << endl;
-        cout << "Password: " << password << endl;
-        cout << "Phone Number: " << phone << endl;
+            ConsoleUtils::clearScreen();
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Tenant created successfully!" << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+
+            cout << "Id: " << id << endl;
+            cout << "UserName: " << username << endl;
+            cout << "Full Name: " << name << endl;
+            cout << "National Id: " << nationalId << endl;
+            cout << "Password: " << password << endl;
+            cout << "Phone Number: " << phone << endl;
+        }
+        catch (const exception& e) {
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\nError: " << e.what() << endl;
+            ConsoleUtils::textattr(Colors::DEFAULT);
+        }
 
         cout << "\nPress any key to continue...";
         ConsoleUtils::getKey();
@@ -86,7 +91,7 @@ void TenantController::getAllTenants() {
         cout << "\nTotal Tenants: " << tenants.size() << "\n" << endl;
         for (auto tenant : tenants) {
             cout << "Id: " << tenant.getUserId() << endl;
-            cout << "UserName: " << tenant.getUserName() << endl;
+            cout << "UserName: " << tenant.getUsername() << endl;
             cout << "Full Name: " << tenant.getFullName() << endl;
             cout << "National Id: " << tenant.getNationalId() << endl;
             cout << "Password: " << tenant.getPassword() << endl;
@@ -110,25 +115,35 @@ void TenantController::removeTenant() {
         return;
     int id = stoi(idStr);
 
-    auto isDeleted = useCases["RemoveTenant"]->execute(id);
 
-    ConsoleUtils::clearScreen();
-    if (isDeleted) {
-        ConsoleUtils::textattr(Colors::HIGHLIGHT);
-        cout << "\n Tenant with ID " << id << " is Deleted." << endl;
-    }
-    else {
+
+    try {
+        RemoveTenantParams params = { id };
+        auto resultAny = useCases["RemoveTenant"]->execute(params);
+
+        bool isDeleted = any_cast<bool>(resultAny);
+
+        ConsoleUtils::clearScreen();
+        if (isDeleted) {
+            ConsoleUtils::textattr(Colors::HIGHLIGHT);
+            cout << "\n Tenant with ID " << id << " is Deleted." << endl;
+        }
+        else {
+            ConsoleUtils::textattr(Colors::ERR);
+            cout << "\n Tenant with ID " << id << " is not Deleted." << endl;
+        }
+    } catch (const exception& e) {
         ConsoleUtils::textattr(Colors::ERR);
-        cout << "\n Tenant with ID " << id << " is not Deleted." << endl;
+        cout << "\nError: " << e.what() << endl;
     }
-    ConsoleUtils::textattr(Colors::DEFAULT);
 
+    ConsoleUtils::textattr(Colors::DEFAULT);
     cout << "\nPress any key to continue...";
     ConsoleUtils::getKey();
 }
 
 
-void BuildingController::execute() {
+void TenantController::execute() {
     bool running = true;
 
     while (running) {

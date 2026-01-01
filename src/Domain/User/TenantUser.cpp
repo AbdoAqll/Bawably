@@ -2,23 +2,12 @@
 using namespace std;
 
 TenantUser::TenantUser(int userId, const string &username, const string &password, const string &name, const string &natlId, const string &phoneNum)
-    : User (userId, username, password, UserRole::TENANT)
+    : User (userId, username, password, UserRole::TENANT) , fullName(name), nationalId(natlId), phoneNumber(phoneNum)
 {
-    fullName = name;
-    nationalId = natlId;
-    phoneNumber = phoneNum;
+
 }
 
 
-int TenantUser::getUserId() const {
-    return userId;
-}
-string TenantUser::getUserName() const {
-    return username;
-}
-string TenantUser::getPassword() const {
-    return password;
-}
 string TenantUser::getFullName() const {
     return fullName;
 }
@@ -30,15 +19,6 @@ string TenantUser::getPhoneNumber() const {
 }
 
 
-void TenantUser::setUserId(int _userId) {
-    userId = _userId;
-}
-void TenantUser::setUserName(const string& _userName) {
-    username = _userName;
-}
-void TenantUser::setPassword(const string& _password) {
-    password = _password;
-}
 void TenantUser::setFullName(const string& _fullname) {
     fullName = _fullname;
 }

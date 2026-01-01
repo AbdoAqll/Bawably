@@ -10,9 +10,6 @@
 
 using namespace std;
 
-// class ApartmentController;
-// class MaintenanceRequestController;
-
 class TenantController {
     unordered_map<string, shared_ptr<IUseCase>> useCases;
     shared_ptr<TenantController> tenantController;

@@ -18,6 +18,10 @@ add_library(Domain STATIC
     User/User.cpp
     User/Owner.cpp
     User/TenantUser.cpp
+        User/Exceptions/TenantUserAlreadyExists.h
+        User/Exceptions/TenantUserAlreadyExists.cpp
+        User/Exceptions/TenantUserNotFound.h
+        User/Exceptions/TenantUserNotFound.cpp
 )
 
 # this is to tell the cmake where to look for .h files

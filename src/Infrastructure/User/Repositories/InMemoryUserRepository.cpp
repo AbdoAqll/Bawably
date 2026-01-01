@@ -37,6 +37,13 @@ shared_ptr<User> InMemoryUserRepository::findByUsername(const string& username) 
     return nullptr;
 }
 
+TenantUser* InMemoryUserRepository::findTenantUserByTenantId(int tenantId) {
+    auto it = tenantUsers.find(tenantId); // Instantly jumps to the user
+    if (it != tenantUsers.end()) {
+        return &(it->second);     // Returns the address of the user inside the map
+    }
+    return nullptr;
+}
 bool InMemoryUserRepository::saveTenantUser(const TenantUser& tenantUser) {
     if (tenantUserExists(tenantUser.getUserId())) {
         return false;
@@ -60,30 +67,9 @@ vector<TenantUser> InMemoryUserRepository::getAllTenantUsers() {
 }
 
 bool InMemoryUserRepository::tenantUserExists(int tenantId) {
-    for (const auto& pair : tenantUsers) {
-        if (pair.second.getUserId() == tenantId) {
-            return true;
-        }
-    }
-    return false;
+    return tenantUsers.count(tenantId) > 0;
 }
 
-bool InMemoryUserRepository::removeTenant(int tenantId) {     /// Added by Shoura
-    for (const auto& pair : tenantUsers) {
-        if (pair.second.getUserId() == tenantId) {
-            tenantUsers.erase(pair.second.getUserId());
-            return true;
-        }
-    }
-    return false;
-}
-
-
-TenantUser* InMemoryUserRepository::findTenantUserByTenantId(int tenantId) {
-    for (auto& pair : tenantUsers) {
-        if (pair.second.getUserId() == tenantId) {
-            return &(pair.second);
-        }
-    }
-    return nullptr;
+bool InMemoryUserRepository::removeTenant(int tenantId) {
+    return tenantUsers.erase(tenantId) > 0;
 }
