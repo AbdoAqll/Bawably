@@ -1,7 +1,7 @@
 #ifndef INVALIDPAYMENTAMOUNTEXCEPTION_H
 #define INVALIDPAYMENTAMOUNTEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class InvalidPaymentAmountException : public DomainException {
 public:

@@ -6,6 +6,6 @@ std::string CurrentDate::getCurrentDateString() {
 
     std::ostringstream oss;
     // %Y = Year (2025), %m = Month (12), %d = Day (26)
-    oss << std::put_time(ltm, "%d/%m/%Y::%H:%M:%S");
+    oss << std::put_time(ltm, "%Y-%m-%d");
     return oss.str();
 }

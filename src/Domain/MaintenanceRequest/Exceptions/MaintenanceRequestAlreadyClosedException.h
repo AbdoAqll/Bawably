@@ -4,7 +4,7 @@
 
 #ifndef MAINTENANCE_REQUEST_ALREADY_CLOSED_EXCEPTION_H
 #define MAINTENANCE_REQUEST_ALREADY_CLOSED_EXCEPTION_H
-#include "Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class MaintenanceRequestAlreadyClosedException : public DomainException {
 public:

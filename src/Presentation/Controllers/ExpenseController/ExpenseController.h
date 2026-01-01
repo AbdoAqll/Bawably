@@ -15,12 +15,10 @@ class ExpenseController {
 public:
     explicit ExpenseController(vector<shared_ptr<IUseCase>>& useCases);
 
-    // For building-specific expense management (inside Manage Building menu)
     void executeForBuilding(int buildingId);
     void addExpense(int buildingId);
     void viewBuildingExpenses(int buildingId);
 
-    // For main menu expense viewing
     void execute();
     void viewAllExpenses();
     void getExpensesByBuilding();

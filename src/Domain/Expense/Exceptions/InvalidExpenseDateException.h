@@ -1,7 +1,7 @@
 #ifndef INVALIDEXPENSEDATEEXCEPTION_H
 #define INVALIDEXPENSEDATEEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class InvalidExpenseDateException : public DomainException {
 public:

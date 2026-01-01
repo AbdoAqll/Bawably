@@ -1,6 +1,21 @@
 #include "InMemoryMaintenanceRequestRepository.h"
 
 
+InMemoryMaintenanceRequestRepository::InMemoryMaintenanceRequestRepository() {
+    string mr1Des = "The electricity bill has increased significantly this month. Please check the electrical system for any issues or excessive consumption.";
+    MaintenanceRequest mr1(getNewId(), 1, 1, mr1Des, 2);
+    requests.insert({mr1.getRequestId(), mr1});
+
+    string mr2Des = "There is a water leak under the kitchen sink. A plumber is needed to fix the pipes as soon as possible.";
+    MaintenanceRequest mr2(getNewId(), 2, 4, mr2Des, 3);
+    requests.insert({mr2.getRequestId(), mr2});
+
+    string mr3Des = "The elevator is making unusual noises and occasionally stops between floors. Please schedule an urgent inspection and repair.";
+    MaintenanceRequest mr3(getNewId(), 3, 7, mr3Des, 4);
+    requests.insert({mr3.getRequestId(), mr3});
+
+}
+
 int InMemoryMaintenanceRequestRepository::getNewId() {
     return requestId++;
 }

@@ -1,7 +1,7 @@
 #ifndef RENTALCONTRACTNOTFOUNDEXCEPTION_H
 #define RENTALCONTRACTNOTFOUNDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 #include <string>
 
 class RentalContractNotFoundException : public DomainException {

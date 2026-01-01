@@ -1,7 +1,7 @@
 #ifndef INVALIDEXPENSEAMOUNTEXCEPTION_H
 #define INVALIDEXPENSEAMOUNTEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class InvalidExpenseAmountException : public DomainException {
 public:

@@ -44,7 +44,6 @@ GlobalBuildingReport GenerateGlobalBuildingReportUseCase::execute(int endYear, i
         int totalApartments = 0;
         int rentedApartments = 0;
 
-        // Loop through all months from start to end
         for (int year = startYear; year <= endYear; year++) {
             int monthStart = (year == startYear) ? startMonth : 1;
             int monthEnd = (year == endYear) ? endMonth : 12;
@@ -63,7 +62,6 @@ GlobalBuildingReport GenerateGlobalBuildingReportUseCase::execute(int endYear, i
             }
         }
 
-        // Create a summary report for this building with accumulated data
         MonthlyBuildingReport summaryReport(building.getId(), endYear, endMonth);
         summaryReport.setTotalApartments(totalApartments);
         summaryReport.setRentedApartments(rentedApartments);

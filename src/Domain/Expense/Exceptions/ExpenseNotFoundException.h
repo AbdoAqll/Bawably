@@ -1,7 +1,7 @@
 #ifndef EXPENSENOTFOUNDEXCEPTION_H
 #define EXPENSENOTFOUNDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class ExpenseNotFoundException : public DomainException {
 public:

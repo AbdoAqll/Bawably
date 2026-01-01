@@ -123,7 +123,7 @@ public:
                     return a.totalExpenses > b.totalExpenses;
                 });
 
-            int count = std::min(5, static_cast<int>(sortedBuildings.size()));
+            int count = (std::min)(5, static_cast<int>(sortedBuildings.size()));
             for (int i = 0; i < count; ++i) {
                 const auto& building = sortedBuildings[i];
                 oss << "  #" << (i + 1) << " Building " << building.buildingId

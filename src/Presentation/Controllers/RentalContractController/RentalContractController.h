@@ -26,7 +26,6 @@ public:
         vector<shared_ptr<IUseCase>>& useCases,
         shared_ptr<IRentalContractRepository> repository);
 
-    void showMenu();
     void handleCreateRentalContract(int buildingId, int apartmentId);
     void handleEndRentalContract();
     void handleViewActiveContracts();

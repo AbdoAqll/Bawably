@@ -2,12 +2,22 @@
 
 InMemoryRentalContractRepository::InMemoryRentalContractRepository() {
     nextId = 1;
+    string rc1date = "2025-01-01";
+    RentalContract rc1 (nextId++, 1, 2, 5000, rc1date);
+    contracts.insert({rc1.getContractId(), rc1});
+
+    string rc2date = "2025-01-01";
+    RentalContract rc2 (nextId++, 4, 3, 6000, rc2date);
+    contracts.insert({rc2.getContractId(), rc2});
+
+    string rc3date = "2025-01-01";
+    RentalContract rc3 (nextId++, 7, 4, 7000, rc3date);
+    contracts.insert({rc3.getContractId(), rc3});
 }
 
 bool InMemoryRentalContractRepository::save(const RentalContract& contract) {
     int id = contract.getContractId();
 
-    // Check if contract already exists
     if (contracts.find(id) != contracts.end()) {
         return false;
     }

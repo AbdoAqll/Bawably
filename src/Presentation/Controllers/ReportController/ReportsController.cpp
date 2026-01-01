@@ -100,7 +100,6 @@ void ReportsController::handleGlobalReport() {
     form.addNumberField("year", "End Year (e.g., 2025)", true)
         .addNumberField("month", "End Month (1-12)", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -111,7 +110,6 @@ void ReportsController::handleGlobalReport() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);
@@ -161,7 +159,6 @@ void ReportsController::handleOccupancyStatistics() {
     form.addNumberField("year", "Year (e.g., 2025)", true)
         .addNumberField("month", "Month (1-12)", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -172,7 +169,6 @@ void ReportsController::handleOccupancyStatistics() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);
@@ -222,7 +218,6 @@ void ReportsController::handleRevenueStatistics() {
     form.addNumberField("year", "Year (e.g., 2025)", true)
         .addNumberField("month", "Month (1-12)", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -233,7 +228,6 @@ void ReportsController::handleRevenueStatistics() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);
@@ -283,7 +277,6 @@ void ReportsController::handleExpenseStatistics() {
     form.addNumberField("year", "Year (e.g., 2025)", true)
         .addNumberField("month", "Month (1-12)", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -294,7 +287,6 @@ void ReportsController::handleExpenseStatistics() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);

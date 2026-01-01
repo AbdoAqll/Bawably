@@ -1,7 +1,7 @@
 #ifndef INVALIDBUILDINGIDEXCEPTION_H
 #define INVALIDBUILDINGIDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class InvalidBuildingIdException : public DomainException {
 public:

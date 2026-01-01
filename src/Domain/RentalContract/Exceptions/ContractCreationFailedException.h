@@ -1,7 +1,7 @@
 #ifndef CONTRACTCREATIONFAILEDEXCEPTION_H
 #define CONTRACTCREATIONFAILEDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class ContractCreationFailedException : public DomainException {
 public:

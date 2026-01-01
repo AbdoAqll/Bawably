@@ -23,7 +23,6 @@ shared_ptr<User> AuthController::showLoginForm() {
 
         switch (choice) {
         case 0: {
-            // Login selected
             shared_ptr<User> user = performLogin();
             if (user != nullptr) {
                 return user;

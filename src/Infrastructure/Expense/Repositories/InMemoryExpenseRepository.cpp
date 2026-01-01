@@ -2,8 +2,8 @@
 
 InMemoryExpenseRepository::InMemoryExpenseRepository() {
     nextId = 1;
-
     // Add expenses for December 2025
+
     // Building 1 expenses
     Expense exp1(nextId++, 1, ExpenseCategory::Electricity, 350.0, "Monthly electricity bill", "2025-12-05");
     expenses.push_back(exp1);

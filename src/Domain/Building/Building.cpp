@@ -4,7 +4,7 @@ int Building::nextId=0;
 
 Building::Building(string &name, string &address)
 {
-    buildingId = Building::nextId++;
+    buildingId = ++nextId;
     buildingName = name;
     buildingAddress = address;
 }

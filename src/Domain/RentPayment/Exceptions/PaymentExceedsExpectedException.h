@@ -1,7 +1,7 @@
 #ifndef PAYMENTEXCEEDSEXPECTEDEXCEPTION_H
 #define PAYMENTEXCEEDSEXPECTEDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class PaymentExceedsExpectedException : public DomainException {
 public:

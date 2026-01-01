@@ -3,7 +3,6 @@
 #include <string>
 
 BuildingRepository::BuildingRepository() {
-    // Add default buildings
     string name1 = "Sunset Apartments";
     string addr1 = "123 Main Street, Downtown";
     Building building1(name1, addr1);

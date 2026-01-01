@@ -1,7 +1,7 @@
 #ifndef PAYMENTRECORDEXISTSEXCEPTION_H
 #define PAYMENTRECORDEXISTSEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class PaymentRecordExistsException : public DomainException {
 public:

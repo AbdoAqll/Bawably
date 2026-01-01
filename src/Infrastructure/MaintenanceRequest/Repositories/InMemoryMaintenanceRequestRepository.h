@@ -11,7 +11,7 @@ private:
     unordered_map<int, MaintenanceRequest> requests;
 
 public:
-    InMemoryMaintenanceRequestRepository() = default;
+    InMemoryMaintenanceRequestRepository();
     ~InMemoryMaintenanceRequestRepository() override = default;
 
     int getNewId() override;

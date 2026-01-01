@@ -17,17 +17,14 @@ ViewPaidTenantsUseCase::ViewPaidTenantsUseCase(
 any ViewPaidTenantsUseCase::execute(const any& params) {
     auto args = any_cast<ViewPaidTenantsParams>(params);
 
-    // Validate month (1-12)
     if (args.month < 1 || args.month > 12) {
         throw InvalidMonthException(args.month);
     }
 
-    // Validate year
     if (args.year < 2000 || args.year > 2100) {
         throw InvalidYearException(args.year);
     }
 
-    // Get all payments with Paid status for the specified month/year
     auto paidPayments = _rentPaymentRepository->findByStatus(PaymentStatus::Paid, args.month, args.year);
 
     vector<PaidTenantInfo> paidTenants;
@@ -40,11 +37,9 @@ any ViewPaidTenantsUseCase::execute(const any& params) {
         info.expectedAmount = payment.getExpectedAmount();
         info.paymentDate = payment.getPaymentDate();
 
-        // Get contract details
         auto contract = _rentalContractRepository->findById(payment.getContractId());
         if (contract != nullptr) {
             info.apartmentId = contract->getApartmentId();
-            // Get buildingId from apartment
             try {
                 auto apartment = _apartmentRepository->findById(contract->getApartmentId());
                 info.buildingId = apartment.getBuildingId();
@@ -58,7 +53,6 @@ any ViewPaidTenantsUseCase::execute(const any& params) {
             info.buildingId = 0;
         }
 
-        // Get tenant name
         auto tenant = _userRepository->findTenantUserByTenantId(payment.getTenantId());
         if (tenant != nullptr) {
             info.tenantName = tenant->getUsername();

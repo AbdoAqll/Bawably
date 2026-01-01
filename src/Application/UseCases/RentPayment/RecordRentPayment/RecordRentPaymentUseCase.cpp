@@ -18,23 +18,19 @@ RecordRentPaymentUseCase::RecordRentPaymentUseCase(
 any RecordRentPaymentUseCase::execute(const any& params) {
     auto args = any_cast<RecordRentPaymentParams>(params);
 
-    // Validate contract exists
     auto contract = _rentalContractRepository->findById(args.contractId);
     if (contract == nullptr) {
         throw RentalContractNotFoundException(args.contractId);
     }
 
-    // Validate month (1-12)
     if (args.month < 1 || args.month > 12) {
         throw InvalidMonthException(args.month);
     }
 
-    // Validate year
     if (args.year < 2000 || args.year > 2100) {
         throw InvalidYearException(args.year);
     }
 
-    // Validate amount must be positive
     if (args.amount <= 0) {
         throw InvalidPaymentAmountException(args.amount, true);
     }
@@ -42,25 +38,21 @@ any RecordRentPaymentUseCase::execute(const any& params) {
     double expectedAmount = contract->getMonthlyRent();
     int tenantId = contract->getTenantId();
 
-    // Check if payment record exists for this contract and month
     auto existingPayment = _rentPaymentRepository->findByContractAndMonth(args.contractId, args.month, args.year);
 
     RecordRentPaymentResult result;
 
     if (existingPayment != nullptr) {
-        // Payment record exists - add to it
         result.paymentId = existingPayment->getPaymentId();
         result.previousAmount = existingPayment->getAmountPaid();
         result.previousStatus = existingPayment->getStatus();
         result.isNewRecord = false;
 
-        // Check if adding this amount would exceed expected
         double totalAfterPayment = existingPayment->getAmountPaid() + args.amount;
         if (totalAfterPayment > expectedAmount) {
             throw PaymentExceedsExpectedException(totalAfterPayment, expectedAmount, existingPayment->getRemainingAmount());
         }
 
-        // Add the payment
         existingPayment->addPayment(args.amount, args.paymentDate);
 
         if (!_rentPaymentRepository->update(*existingPayment)) {
@@ -72,12 +64,10 @@ any RecordRentPaymentUseCase::execute(const any& params) {
         result.remainingAmount = existingPayment->getRemainingAmount();
     }
     else {
-        // Check if amount exceeds expected for new payment
         if (args.amount > expectedAmount) {
             throw PaymentExceedsExpectedException(args.amount, expectedAmount, expectedAmount);
         }
 
-        // Create new payment record
         int paymentId = _rentPaymentRepository->getNextId();
         RentPayment newPayment(paymentId, args.contractId, tenantId, args.month, args.year,
             args.amount, expectedAmount, args.paymentDate);

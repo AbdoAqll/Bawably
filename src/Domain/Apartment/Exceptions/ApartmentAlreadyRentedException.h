@@ -1,7 +1,7 @@
 #ifndef APARTMENTALREADYRENTEDEXCEPTION_H
 #define APARTMENTALREADYRENTEDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class ApartmentAlreadyRentedException : public DomainException {
 public:

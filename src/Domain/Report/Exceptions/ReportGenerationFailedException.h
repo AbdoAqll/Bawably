@@ -1,7 +1,7 @@
 #ifndef REPORTGENERATIONFAILEDEXCEPTION_H
 #define REPORTGENERATIONFAILEDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 #include <string>
 
 class ReportGenerationFailedException : public DomainException {

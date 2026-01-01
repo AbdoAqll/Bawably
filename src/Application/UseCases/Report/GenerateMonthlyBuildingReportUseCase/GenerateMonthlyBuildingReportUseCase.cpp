@@ -41,7 +41,6 @@ MonthlyBuildingReport GenerateMonthlyBuildingReportUseCase::execute(int building
 
     MonthlyBuildingReport report(buildingId, year, month);
 
-    // Calculate total expenses
     auto expenses = expenseRepo_->getByBuildingAndMonth(buildingId, year, month);
     double totalExpenses = 0.0;
     for (const auto& e : expenses) {
@@ -49,15 +48,35 @@ MonthlyBuildingReport GenerateMonthlyBuildingReportUseCase::execute(int building
     }
     report.setTotalExpenses(totalExpenses);
 
-    // Count total apartments in building
     auto apartments = apartmentRepo_->getAll(buildingId);
     report.setTotalApartments(apartments.size());
 
-    // Count rented apartments (active contracts)
-    auto activeContracts = contractRepo_->getActiveContracts();
+    auto allContracts = contractRepo_->getAll();
     int rentedCount = 0;
     double totalRent = 0.0;
-    for (const auto& contract : activeContracts) {
+
+    auto toDateStr = [](int y, int m, int d) {
+        std::ostringstream oss;
+        oss << std::setw(4) << std::setfill('0') << y << "-" << std::setw(2) << std::setfill('0') << m << "-" << std::setw(2) << std::setfill('0') << d;
+        return oss.str();
+    };
+
+    std::string monthStart = toDateStr(year, month, 1);
+    std::string monthEnd = toDateStr(year, month, 31);
+
+    for (const auto& contract : allContracts) {
+        const std::string& start = contract.getStartDate();
+        const std::string& end = contract.getEndDate();
+
+        bool overlaps = false;
+        if (!start.empty() && start <= monthEnd) {
+            if (end.empty() || end >= monthStart) {
+                overlaps = true;
+            }
+        }
+
+        if (!overlaps) continue;
+
         for (const auto& apt : apartments) {
             if (apt.getId() == contract.getApartmentId()) {
                 rentedCount++;

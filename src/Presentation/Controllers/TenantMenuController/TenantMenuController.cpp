@@ -14,7 +14,6 @@ TenantMenuController::TenantMenuController(
 void TenantMenuController::execute(shared_ptr<TenantUser> tenant, shared_ptr<RentalContract> contract) {
     bool running = true;
 
-    // Get buildingId from apartment
     auto apartment = apartmentRepository->findById(contract->getApartmentId());
     int buildingId = apartment.getBuildingId();
 

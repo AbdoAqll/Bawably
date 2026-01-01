@@ -3,46 +3,42 @@
 #include <Apartment/Exceptions/ApartmentNotExistException.h>
 
 InMemoryApartmentRepository::InMemoryApartmentRepository() {
-    string apt1 = "101";
+    string apt1 = "apt1";
     Apartment a1(1, apt1);
     apartments.insert({ a1.getId(), a1 });
 
-    string apt2 = "102";
+    string apt2 = "apt2";
     Apartment a2(1, apt2);
     apartments.insert({ a2.getId(), a2 });
 
-    string apt3 = "201";
+    string apt3 = "apt3";
     Apartment a3(1, apt3);
 
     apartments.insert({ a3.getId(), a3 });
 
-    string apt4 = "202";
-    Apartment a4(1, apt4);
+    string apt4 = "apt1";
+    Apartment a4(2, apt4);
     apartments.insert({ a4.getId(), a4 });
 
-    string apt5 = "A1";
+    string apt5 = "apt2";
     Apartment a5(2, apt5);
     apartments.insert({ a5.getId(), a5 });
 
-    string apt6 = "A2";
+    string apt6 = "apt3";
     Apartment a6(2, apt6);
     apartments.insert({ a6.getId(), a6 });
 
-    string apt7 = "B1";
-    Apartment a7(2, apt7);
+    string apt7 = "apt1";
+    Apartment a7(3, apt7);
     apartments.insert({ a7.getId(), a7 });
 
-    string apt8 = "1A";
+    string apt8 = "apt2";
     Apartment a8(3, apt8);
     apartments.insert({ a8.getId(), a8 });
 
-    string apt9 = "2A";
+    string apt9 = "apt3";
     Apartment a9(3, apt9);
     apartments.insert({ a9.getId(), a9 });
-
-    string apt10 = "3A";
-    Apartment a10(3, apt10);
-    apartments.insert({ a10.getId(), a10 });
 }
 
 bool InMemoryApartmentRepository::save(const Apartment& apartment) {

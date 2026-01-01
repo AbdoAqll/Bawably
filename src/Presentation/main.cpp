@@ -11,7 +11,6 @@
 using namespace std;
 
 int main() {
-    // Initialize console for proper character encoding (box-drawing chars)
     ConsoleUtils::initConsole();
     ConsoleUtils::clearScreen();
 
@@ -25,7 +24,6 @@ int main() {
     while (running) {
         shared_ptr<User> loggedInUser = authController.showLoginForm();
         if (loggedInUser == nullptr) {
-            // User chose to exit
             ConsoleUtils::clearScreen();
             ConsoleUtils::textattr(Colors::HIGHLIGHT);
             cout << "\n Thank you for using Bawably System!" << endl;
@@ -34,16 +32,13 @@ int main() {
             break;
         }
 
-        // Route to appropriate menu based on user role
         if (loggedInUser->getRole() == UserRole::OWNER) {
-            // Cast to Owner and show owner menu
             auto owner = dynamic_pointer_cast<Owner>(loggedInUser);
             if (owner) {
                 ownerMenuController.execute(owner);
             }
         }
         else if (loggedInUser->getRole() == UserRole::TENANT) {
-            // Cast to TenantUser and show tenant menu
             auto tenant = dynamic_pointer_cast<TenantUser>(loggedInUser);
             if (tenant) {
                 auto rentalContract = rentalContractController.getContractForTenantId(tenant->getUserId());
@@ -52,7 +47,6 @@ int main() {
                 }
             }
         }
-        // After logout, loop back to login screen
     }
 
     return 0;

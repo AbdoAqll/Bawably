@@ -1,4 +1,7 @@
 #include "CreateRentalContractUseCase.h"
+
+#include <Shared/CurrentDate.h>
+
 #include "Domain/RentalContract/Exceptions/ContractAlreadyExistsException.h"
 #include "Domain/RentalContract/Exceptions/ContractCreationFailedException.h"
 #include "Domain/Apartment/Exceptions/ApartmentNotExistException.h"
@@ -19,38 +22,34 @@ CreateRentalContractUseCase::CreateRentalContractUseCase(
 any CreateRentalContractUseCase::execute(const any& params) {
     auto args = any_cast<CreateRentalContractParams>(params);
 
-    // Get the apartment to validate it exists
     Apartment apartment = _apartmentRepository->findById(args.apartmentId);
 
     if (!_userRepository->tenantUserExists(args.tenantId)) {
         throw TenantNotExistException(args.tenantId);
     }
 
-    // Check if this tenant already has an active contract (apartment transfer scenario)
     RentalContract* existingContract = _rentalContractRepository->findActiveByTenant(args.tenantId);
     bool isTransfer = (existingContract != nullptr);
     int previousApartmentId = 0;
 
     if (isTransfer) {
-        // If tenant has active contract and trying to rent same apartment, throw error
         if (existingContract->getApartmentId() == args.apartmentId) {
             throw ContractAlreadyExistsException(args.apartmentId, args.tenantId);
         }
 
-        // Store previous apartment ID for transfer
         previousApartmentId = existingContract->getApartmentId();
 
-        // End the previous contract
         existingContract->setActive(false);
+        string endDate = CurrentDate::getCurrentDateString();
+        existingContract->setEndDate(endDate);
         _rentalContractRepository->update(*existingContract);
 
-        // Set previous apartment status back to Vacant
         Apartment previousApartment = _apartmentRepository->findById(previousApartmentId);
         previousApartment.setStatus(ApartmentStatus::Vacant);
+
         _apartmentRepository->save(previousApartment);
     }
     else {
-        // For new tenants, check if apartment is already rented
         if (apartment.getStatus() == ApartmentStatus::Rented) {
             throw ApartmentAlreadyRentedException(args.apartmentId);
         }
@@ -64,11 +63,9 @@ any CreateRentalContractUseCase::execute(const any& params) {
         throw ContractCreationFailedException();
     }
 
-    // Set new apartment status to Rented
     apartment.setStatus(ApartmentStatus::Rented);
     _apartmentRepository->save(apartment);
 
-    // Prepare result with transfer information
     CreateRentalContractResult result;
     result.contractId = contract.getContractId();
     result.isTransfer = isTransfer;

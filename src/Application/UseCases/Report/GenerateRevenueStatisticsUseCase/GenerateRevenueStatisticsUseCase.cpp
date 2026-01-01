@@ -24,12 +24,10 @@ any GenerateRevenueStatisticsUseCase::execute(const any& params) {
 }
 
 RevenueStatistics GenerateRevenueStatisticsUseCase::execute(int year, int month) {
-    // Validate month (1-12)
     if (month < 1 || month > 12) {
         throw InvalidMonthException(month);
     }
 
-    // Validate year
     if (year < 2000 || year > 2100) {
         throw InvalidYearException(year);
     }
@@ -51,12 +49,10 @@ RevenueStatistics GenerateRevenueStatisticsUseCase::execute(int year, int month)
         int buildingId = building.getId();
         auto apartments = apartmentRepo_->getAll(buildingId);
 
-        // Calculate revenue for this building for the specific month/year
         double revenue = 0.0;
         int totalTenants = 0;
         int paidTenants = 0;
 
-        // Get all payments for the specified month/year
         auto monthPayments = paymentRepo_->findByMonth(month, year);
 
         for (const auto& contract : activeContracts) {
@@ -64,11 +60,9 @@ RevenueStatistics GenerateRevenueStatisticsUseCase::execute(int year, int month)
                 if (apt.getId() == contract.getApartmentId()) {
                     totalTenants++;
 
-                    // Check if this tenant paid for this month
                     bool hasPaid = false;
                     for (const auto& payment : monthPayments) {
                         if (payment.getContractId() == contract.getContractId()) {
-                            // Add actual amount paid (could be partial or full)
                             revenue += payment.getAmountPaid();
                             if (payment.getStatus() == PaymentStatus::Paid) {
                                 paidTenants++;
@@ -77,10 +71,6 @@ RevenueStatistics GenerateRevenueStatisticsUseCase::execute(int year, int month)
                             break;
                         }
                     }
-
-                    // If not paid at all, revenue is 0 for this tenant
-                    // (already initialized to 0)
-
                     break;
                 }
             }

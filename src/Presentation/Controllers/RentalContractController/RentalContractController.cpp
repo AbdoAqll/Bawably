@@ -54,17 +54,6 @@ void RentalContractController::execute(int buildingId, int apartmentId) {
     }
 }
 
-void RentalContractController::showMenu() {
-    // Kept for compatibility but not used anymore
-    cout << "\n=== Rental Contract Management ===" << endl;
-    cout << "1. Create Rental Contract" << endl;
-    cout << "2. End Rental Contract" << endl;
-    cout << "3. View Active Contracts" << endl;
-    cout << "4. View All Contracts" << endl;
-    cout << "5. View Contract Details" << endl;
-    cout << "0. Back to Main Menu" << endl;
-}
-
 void RentalContractController::handleCreateRentalContract(int buildingId, int apartmentId) {
     ConsoleUtils::clearScreen();
 
@@ -73,7 +62,6 @@ void RentalContractController::handleCreateRentalContract(int buildingId, int ap
         .addDecimalField("monthlyRent", "Monthly Rent ($)", true)
         .addDateField("startDate", "Start Date (YYYY-MM-DD)", true);
 
-    // Validate monthly rent is positive
     form.setValidator("monthlyRent", [](const string& val) {
         try {
             double rent = stod(val);

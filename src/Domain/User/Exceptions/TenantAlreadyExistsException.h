@@ -1,7 +1,7 @@
 #ifndef TENANTALREADYEXISTSEXCEPTION_H
 #define TENANTALREADYEXISTSEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 #include <string>
 
 class TenantAlreadyExistsException : public DomainException {

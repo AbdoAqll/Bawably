@@ -1,7 +1,7 @@
 #ifndef PAYMENTUPDATEFAILEDEXCEPTION_H
 #define PAYMENTUPDATEFAILEDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class PaymentUpdateFailedException : public DomainException {
 public:

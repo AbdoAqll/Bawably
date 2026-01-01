@@ -59,7 +59,6 @@ void RentPaymentController::handleRecordRentPayment() {
         .addDecimalField("amount", "Amount ($)", true)
         .addDateField("paymentDate", "Payment Date (YYYY-MM-DD)", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -70,7 +69,6 @@ void RentPaymentController::handleRecordRentPayment() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);
@@ -81,7 +79,6 @@ void RentPaymentController::handleRecordRentPayment() {
         }
         }, "Year must be between 2000 and 2100");
 
-    // Validate amount must be positive
     form.setValidator("amount", [](const string& val) {
         try {
             double amount = stod(val);
@@ -134,7 +131,6 @@ void RentPaymentController::handleViewPaidTenants() {
     form.addNumberField("month", "Month (1-12)", true)
         .addNumberField("year", "Year", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -145,7 +141,6 @@ void RentPaymentController::handleViewPaidTenants() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);
@@ -195,7 +190,6 @@ void RentPaymentController::handleViewUnpaidOrPartialTenants() {
     form.addNumberField("month", "Month (1-12)", true)
         .addNumberField("year", "Year", true);
 
-    // Validate month
     form.setValidator("month", [](const string& val) {
         try {
             int month = stoi(val);
@@ -206,7 +200,6 @@ void RentPaymentController::handleViewUnpaidOrPartialTenants() {
         }
         }, "Month must be between 1 and 12");
 
-    // Validate year
     form.setValidator("year", [](const string& val) {
         try {
             int year = stoi(val);
@@ -285,7 +278,6 @@ void RentPaymentController::handleViewAllPayments() {
                 << "$" << setw(10) << fixed << setprecision(2) << payment.getAmountPaid()
                 << "$" << setw(10) << payment.getExpectedAmount();
 
-            // Color-code status
             switch (payment.getStatus()) {
             case PaymentStatus::Paid:
                 ConsoleUtils::textattr(Colors::HIGHLIGHT);

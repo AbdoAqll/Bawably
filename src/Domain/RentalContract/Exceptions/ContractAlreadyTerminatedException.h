@@ -1,7 +1,7 @@
 #ifndef CONTRACTALREADYTERMINATEDEXCEPTION_H
 #define CONTRACTALREADYTERMINATEDEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class ContractAlreadyTerminatedException : public DomainException {
 public:

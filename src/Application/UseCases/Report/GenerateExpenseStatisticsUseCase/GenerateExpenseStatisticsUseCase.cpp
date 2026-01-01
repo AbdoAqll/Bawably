@@ -6,7 +6,6 @@
 #include <sstream>
 #include <map>
 
-// Helper function to convert ExpenseCategory enum to string
 std::string expenseCategoryToString(ExpenseCategory category) {
     switch (category) {
     case ExpenseCategory::Electricity: return "Electricity";
@@ -33,12 +32,10 @@ any GenerateExpenseStatisticsUseCase::execute(const any& params) {
 }
 
 ExpenseStatistics GenerateExpenseStatisticsUseCase::execute(int year, int month) {
-    // Validate month (1-12)
     if (month < 1 || month > 12) {
         throw InvalidMonthException(month);
     }
 
-    // Validate year
     if (year < 2000 || year > 2100) {
         throw InvalidYearException(year);
     }
@@ -64,7 +61,6 @@ ExpenseStatistics GenerateExpenseStatisticsUseCase::execute(int year, int month)
         for (const auto& expense : expenses) {
             totalExpenses += expense.getAmount();
 
-            // Aggregate by category - convert enum to string
             std::string category = expenseCategoryToString(expense.getCategory());
             categoryTotals[category] += expense.getAmount();
         }
@@ -72,7 +68,6 @@ ExpenseStatistics GenerateExpenseStatisticsUseCase::execute(int year, int month)
         statistics.addBuildingData(buildingId, totalExpenses, expenses.size());
     }
 
-    // Add category breakdowns
     for (const auto& [category, amount] : categoryTotals) {
         statistics.addExpenseByCategory(category, amount);
     }

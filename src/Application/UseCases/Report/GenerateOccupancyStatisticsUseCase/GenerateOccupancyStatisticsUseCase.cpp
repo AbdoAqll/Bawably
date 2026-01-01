@@ -22,12 +22,10 @@ any GenerateOccupancyStatisticsUseCase::execute(const any& params) {
 }
 
 OccupancyStatistics GenerateOccupancyStatisticsUseCase::execute(int year, int month) {
-    // Validate month (1-12)
     if (month < 1 || month > 12) {
         throw InvalidMonthException(month);
     }
 
-    // Validate year
     if (year < 2000 || year > 2100) {
         throw InvalidYearException(year);
     }
@@ -50,7 +48,6 @@ OccupancyStatistics GenerateOccupancyStatisticsUseCase::execute(int year, int mo
         auto apartments = apartmentRepo_->getAll(buildingId);
         int totalApts = apartments.size();
 
-        // Count occupied apartments in this building
         int occupiedCount = 0;
         for (const auto& contract : activeContracts) {
             for (const auto& apt : apartments) {

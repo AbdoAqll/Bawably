@@ -1,7 +1,7 @@
 #ifndef USERNAMEALREADYTAKENEXCEPTION_H
 #define USERNAMEALREADYTAKENEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 #include <string>
 
 class UsernameAlreadyTakenException : public DomainException {

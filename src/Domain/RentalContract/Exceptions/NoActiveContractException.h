@@ -1,7 +1,7 @@
 #ifndef NOACTIVECONTRACTEXCEPTION_H
 #define NOACTIVECONTRACTEXCEPTION_H
 
-#include "../../Shared/DomainException.h"
+#include <Shared/DomainException.h>
 
 class NoActiveContractException : public DomainException {
 public:
