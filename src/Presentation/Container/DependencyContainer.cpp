@@ -33,7 +33,6 @@
 
 #include "Infrastructure/RentPayment/Repositories/InMemoryRentPaymentRepository.h"
 #include "Application/UseCases/RentPayment/RecordRentPayment/RecordRentPaymentUseCase.h"
-#include "Application/UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.h"
 #include "Application/UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.h"
 #include "Application/UseCases/RentPayment/ViewUnpaidOrPartialTenants/ViewUnpaidOrPartialTenantsUseCase.h"
 #include "UseCases/User/GetAllTenants/GetAllTenantsUseCase.h"
@@ -123,12 +122,11 @@ DependencyContainer::DependencyContainer() {
 
     vector<shared_ptr<IUseCase>> rentPaymentUseCases = {
         make_shared<RecordRentPaymentUseCase>(rentPaymentRepository, rentalContractRepository),
-        make_shared<AddPartialPaymentUseCase>(rentPaymentRepository, rentalContractRepository),
         make_shared<ViewPaidTenantsUseCase>(rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository),
         make_shared<ViewUnpaidOrPartialTenantsUseCase>(rentPaymentRepository, rentalContractRepository, userRepository, apartmentRepository)
     };
 
-    
+
     auto loginUseCase = make_shared<LoginUseCase>(userRepository);
 
     // Initialize controllers

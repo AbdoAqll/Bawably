@@ -20,10 +20,9 @@ void RentPaymentController::execute() {
     while (running) {
         MenuDisplayer menu("Rent Payment Management", {
             "1. Record Rent Payment",
-            "2. Add Partial Payment",
-            "3. View Paid Tenants",
-            "4. View Unpaid/Partial Tenants",
-            "5. View All Payments",
+            "2. View Paid Tenants",
+            "3. View Unpaid/Partial Tenants",
+            "4. View All Payments",
             "0. Back to Main Menu"
             });
 
@@ -34,18 +33,15 @@ void RentPaymentController::execute() {
             handleRecordRentPayment();
             break;
         case 1:
-            handleAddPartialPayment();
-            break;
-        case 2:
             handleViewPaidTenants();
             break;
-        case 3:
+        case 2:
             handleViewUnpaidOrPartialTenants();
             break;
-        case 4:
+        case 3:
             handleViewAllPayments();
             break;
-        case 5:
+        case 4:
         case -1:
             running = false;
             break;
@@ -60,85 +56,7 @@ void RentPaymentController::handleRecordRentPayment() {
     form.addNumberField("contractId", "Contract ID", true)
         .addNumberField("month", "Month (1-12)", true)
         .addNumberField("year", "Year", true)
-        .addDecimalField("amountPaid", "Amount Paid ($)", true)
-        .addDateField("paymentDate", "Payment Date (YYYY-MM-DD)", true);
-
-    // Validate month
-    form.setValidator("month", [](const string& val) {
-        try {
-            int month = stoi(val);
-            return month >= 1 && month <= 12;
-        }
-        catch (...) {
-            return false;
-        }
-        }, "Month must be between 1 and 12");
-
-    // Validate year
-    form.setValidator("year", [](const string& val) {
-        try {
-            int year = stoi(val);
-            return year >= 2000 && year <= 2100;
-        }
-        catch (...) {
-            return false;
-        }
-        }, "Year must be between 2000 and 2100");
-
-    // Validate amount
-    form.setValidator("amountPaid", [](const string& val) {
-        try {
-            double amount = stod(val);
-            return amount >= 0;
-        }
-        catch (...) {
-            return false;
-        }
-        }, "Amount must be a non-negative number");
-
-    FormResult result = form.show();
-
-    if (result.submitted) {
-        try {
-            RecordRentPaymentParams params;
-            params.contractId = result.getInt("contractId");
-            params.month = result.getInt("month");
-            params.year = result.getInt("year");
-            params.amountPaid = result.getDouble("amountPaid");
-            params.paymentDate = result.get("paymentDate");
-
-            auto execResult = useCases["RecordRentPayment"]->execute(params);
-            auto paymentResult = any_cast<RecordRentPaymentResult>(execResult);
-
-            displayPaymentDetails(paymentResult);
-        }
-        catch (const DomainException& e) {
-            ConsoleUtils::clearScreen();
-            ConsoleUtils::textattr(Colors::ERR);
-            cout << "\n Error: " << e.what() << endl;
-            ConsoleUtils::textattr(Colors::DEFAULT);
-            cout << "\nPress any key to continue...";
-            ConsoleUtils::getKey();
-        }
-        catch (const exception& e) {
-            ConsoleUtils::clearScreen();
-            ConsoleUtils::textattr(Colors::ERR);
-            cout << "\n Unexpected error: " << e.what() << endl;
-            ConsoleUtils::textattr(Colors::DEFAULT);
-            cout << "\nPress any key to continue...";
-            ConsoleUtils::getKey();
-        }
-    }
-}
-
-void RentPaymentController::handleAddPartialPayment() {
-    ConsoleUtils::clearScreen();
-
-    InputForm form("Add Partial Payment");
-    form.addNumberField("contractId", "Contract ID", true)
-        .addNumberField("month", "Month (1-12)", true)
-        .addNumberField("year", "Year", true)
-        .addDecimalField("amount", "Amount to Add ($)", true)
+        .addDecimalField("amount", "Amount ($)", true)
         .addDateField("paymentDate", "Payment Date (YYYY-MM-DD)", true);
 
     // Validate month
@@ -178,17 +96,17 @@ void RentPaymentController::handleAddPartialPayment() {
 
     if (result.submitted) {
         try {
-            AddPartialPaymentParams params;
+            RecordRentPaymentParams params;
             params.contractId = result.getInt("contractId");
             params.month = result.getInt("month");
             params.year = result.getInt("year");
             params.amount = result.getDouble("amount");
             params.paymentDate = result.get("paymentDate");
 
-            auto execResult = useCases["AddPartialPayment"]->execute(params);
-            auto paymentResult = any_cast<AddPartialPaymentResult>(execResult);
+            auto execResult = useCases["RecordRentPayment"]->execute(params);
+            auto paymentResult = any_cast<RecordRentPaymentResult>(execResult);
 
-            displayPartialPaymentResult(paymentResult);
+            displayPaymentDetails(paymentResult);
         }
         catch (const DomainException& e) {
             ConsoleUtils::clearScreen();
@@ -394,7 +312,12 @@ void RentPaymentController::handleViewAllPayments() {
 void RentPaymentController::displayPaymentDetails(const RecordRentPaymentResult& result) {
     ConsoleUtils::clearScreen();
     ConsoleUtils::textattr(Colors::HIGHLIGHT);
-    cout << "\n Rent payment recorded successfully!" << endl;
+    if (result.isNewRecord) {
+        cout << "\n Rent payment recorded successfully!" << endl;
+    }
+    else {
+        cout << "\n Payment added successfully!" << endl;
+    }
     ConsoleUtils::textattr(Colors::DEFAULT);
 
     cout << "\n--- Payment Details ---" << endl;
@@ -402,12 +325,23 @@ void RentPaymentController::displayPaymentDetails(const RecordRentPaymentResult&
     cout << "Contract ID: " << result.contractId << endl;
     cout << "Tenant ID: " << result.tenantId << endl;
     cout << "Period: " << getMonthName(result.month) << " " << result.year << endl;
-    cout << "Amount Paid: $" << fixed << setprecision(2) << result.amountPaid << endl;
+
+    if (!result.isNewRecord) {
+        cout << "\nPrevious Amount: $" << fixed << setprecision(2) << result.previousAmount << endl;
+    }
+    cout << "Added Amount: $" << fixed << setprecision(2) << result.addedAmount << endl;
+    cout << "Total Paid: $" << result.totalAmountPaid << endl;
     cout << "Expected Amount: $" << result.expectedAmount << endl;
     cout << "Remaining: $" << result.remainingAmount << endl;
-    cout << "Status: ";
 
-    switch (result.status) {
+    if (!result.isNewRecord) {
+        cout << "\nStatus Change: " << getStatusString(result.previousStatus) << " -> ";
+    }
+    else {
+        cout << "Status: ";
+    }
+
+    switch (result.newStatus) {
     case PaymentStatus::Paid:
         ConsoleUtils::textattr(Colors::HIGHLIGHT);
         cout << "PAID";
@@ -421,44 +355,6 @@ void RentPaymentController::displayPaymentDetails(const RecordRentPaymentResult&
         cout << "UNPAID";
         break;
     }
-    ConsoleUtils::textattr(Colors::DEFAULT);
-
-    cout << "\n\nPress any key to continue...";
-    ConsoleUtils::getKey();
-}
-
-void RentPaymentController::displayPartialPaymentResult(const AddPartialPaymentResult& result) {
-    ConsoleUtils::clearScreen();
-    ConsoleUtils::textattr(Colors::HIGHLIGHT);
-    cout << "\n Partial payment added successfully!" << endl;
-    ConsoleUtils::textattr(Colors::DEFAULT);
-
-    cout << "\n--- Payment Update ---" << endl;
-    cout << "Payment ID: " << result.paymentId << endl;
-    cout << "Contract ID: " << result.contractId << endl;
-    cout << "Tenant ID: " << result.tenantId << endl;
-    cout << "Period: " << getMonthName(result.month) << " " << result.year << endl;
-    cout << "\nPrevious Amount: $" << fixed << setprecision(2) << result.previousAmount << endl;
-    cout << "Added Amount: $" << result.addedAmount << endl;
-    cout << "Total Paid: $" << result.totalAmountPaid << endl;
-    cout << "Expected Amount: $" << result.expectedAmount << endl;
-    cout << "Remaining: $" << result.remainingAmount << endl;
-
-    cout << "\nStatus Change: ";
-    cout << getStatusString(result.previousStatus) << " -> ";
-
-    switch (result.newStatus) {
-    case PaymentStatus::Paid:
-        ConsoleUtils::textattr(Colors::HIGHLIGHT);
-        break;
-    case PaymentStatus::Partial:
-        ConsoleUtils::textattr(Colors::TITLE);
-        break;
-    case PaymentStatus::Unpaid:
-        ConsoleUtils::textattr(Colors::ERR);
-        break;
-    }
-    cout << getStatusString(result.newStatus);
     ConsoleUtils::textattr(Colors::DEFAULT);
 
     cout << "\n\nPress any key to continue...";

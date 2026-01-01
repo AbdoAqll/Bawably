@@ -30,6 +30,7 @@ add_library(Domain STATIC
     RentPayment/Exceptions/PaymentCreationFailedException.cpp
     RentPayment/Exceptions/PaymentRecordExistsException.cpp
     RentPayment/Exceptions/PaymentUpdateFailedException.cpp
+    RentPayment/Exceptions/PaymentExceedsExpectedException.cpp
     Expense/Exceptions/InvalidExpenseAmountException.cpp
     Expense/Exceptions/InvalidExpenseDateException.cpp
     Expense/Exceptions/InvalidBuildingIdForExpenseException.cpp

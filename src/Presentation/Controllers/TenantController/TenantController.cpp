@@ -21,9 +21,9 @@ void TenantController::createTenant() {
     InputForm form("Add New Tenant");
     form.addTextField("username", "Tenant Username", 50, true)
         .addTextField("password", "Password", 50, true)
-        .addTextField("nationalId", "Tenant National Id", 20, true)
-        .addTextField("phone", "Tenant Phone Number", 20, true)
-        .addTextField("name", "Tenant Full Name", 20, true);
+        .addTextField("nationalId", "Tenant National Id", 50, true)
+        .addTextField("phone", "Tenant Phone Number", 50, true)
+        .addTextField("name", "Tenant Full Name", 50, true);
     FormResult result = form.show();
 
     if (result.submitted) {

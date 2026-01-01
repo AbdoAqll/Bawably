@@ -12,7 +12,7 @@ struct RecordRentPaymentParams {
     int contractId;
     int month;
     int year;
-    double amountPaid;
+    double amount;
     string paymentDate;
 };
 
@@ -22,10 +22,14 @@ struct RecordRentPaymentResult {
     int tenantId;
     int month;
     int year;
-    double amountPaid;
+    double previousAmount;
+    double addedAmount;
+    double totalAmountPaid;
     double expectedAmount;
     double remainingAmount;
-    PaymentStatus status;
+    PaymentStatus previousStatus;
+    PaymentStatus newStatus;
+    bool isNewRecord;
 };
 
 class RecordRentPaymentUseCase : public IUseCase {

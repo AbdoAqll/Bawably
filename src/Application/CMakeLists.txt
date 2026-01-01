@@ -23,7 +23,6 @@ add_library(Application STATIC
         UseCases/Expense/GetExpensesByBuildingAndMonth/GetExpensesByBuildingAndMonthUseCase.cpp
         UseCases/Expense/GetAllExpenses/GetAllExpensesUseCase.cpp
         UseCases/RentPayment/RecordRentPayment/RecordRentPaymentUseCase.cpp
-        UseCases/RentPayment/AddPartialPayment/AddPartialPaymentUseCase.cpp
         UseCases/RentPayment/ViewPaidTenants/ViewPaidTenantsUseCase.cpp
         UseCases/RentPayment/ViewUnpaidOrPartialTenants/ViewUnpaidOrPartialTenantsUseCase.cpp
         UseCases/User/GetAllTenants/GetAllTenantsUseCase.h
